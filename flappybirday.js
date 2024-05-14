@@ -55,10 +55,6 @@ window.onload = function() {
     board.width = boardWitdh;
     context = board.getContext('2d'); // used for drawing on the board
 
-    // draw the bird
-    //context.fillStyle = "green";
-    //context.fillRect(bird.x, bird.y, bird.width, bird.height);
-
     // load the images
     birdImage = new Image();
     birdImage.src = "./img/flappybird.png";
@@ -106,7 +102,15 @@ function update(){
     }
 
     else if (state == GameState.READY){
+        context.clearRect(0, 0, boardWitdh, boardHeight);
 
+        bird.x = birdX;
+        bird.y = birdInitY;
+        bird.width = birdWidth;
+        bird.height = birdHeight;
+
+        // draw the bird, need to handle the draw of the bird when go up up and down based on velocityY
+        context.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
     }
 
     else if (state == GameState.PLAYING)
@@ -214,18 +218,21 @@ function moveBird(e)
 {
     if (state == GameState.PLAYING)
     {
-        if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyW"){
+        if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyW")
+        {
             velocityY = -6;
         }
     }
-    else if (state == GameState.DROPPING || state == GameState.READY)
+    else if (state == GameState.READY)
     {
-        if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyW"){
+        if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyW")
+        { 
             // reset the game
             bird.y = birdInitY;
             pipeArray = [];
             score = 0;
             state = GameState.PLAYING;
+            velocityY = -6;
         }
     }
 

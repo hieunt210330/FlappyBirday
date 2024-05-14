@@ -1,5 +1,14 @@
 // Need to define all constants
 
+const GameState = {
+    PLAYING: 0,
+    PAUSED: 1,
+    GAMEOVER: 2,
+    DROPPING: 3
+}
+
+let state = GameState.PLAYING;
+
 let board;
 let boardWitdh = window.innerWidth;
 let boardHeight = window.innerHeight;
@@ -11,15 +20,14 @@ let groundHeight = boardHeight * 65 / 1080;
 let birdWidth = boardHeight / 18; // bird width/height ration = 17/12
 let birdHeight = birdWidth * 12 / 17;
 let birdX = boardWitdh / 2 - birdWidth / 2;
-let birdY = boardHeight / 2 - birdHeight / 2;
+let birdInitY = boardHeight / 2 - birdHeight / 2;
 
 let bird = {
     x: birdX,
-    y: birdY,
+    y: birdInitY,
     width: birdWidth,
     height: birdHeight
 }
-
 
 let pipeArray = []; // each element in pipes array should be a pair of top and bottom pipes
 
@@ -28,12 +36,11 @@ let pipeWidth = 64; // will be calculated based on the bird size
 let pipeHeight = 512; // will be calculated based on the bird size
 let pipeX = boardWitdh;
 let pipeY = 0;
-let pipeOpeningSpace = 200; // will be calculated based on the board size or/and bird size or/and score
+let pipeOpeningSpace = 500; // will be calculated based on the board size or/and bird size or/and score
 let pipeDistance = 300; // will be calculated based on the board size
 
 let topPipeImg;
 let bottomPipeImg;
-
 
 //physics
 // need to write function to calculate physics based on score
@@ -89,27 +96,11 @@ function update(){
     }
 
     if (gameOver == true){
+        // if the game is over, the bird drops to the ground
         return;
     }
 
     context.clearRect(0, 0, boardWitdh, boardHeight);
-
-
-    gameOver = checkCollision(bird, pipeArray);
-
-    // draw the pipes
-    for (let i = 0; i < pipeArray.length; i++){
-        let pipe = pipeArray[i];
-
-        // must handle the case when the pipe is out of the screen only draw the pipe if it is in the screen (computer screen, not window.innerHeight). If it is not in the screen, remove it from the array.
-        pipe.top.x += velocityX;
-        context.drawImage(topPipeImg, pipe.top.x, pipe.top.y, pipe.top.width, pipe.top.height);
-
-        pipe.bottom.x += velocityX;
-        context.drawImage(bottomPipeImg, pipe.bottom.x, pipe.bottom.y, pipe.bottom.width, pipe.bottom.height);
-    }
-
-    // change position of the bird to not go inside the pipe if there is a collision
 
     velocityY += gravity;
     
@@ -123,19 +114,42 @@ function update(){
     // Bird can't be below the ground
     bird.y = Math.min(bird.y + velocityY, boardHeight + bird.height - groundHeight);
 
-    // draw the bird, need to draw the bird up and down based on velocityY
+    // draw the pipes
+    for (let i = 0; i < pipeArray.length; i++){
+        let pipe = pipeArray[i];
+        
+        // must handle the case when the pipe is out of the screen only draw the pipe if it is in the screen (computer screen, not window.innerHeight). If it is not in the screen, remove it from the array.
+        pipe.top.x += velocityX;
+        context.drawImage(topPipeImg, pipe.top.x, pipe.top.y, pipe.top.width, pipe.top.height);
+
+        pipe.bottom.x += velocityX;
+        context.drawImage(bottomPipeImg, pipe.bottom.x, pipe.bottom.y, pipe.bottom.width, pipe.bottom.height);
+    }
+
+    // draw the bird, need to handle the draw of the bird when go up up and down based on velocityY
     context.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
 
+    let score = 0;
 
-    // if game over, the bird drops out of the screen
-    if (gameOver == true){
-        return;
+    // calculate the score
+    for (let i = 0; i < pipeArray.length; i++){
+        let pipe = pipeArray[i];
+        if (pipe.passed == true)
+        {
+            score++;
+        }
+        else if (pipe.top.x + pipe.top.width < bird.x){
+            pipe.passed = true;
+            score++;
+        }
     }
-    else
-    {
 
-    }
+    // display score
+    context.fillStyle = "white";
+    context.font = "45px sans-serif";
+    context.fillText(score, 10, 50);
 
+    gameOver = checkCollision(bird, pipeArray);
 
 }
 
@@ -169,6 +183,7 @@ function placePipes(){
     };
 
     let pipe = {
+        passed: false,
         top: topPipe,
         bottom: bottomPipe
     }
@@ -182,10 +197,13 @@ function moveBird(e)
     // if state is PLAYING
     if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyW"){
         velocityY = -6;
-        gameOver = checkCollision(bird, pipeArray);
-        if (gameOver == true)
-        {
-            return;
+
+        if(gameOver == true){
+            // reset the game
+            bird.y = birdInitY;
+            pipeArray = [];
+            gameOver = false;
+            score = 0;
         }
     }
 }
@@ -194,8 +212,6 @@ function checkCollision(bird, pipeArray){
     // Check if the the bird is touching the ground.
     if (bird.y + bird.height >= boardHeight - groundHeight)
     {
-        // change position of the bird to not go below the ground
-        bird.y = boardHeight - groundHeight - bird.height;
         return true;
     }
 
@@ -203,19 +219,15 @@ function checkCollision(bird, pipeArray){
     {
         let pipe = pipeArray[i];
         // check if the bird is not outside the pipe
-        if (pipe.top.x >= bird.x + bird.width && bird.x <= pipe.top.x + pipe.top.width)
+        if (pipe.top.x <= bird.x + bird.width && bird.x <= pipe.top.x + pipe.top.width)
         {
             // check if the bird is between the top and bottom pipes
             if (bird.y <= pipe.top.y + pipe.top.height)
             {
-                // change position of the bird to not go inside the top pipe
-                //bird.y = pipe.top.y + pipe.top.height;
                 return true;
             }
             else if (bird.y + bird.height >= pipe.bottom.y)
             {
-                // change position of the bird to not go inside the bottom pipe
-                //bird.y = pipe.bottom.y - bird.height;
                 return true;
             }
         }

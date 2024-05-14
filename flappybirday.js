@@ -4,7 +4,8 @@ const GameState = {
     PLAYING: 0,
     PAUSED: 1,
     GAMEOVER: 2,
-    DROPPING: 3
+    DROPPING: 3,
+    READY: 4            
 }
 
 let state = GameState.PLAYING;
@@ -47,8 +48,6 @@ let bottomPipeImg;
 let velocityX = -2; //pipes moving left speed
 let velocityY = -6; //bird jump speed
 let gravity = 0.4;
-
-let gameOver = false;
 
 window.onload = function() {
     board = document.getElementById("board");
@@ -95,117 +94,141 @@ function update(){
         return;
     }
 
-    if (gameOver == true){
+    else if (state == GameState.GAMEOVER){
         // if the game is over, the bird drops to the ground
+        state = GameState.DROPPING;
         return;
     }
 
-    context.clearRect(0, 0, boardWitdh, boardHeight);
+    else if (state == GameState.DROPPING){
+        // After dropped, set the game state to READY
+        state = GameState.READY;
+    }
 
-    velocityY += gravity;
-    
-    // function updateBirdPosition():
-    // Bird can go up and out of the screen
-    // bird.y += velocityY;
+    else if (state == GameState.READY){
 
-    // Bird can't go up and out of the screen
-    bird.y = Math.max(bird.y + velocityY, 0);
+    }
 
-    // Bird can't be below the ground
-    bird.y = Math.min(bird.y + velocityY, boardHeight + bird.height - groundHeight);
+    else if (state == GameState.PLAYING)
+    {
+        context.clearRect(0, 0, boardWitdh, boardHeight);
 
-    // draw the pipes
-    for (let i = 0; i < pipeArray.length; i++){
-        let pipe = pipeArray[i];
+        velocityY += gravity;
         
-        // must handle the case when the pipe is out of the screen only draw the pipe if it is in the screen (computer screen, not window.innerHeight). If it is not in the screen, remove it from the array.
-        pipe.top.x += velocityX;
-        context.drawImage(topPipeImg, pipe.top.x, pipe.top.y, pipe.top.width, pipe.top.height);
+        // function updateBirdPosition():
+        // Bird can go up and out of the screen
+        // bird.y += velocityY;
 
-        pipe.bottom.x += velocityX;
-        context.drawImage(bottomPipeImg, pipe.bottom.x, pipe.bottom.y, pipe.bottom.width, pipe.bottom.height);
-    }
+        // Bird can't go up and out of the screen
+        bird.y = Math.max(bird.y + velocityY, 0);
 
-    // draw the bird, need to handle the draw of the bird when go up up and down based on velocityY
-    context.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
+        // Bird can't be below the ground
+        bird.y = Math.min(bird.y + velocityY, boardHeight + bird.height - groundHeight);
 
-    let score = 0;
+        // draw the pipes
+        for (let i = 0; i < pipeArray.length; i++){
+            let pipe = pipeArray[i];
+            
+            // must handle the case when the pipe is out of the screen only draw the pipe if it is in the screen (computer screen, not window.innerHeight). If it is not in the screen, remove it from the array.
+            pipe.top.x += velocityX;
+            context.drawImage(topPipeImg, pipe.top.x, pipe.top.y, pipe.top.width, pipe.top.height);
 
-    // calculate the score
-    for (let i = 0; i < pipeArray.length; i++){
-        let pipe = pipeArray[i];
-        if (pipe.passed == true)
+            pipe.bottom.x += velocityX;
+            context.drawImage(bottomPipeImg, pipe.bottom.x, pipe.bottom.y, pipe.bottom.width, pipe.bottom.height);
+        }
+
+        // draw the bird, need to handle the draw of the bird when go up up and down based on velocityY
+        context.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
+
+        let score = 0;
+
+        // calculate the score
+        for (let i = 0; i < pipeArray.length; i++){
+            let pipe = pipeArray[i];
+            if (pipe.passed == true)
+            {
+                score++;
+            }
+            else if (pipe.top.x + pipe.top.width < bird.x){
+                pipe.passed = true;
+                score++;
+            }
+        }
+
+        // display score
+        context.fillStyle = "white";
+        context.font = "45px sans-serif";
+        context.fillText(score, 10, 50);
+
+        if (checkCollision(bird, pipeArray))
         {
-            score++;
-        }
-        else if (pipe.top.x + pipe.top.width < bird.x){
-            pipe.passed = true;
-            score++;
+            state = GameState.GAMEOVER;
         }
     }
-
-    // display score
-    context.fillStyle = "white";
-    context.font = "45px sans-serif";
-    context.fillText(score, 10, 50);
-
-    gameOver = checkCollision(bird, pipeArray);
-
 }
 
 // instead of using setInterval, check the position of the pipes to make sure the gap between the pipes is always the same
-function placePipes(){
-
+function placePipes()
+{
     if (document.hasFocus() == false){
+        // pause the game
         return;
     }
 
-    // need a function to update pipeY based on difficulty level
-    let randomPipeY  = pipeY - pipeHeight/4 - Math.random() * (pipeHeight/2);
+    else if (state == GameState.PLAYING)
+    {
+        // need a function update pipeY based on difficulty level and score
+        let randomPipeY  = pipeY - pipeHeight/4 - Math.random() * (pipeHeight/2);
 
+        // need a function to create new pipe
+        let topPipe = {
+            img: topPipeImg,
+            x: pipeX,
+            y: randomPipeY,
+            width: pipeWidth,
+            height: pipeHeight,
+            passed: false
+        };
 
-    let topPipe = {
-        img: topPipeImg,
-        x: pipeX,
-        y: randomPipeY,
-        width: pipeWidth,
-        height: pipeHeight,
-        passed: false
-    };
+        let bottomPipe = {
+            img: bottomPipeImg,
+            x: pipeX,
+            y: randomPipeY + pipeHeight + pipeOpeningSpace,
+            width: pipeWidth,
+            height: pipeHeight,
+            passed: false
+        };
 
-    let bottomPipe = {
-        img: bottomPipeImg,
-        x: pipeX,
-        y: randomPipeY + pipeHeight + pipeOpeningSpace,
-        width: pipeWidth,
-        height: pipeHeight,
-        passed: false
-    };
+        let pipe = {
+            passed: false,
+            top: topPipe,
+            bottom: bottomPipe
+        }
 
-    let pipe = {
-        passed: false,
-        top: topPipe,
-        bottom: bottomPipe
+        pipeArray.push(pipe);
     }
-
-    pipeArray.push(pipe);
 
 }
 
 function moveBird(e)
 {
-    // if state is PLAYING
-    if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyW"){
-        velocityY = -6;
-
-        if(gameOver == true){
+    if (state == GameState.PLAYING)
+    {
+        if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyW"){
+            velocityY = -6;
+        }
+    }
+    else if (state == GameState.DROPPING || state == GameState.READY)
+    {
+        if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyW"){
             // reset the game
             bird.y = birdInitY;
             pipeArray = [];
-            gameOver = false;
             score = 0;
+            state = GameState.PLAYING;
         }
     }
+
 }
 
 function checkCollision(bird, pipeArray){

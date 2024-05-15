@@ -33,21 +33,24 @@ let bird = {
 let pipeArray = []; // each element in pipes array should be a pair of top and bottom pipes
 
 // need to write functions to calulate the pipes size and position based on the board size
-let pipeWidth = 64; // will be calculated based on the bird size
-let pipeHeight = 512; // will be calculated based on the bird size
+let pipeWidth = boardWitdh / 15; // will be calculated based on the bird size
+let pipeHeight = boardHeight; // will be calculated based on the bird size
 let pipeX = boardWitdh;
 let pipeY = 0;
-let pipeOpeningSpace = 500; // will be calculated based on the board size or/and bird size or/and score
-let pipeDistance = 300; // will be calculated based on the board size
+let pipeOpeningSpace = boardHeight / 2; // will be calculated based on the board size or/and bird size or/and score
+let pipeDistance = boardWitdh / 5; // will be calculated based on the board size
 
 let topPipeImg;
 let bottomPipeImg;
 
 //physics
 // need to write function to calculate physics based on score
-let velocityX = -2; //pipes moving left speed
-let velocityY = -6; //bird jump speed
-let gravity = 0.4;
+const velocityInitX = (-2) * boardWitdh / 360;
+const velocityInitY = (-6) * boardHeight / 360;
+const gravityInit = (0.4) * boardHeight / 360;
+let velocityX = velocityInitX; //pipes moving left speed
+let velocityY = velocityInitY; //bird jump speed
+let gravity = gravityInit; //gravity
 
 window.onload = function() {
     board = document.getElementById("board");
@@ -220,7 +223,7 @@ function moveBird(e)
     {
         if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyW")
         {
-            velocityY = -6;
+            velocityY = velocityInitY;
         }
     }
     else if (state == GameState.READY)
@@ -232,7 +235,7 @@ function moveBird(e)
             pipeArray = [];
             score = 0;
             state = GameState.PLAYING;
-            velocityY = -6;
+            velocityY = velocityInitY;
         }
     }
 

@@ -1,0 +1,117 @@
+/* ModeSelectionScreen styles */
+.mode-selection-container {
+    display: flex;
+    height: 100vh;
+}
+
+.mode-selection-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent background */
+}
+
+.mode-selection-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+}
+
+.mode-selection-content h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.turn-back-button {
+    position: absolute;
+    top: 3%;
+    left: 1.5%;
+    background: #ff5c5c;
+    border: none;
+    color: white;
+    padding: 1% 1.5%;
+    border-radius: 10%;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.turn-back-button:hover {
+    background: #e60000;
+}
+
+.options {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.option {
+    margin-bottom: 2vh;
+}
+
+.option label {
+    font-weight: bold;
+    display: block;
+    justify-self: center;
+    color: #555;
+}
+
+.radio-group {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 1vh;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.radio-item input[type="radio"] {
+    margin-right: 5px;
+}
+
+.play-button {
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.play-button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+.play-button:hover:not(:disabled) {
+    background-color: #45a049;
+}
+
+.play-option {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    color: #333;
+    font-size: 1.5em;
+    margin-right: 10px;
+}

@@ -1,0 +1,30 @@
+{
+  "name": "flappy-react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5",
+    "tailwindcss": "^3.4.3"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.2.5",
+    "@types/react": "^18.3.2",
+    "conf": "^12.0.0",
+    "rea": "^0.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-react": "^1.2.0",
+    "react-redux": "^9.1.2",
+    "react-table": "^7.8.0",
+    "redux": "^5.0.1",
+    "redux-thunk": "^3.1.0"
+  }
+}

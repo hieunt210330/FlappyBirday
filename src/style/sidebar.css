@@ -1,0 +1,49 @@
+/* Ensure you include necessary styles for the sidebar */
+.sidebar {
+    position: fixed;
+    top: 0.5vh;
+    right: 0.5vh; /* Position it to the right */
+    width: 5vh; /* Adjust the width as needed */
+    background-color: #a74343;
+    transition: width 0.3s ease; /* Smooth transition for expanding/collapsing */
+    overflow-x: hidden;
+    z-index: 1000; /* Ensure it stays on top */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center icons vertically */
+    justify-content: center;
+    border-radius: 2.5vh 2.5vh 2.5vh 2.5vh; /* Rounded corners for collapsed state */
+
+}
+
+.sidebar-toggle {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.sidebar-button {
+    display: block;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease; /* Smooth zoom effect */
+    margin: 10px 0; /* Add some margin for better spacing */
+}
+
+.sidebar-button img {
+    width: 4vh;
+    height: 4vh;
+    overflow: hidden;
+    border-radius: 50%; /* Make the icon circular */
+}
+
+.sidebar-button:hover {
+    transform: scale(1.2); /* Zoom in on hover */
+    transform-origin: center; /* Prevent overflow */
+}
+
+.sidebar img {
+    display: block;
+    margin: 0 auto; /* Center the icons */
+}

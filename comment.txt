@@ -1,0 +1,11 @@
+state:
+rule_screen
+report_screen
+score_board_screen
+reward_screen
+daily_checkin_screen
+puzzle_screen
+home_screen
+new_game_screen
+playing
+result_screen

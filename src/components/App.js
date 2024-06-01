@@ -1,6 +1,6 @@
 import React from 'react';
 import {Provider} from 'react-redux';
-import Home from './Home';
+import Display from './Display';
 import Game from './Game';
 
 const App = ({store}) => {
@@ -8,7 +8,7 @@ const App = ({store}) => {
 return (
 	<div className='app'>
 	<Provider store ={store}>
-		<Home/>
+		<Display/>
 	</Provider>
 	</div>
 );

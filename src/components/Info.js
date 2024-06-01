@@ -1,14 +1,11 @@
-import React from 'react';
-import { useState } from 'react';
-
+import React, { useState } from 'react';
 import Reward from './Reward';
 import Scoreboard from './Scoreboard';
 import Checkin from './Checkin';
-
 import '../style.css';
 
-const Info = ({ screen }) => {
-  const [activeTab, setActiveTab] = useState('screen');
+const Info = ({ screen, fnGoBack }) => {
+  const [activeTab, setActiveTab] = useState(screen);
 
   const tabs = ['Global Ranking', 'Received Rewards', 'Daily Checkin'];
 
@@ -18,6 +15,7 @@ const Info = ({ screen }) => {
 
   return (
     <div style={styles.container}>
+      <button className="return-button" onClick={() => fnGoBack('home')}>Return to Home</button>
       <div style={styles.navbar} className="tabs">
         {tabs.map((tab) => (
           <button
@@ -37,7 +35,7 @@ const Info = ({ screen }) => {
       </div>
     </div>
   );
-}
+};
 
 export default Info;
 

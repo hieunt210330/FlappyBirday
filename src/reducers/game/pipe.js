@@ -12,7 +12,8 @@ const intialState = {
 }
 
 export default (state = intialState, {type} = {}) => {
-    let tmp_pipes = state.pipes;
+    let pipes = state.pipes;
+    let tmp_pipes = pipes;
     switch (type) {
         case 'PIPE_MOVE':
             if (!state.pipes.length) 
@@ -42,10 +43,15 @@ export default (state = intialState, {type} = {}) => {
                 topHeight = Math.floor(Math.random() * 50) + 10;
                 tmp_pipes.push({x: 100, topHeight: topHeight});
             }
-            while(tmp_pipes.length && tmp_pipes[tmp_pipes.length - 1].x <= 5000) {
-                topHeight = Math.floor(Math.random() * 50) + 10;
-                tmp_pipes.push({x: tmp_pipes[tmp_pipes.length - 1].x + config.PIPE_DISTANCE,  
-                                    topHeight: topHeight});
+            try {
+                while(tmp_pipes.length && tmp_pipes[tmp_pipes.length - 1].x <= 5000) {
+                    topHeight = Math.floor(Math.random() * 50) + 10;
+                    tmp_pipes.push({x: tmp_pipes[tmp_pipes.length - 1].x + config.PIPE_DISTANCE,  
+                                        topHeight: topHeight});
+                }
+            }
+            catch (e) {
+                //console.log(e);
             }
 
             return {...state, 

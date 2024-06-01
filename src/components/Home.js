@@ -1,22 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { useState } from 'react';
 
 import ModeSelection from './ModeSelection';
 import Sidebar from './Sidebar';
+import Info from './Info';
 import '../style/home.css';
 
-const Home = () => {
+const Home = ({status, dispatchDisplay}) => {
+  
   const [displayScreen, setDisplayScreen] = useState('home');
   const [sidebarOption, setSidebarOption] = useState('');
 
   const fnDisplay = (scr) => {
     setDisplayScreen(scr);
+    setSidebarOption('');
   };
 
   const handleOptionChange = (option) => {
     setSidebarOption(option);
+    if (option) {
+      setDisplayScreen('info');
+    } else {
+      setDisplayScreen('home');
+    }
   };
+  
+  dispatchDisplay('DISPLAY_HOME');
 
   switch (displayScreen) {
+    
     case 'home':
       return (
         <div className="home-screen">
@@ -34,12 +47,25 @@ const Home = () => {
         </div>
       );
     case 'choose-game-mode':
-      return <ModeSelection fnGoBack={fnDisplay} />
+      return <ModeSelection fnGoBack={fnDisplay} />;
+    case 'info':
+      return <Info screen={sidebarOption} fnGoBack={fnDisplay} />;
+    
     default:
       return (<div></div>);
   }
-
-  return (<div></div>);
 };
 
-export default Home;
+const dispatchDisplay = (diplayTypeStr) => {
+  return (dispatch, getState) => {
+    dispatch({type: diplayTypeStr})
+  }
+}
+
+//const mapStateToProps = ({display}) => ({displayList: display.displayList});
+const mapStateToProps = ({display}) => ({status: display.displayList});
+
+
+const mapDispatchToProps = {dispatchDisplay};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

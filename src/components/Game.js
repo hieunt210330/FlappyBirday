@@ -18,7 +18,6 @@ const Game = ({status, start, fly}) => {
     useEffect(() => {
         const handleKeyPress = (e) => {
             start();
-            console.log(e.code);
             if (e.code === "Space") {
                 fly();
             }
@@ -42,7 +41,12 @@ const Game = ({status, start, fly}) => {
 
 const fly = () => {
     return (dispatch) => {
-        dispatch({type: "BIRD_FLY"});
+        try{
+            dispatch({type: "BIRD_FLY"});
+        }
+        catch(e){
+            console.log(e);
+        }
     }
 }
 
@@ -59,11 +63,17 @@ const start = () => {
             }, 1000/config.FPS);
 
             pipeGenrator = setInterval(() => {
-                dispatch({type: "PIPE_GENERATE"});
+                try{
+                    dispatch({type: "PIPE_GENERATE"});
+                }
+                catch(e){
+                }
+        
             }, config.PIPE_GENERATE_TIME);
 
             dispatch({type: "START"});
         }
+        console.log("Start: " + getState().game.status);
     }
 }
 

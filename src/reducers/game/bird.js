@@ -21,7 +21,6 @@ export default (state = intialState, {type} = {}) => {
         case 'BIRD_FALL':
             tmp_dY = state.dY + config.GRAVITY;
             tmp_y = state.y + tmp_dY;
-            console.log(tmp_dY);
             if (tmp_dY >= config.JUMP_HEIGHT * 0.4)
             {
                 tmp_dY = config.JUMP_HEIGHT *0.4;

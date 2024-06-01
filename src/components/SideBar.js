@@ -1,6 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
-
+import React, { useState } from 'react';
 import exitIcon from '../../.../../images/icons/exit.png'; 
 import rulesIcon from '../../.../../images/icons/rules.png';
 import checkinIcon from '../../.../../images/icons/checkin.png';
@@ -25,8 +23,8 @@ const Sidebar = ({ onOptionChange }) => {
 
   const [option, setOption] = useState('');
 
+
   const fnDisplayOption = (option) => {
-    setOption(option);
     onOptionChange(option);
   };
 

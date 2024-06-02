@@ -1,7 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { useTable } from 'react-table';
 
-const Scoreboard = () => {
+const Scoreboard = ({dispatchDisplay}) => {
     const data = React.useMemo(
         () => [
             { code: 'Voucher Code 1', detail: 'Voucher Brief Info', date: 'DD/MM/YYYY' },
@@ -134,4 +135,15 @@ const styles = {
     },
 };
 
-export default Scoreboard;
+const dispatchDisplay = (diplayTypeStr) => {
+    return (dispatch) => {
+        dispatch({type: diplayTypeStr})
+    }
+  }
+  
+  const mapStateToProps = ({}) => ({});
+  
+  const mapDispatchToProps = {dispatchDisplay};
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Scoreboard);
+  

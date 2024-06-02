@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import '../style/home.css';
 
-const Rules = ({dispatchDisplay}) => {
+const Volume = ({dispatchDisplay}) => {
 
 };
 
@@ -17,4 +17,4 @@ const mapStateToProps = ({}) => ({});
 
 const mapDispatchToProps = {dispatchDisplay};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Rules);
+export default connect(mapStateToProps, mapDispatchToProps)(Volume);

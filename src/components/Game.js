@@ -45,7 +45,7 @@ const fly = () => {
             dispatch({type: "BIRD_FLY"});
         }
         catch(e){
-            console.log(e);
+            //console.log(e);
         }
     }
 }
@@ -73,7 +73,6 @@ const start = () => {
 
             dispatch({type: "START"});
         }
-        console.log("Start: " + getState().game.status);
     }
 }
 

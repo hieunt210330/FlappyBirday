@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import exitIcon from '../../.../../images/icons/exit.png'; 
 import rulesIcon from '../../.../../images/icons/rules.png';
 import checkinIcon from '../../.../../images/icons/checkin.png';
@@ -14,18 +15,12 @@ import '../style/sidebar.css';
 import Puzzle from './Puzzle';
 import Info from './Info';
 
-const Sidebar = ({ onOptionChange }) => {
+const Sidebar = ({dispatchDisplay}) => {
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
-  };
-
-  const [option, setOption] = useState('');
-
-
-  const fnDisplayOption = (option) => {
-    onOptionChange(option);
   };
 
   return (
@@ -38,21 +33,27 @@ const Sidebar = ({ onOptionChange }) => {
           <>
             <button className="sidebar-button"><img src={exitIcon} alt="Exit" /></button>
             <button className="sidebar-button"><img src={rulesIcon} alt="Rules" /></button>
-            <button className="sidebar-button" onClick={() => fnDisplayOption('checkin')}><img src={checkinIcon} alt="Checkin" /></button>
-            <button className="sidebar-button" onClick={() => fnDisplayOption('scoreboard')}><img src={scoreboardIcon} alt="Scoreboard" /></button>
-            <button className="sidebar-button" onClick={() => fnDisplayOption('reward')}><img src={rewardIcon} alt="Reward" /></button>
-            <button className="sidebar-button" onClick={() => fnDisplayOption('puzzle')}><img src={puzzleIcon} alt="Puzzle" /></button>
+            <button className="sidebar-button" onClick={() => dispatchDisplay('DISPLAY_CHECKIN')}><img src={checkinIcon} alt="Checkin" /></button>
+            <button className="sidebar-button" onClick={() => dispatchDisplay('DISPLAY_SCOREBOARD')}><img src={scoreboardIcon} alt="Scoreboard" /></button>
+            <button className="sidebar-button" onClick={() => dispatchDisplay('DISPLAY_CHECKIN')}><img src={rewardIcon} alt="Reward" /></button>
+            <button className="sidebar-button" onClick={() => dispatchDisplay('DISPLAY_REWARD')}><img src={puzzleIcon} alt="Puzzle" /></button>
             <button className="sidebar-button"><img src={volumeIcon} alt="Volume" /></button>
-            <button className="sidebar-button" onClick={() => fnDisplayOption('bug-report')}><img src={bugIcon} alt="Bug Report" /></button>
+            <button className="sidebar-button" onClick={() => dispatchDisplay('DISPLAY_BUG_REPORT')}><img src={bugIcon} alt="Bug Report" /></button>
           </>
         )}
-      </div>
-      <div>
-        {(option === 'checkin' || option === 'reward' || option === 'scoreboard') && <Info screen={option} />}
-        {option === 'puzzle' && <Puzzle />}
       </div>
     </div>
   );
 };
 
-export default Sidebar;
+const dispatchDisplay = (diplayTypeStr) => {
+  return (dispatch) => {
+      dispatch({type: diplayTypeStr})
+  }
+}
+
+const mapStateToProps = ({}) => ({});
+
+const mapDispatchToProps = {dispatchDisplay};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

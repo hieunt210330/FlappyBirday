@@ -6,6 +6,13 @@ import Game from './Game';
 import Sidebar from './Sidebar';
 import Info from './Info';
 import Puzzle from "./Puzzle";
+import BugReport from "./BugReport";
+import Volume from "./Volume";
+import Rules from "./Rules";
+import Reward from './Reward';
+import Scoreboard from './Scoreboard';
+import Checkin from './Checkin';
+
 import '../style/home.css';
 
 const Display = ({ displayList, dispatchDisplay }) => {
@@ -35,11 +42,28 @@ const Display = ({ displayList, dispatchDisplay }) => {
     if (displayList.displaySidebar) {
         displayComponents.push(<Sidebar key="sidebar" />);
     }
+    if (displayList.displayCheckin) {
+        displayComponents.push(<Checkin key="checkin" />);
+    }
+    if (displayList.displayScoreboard) {
+        displayComponents.push(<Scoreboard key="checkin" />);
+    }
+    if (displayList.displayReward) {
+        displayComponents.push(<Reward key="reward" />);
+    }
     if (displayList.displayPuzzle) {
         displayComponents.push(<Puzzle key="puzzle" />);
     }
     // Add more components as needed, e.g., BugReport, Volume, Rules
-
+    if (displayList.displayBugReport) {
+        displayComponents.push(<BugReport key="bugReport" />);
+    }
+    if (displayList.displayVolume) {
+        displayComponents.push(<Volume key="volume" />);
+    }
+    if (displayList.displayRules) {
+        displayComponents.push(<Rules key="rules" />);
+    }
     return (
         <div>
             {displayComponents}

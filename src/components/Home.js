@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { useState } from 'react';
 
-import ModeSelection from './ModeSelection';
-import Sidebar from './Sidebar';
-import Info from './Info';
 import '../style/home.css';
 
 let cnt = 0;
@@ -31,9 +27,7 @@ const dispatchDisplay = (diplayTypeStr) => {
   }
 }
 
-//const mapStateToProps = ({display}) => ({displayList: display.displayList});
 const mapStateToProps = ({}) => ({});
-
 
 const mapDispatchToProps = {dispatchDisplay};
 

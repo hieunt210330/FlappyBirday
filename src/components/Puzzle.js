@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 
-const Puzzle = () => {
+const Puzzle = ({dispatchDisplay}) => {
+
   const [piecesCollected, setPiecesCollected] = useState(0);
   const totalPieces = 10; // Example total pieces
 
   const handleClose = () => {
-    // Logic to close the puzzle
-    console.log('Puzzle closed');
+    dispatchDisplay('DISPLAY_HOME')
   };
 
   const handleReward = () => {
@@ -31,4 +32,14 @@ const Puzzle = () => {
   );
 }
 
-export default Puzzle;
+const dispatchDisplay = (diplayTypeStr) => {
+  return (dispatch) => {
+      dispatch({type: diplayTypeStr})
+  }
+}
+
+const mapStateToProps = ({}) => ({});
+
+const mapDispatchToProps = {dispatchDisplay};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Puzzle);

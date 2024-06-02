@@ -1,7 +1,7 @@
 import React from 'react';
 import '../style/endgame.css';
 
-const EndGame = ({ score, turnsLeft, onReceiveGifts, onNewGame }) => {
+const EndGame = ({ dispatchDisplay, score, turnsLeft, onReceiveGifts, onNewGame }) => {
   return (
     <div className="end-game-screen">
       <div className="end-game-content">
@@ -26,4 +26,14 @@ const EndGame = ({ score, turnsLeft, onReceiveGifts, onNewGame }) => {
   );
 };
 
-export default EndGame;
+const dispatchDisplay = (diplayTypeStr) => {
+  return (dispatch) => {
+      dispatch({type: diplayTypeStr})
+  }
+}
+
+const mapStateToProps = ({}) => ({});
+
+const mapDispatchToProps = {dispatchDisplay};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EndGame);

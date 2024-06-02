@@ -15,7 +15,6 @@ export default (state = intialState, {type} = {}) => {
     let tmp_r = 0;
     switch (type) {
         case 'BIRD_FLY':
-            console.log("BIRD_FLY");
             tmp_dY = Math.max(state.dY - config.JUMP_HEIGHT, -config.JUMP_HEIGHT * 0.7);
             return {...state, y: state.y, dY: tmp_dY, d: ""};
         case 'BIRD_FALL':

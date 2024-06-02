@@ -1,7 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { useTable } from 'react-table';
 
-const Reward = () => {
+const Reward = ({dispatchDisplay}) => {
     const data = React.useMemo(
         () => [
             { rank: 'Voucher rank 1', username: 'Voucher Brief Info', score: 'DD/MM/YYYY' },
@@ -136,4 +137,15 @@ const styles = {
     },
 };
 
-export default Reward;
+const dispatchDisplay = (diplayTypeStr) => {
+    return (dispatch) => {
+        dispatch({type: diplayTypeStr})
+    }
+  }
+  
+  const mapStateToProps = ({}) => ({});
+  
+  const mapDispatchToProps = {dispatchDisplay};
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Reward);
+  

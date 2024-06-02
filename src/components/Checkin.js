@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 
 import '../style/checkin.css';
 
-const Checkin = () => {
+const Checkin = ({dispatchDisplay}) => {
   const [checkinDays, setCheckinDays] = useState([]);
   const [todayCheckedIn, setTodayCheckedIn] = useState(false);
 
@@ -140,4 +141,14 @@ const Checkin = () => {
   );
 };
 
-export default Checkin;
+const dispatchDisplay = (diplayTypeStr) => {
+  return (dispatch) => {
+      dispatch({type: diplayTypeStr})
+  }
+}
+
+const mapStateToProps = ({}) => ({});
+
+const mapDispatchToProps = {dispatchDisplay};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Checkin);

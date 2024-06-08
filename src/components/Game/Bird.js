@@ -6,9 +6,10 @@ import config from "../../gameconfig";
 
 import "../../style.css";
 
-const x = 47.5 * document.documentElement.clientWidth / document.documentElement.clientHeight;
 
 const Bird = ({y, dY, r, d}) => {
+    
+    const x = 47.5 * document.documentElement.clientWidth / document.documentElement.clientHeight;
 
     return (
         <div className="bird"

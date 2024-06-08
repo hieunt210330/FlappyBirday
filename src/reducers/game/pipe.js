@@ -1,12 +1,12 @@
 import config from "../../gameconfig";
 
+const default_x = 200;
+
 const intialState = {
-    d: "",
-    x: 100,
     pipes: [
         {
             topHeight: 50,
-            x: 70,
+            x: default_x, //vh
         },
     ]
 }
@@ -15,6 +15,8 @@ export default (state = intialState, {type} = {}) => {
     let pipes = state.pipes;
     let tmp_pipes = pipes;
     switch (type) {
+        case 'DISPLAY_END_GAME':
+            return {...state, pipes: [{topHeight: 50, x: default_x}]};
         case 'PIPE_MOVE':
             if (!state.pipes.length) 
             {
@@ -41,7 +43,7 @@ export default (state = intialState, {type} = {}) => {
             let topHeight;
             if (tmp_pipes.length == 0) {
                 topHeight = Math.floor(Math.random() * 50) + 10;
-                tmp_pipes.push({x: 100, topHeight: topHeight});
+                tmp_pipes.push({x: default_x, topHeight: topHeight});
             }
             try {
                 while(tmp_pipes.length && tmp_pipes[tmp_pipes.length - 1].x <= 5000) {

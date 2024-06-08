@@ -8,15 +8,21 @@ import Foreground from "./Game/Foreground";
 import config from "../gameconfig"
 import "../style.css";
 
-let birdFall;
+let gameAnimation;
 let pipeGenrator;
-let pipeMove;
 
 let effect_on = false;
 
+let inGame = false;
+
 const Game = ({status, start, fly}) => {
+    inGame = true;
     useEffect(() => {
         const handleKeyPress = (e) => {
+            if (inGame === false)
+            {
+                return;
+            }
             start();
             if (e.code === "Space") {
                 fly();
@@ -54,12 +60,10 @@ const start = () => {
     return (dispatch, getState) => {
         const status = getState().game.status;
         if (status !== 'playing') {
-            birdFall = setInterval(() => {
+            gameAnimation = setInterval(() => {
                 dispatch({type: "BIRD_FALL"});
-            }, 1000/config.FPS);
-
-            pipeMove = setInterval(() => {
                 dispatch({type: "PIPE_MOVE"});
+                check(dispatch, getState);
             }, 1000/config.FPS);
 
             pipeGenrator = setInterval(() => {
@@ -74,6 +78,39 @@ const start = () => {
             dispatch({type: "START"});
         }
     }
+}
+
+let cnt = 0;
+
+const check = (dispatch, getState) => {
+    const state = getState();
+    const bird = state.bird;
+    const pipes = state.pipe.pipes;
+    /*
+    const foreground = state.game.foreground;
+
+    if (bird.y + bird.height > config.FOREGROUND_Y) {
+        clearInterval(birdFall);
+        clearInterval(pipeGenrator);
+        clearInterval(pipeMove);
+        dispatch({type: "DISPLAY_END_GAME"});
+    }
+    */
+
+    for (let i = 0; i < pipes.length; i++) {
+        if (
+            bird.x + bird.width > pipes[i].x &&
+            bird.x < pipes[i].x + config.PIPE_WIDTH &&
+            (bird.y < pipes[i].topHeight || bird.y + bird.height > pipes[i].topHeight + config.PIPE_HOLE)
+        ) {
+            effect_on = false;
+            inGame = false;
+            clearInterval(gameAnimation);
+            clearInterval(pipeGenrator);
+            dispatch({type: "DISPLAY_END_GAME"});
+        }
+    }
+
 }
 
 const mapStateToProps = ({game}) => ({status: game.status});

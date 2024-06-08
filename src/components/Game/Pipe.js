@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 
 import config from "../../gameconfig";
 
-var distance = 20;
-
 import "../../style.css";
 
 const Pipe = ({pipes, d}) => {

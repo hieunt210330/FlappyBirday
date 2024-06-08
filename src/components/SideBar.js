@@ -12,9 +12,6 @@ import rewardIcon from '../../.../../images/icons/reward.png';
 
 import '../style/sidebar.css';
 
-import Puzzle from './Puzzle';
-import Info from './Info';
-
 const Sidebar = ({dispatchDisplay}) => {
 
   const [isExpanded, setIsExpanded] = useState(false);

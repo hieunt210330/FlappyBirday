@@ -5,6 +5,9 @@ const PIPE_HOLE = 20; // vh
 const PIPE_DISTANCE = 40; // vh
 const PIPE_WIDTH = 10; // vh
 
+const GIFT_HEIGHT = 5; // vh
+const GIFT_WIDTH = 5; // vh
+
 const GRAVITY = 0.0625 * 1.2;
 const JUMP_HEIGHT = 1 * 2;
 const JUMP_TIME = 500; //ms
@@ -23,4 +26,6 @@ export default
     PIPE_HOLE,
     PIPE_DISTANCE,
     PIPE_WIDTH,
+    GIFT_HEIGHT,
+    GIFT_WIDTH
 } 

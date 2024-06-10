@@ -47,6 +47,16 @@
     background-position: center top;
 }
 
+.gift{
+    position: fixed;
+    width: 5vh;
+    height: 5vh;
+    background-color: black;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+}
+
 img {
     width: 100%; /* or any custom size */
     height: 100%; 

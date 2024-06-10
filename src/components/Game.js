@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import Bird from "./Game/Bird";
 import Pipe from "./Game/Pipe";
 import Foreground from "./Game/Foreground";
+import Gift from "./Game/Gift";
 
 import config from "../gameconfig"
 import "../style.css";
@@ -41,6 +42,7 @@ const Game = ({status, start, fly}) => {
             <Bird />
             <Pipe />
             <Foreground />
+            <Gift />
         </div>
     )
 }
@@ -86,16 +88,7 @@ const check = (dispatch, getState) => {
     const state = getState();
     const bird = state.bird;
     const pipes = state.pipe.pipes;
-    /*
-    const foreground = state.game.foreground;
-
-    if (bird.y + bird.height > config.FOREGROUND_Y) {
-        clearInterval(birdFall);
-        clearInterval(pipeGenrator);
-        clearInterval(pipeMove);
-        dispatch({type: "DISPLAY_END_GAME"});
-    }
-    */
+    const gifts = state.pipe.gifts;
 
     for (let i = 0; i < pipes.length; i++) {
         if (
@@ -111,6 +104,17 @@ const check = (dispatch, getState) => {
         }
     }
 
+    // Kiểm tra va chạm giữa con chim và hộp quà
+    for (let i = 0; i < gifts.length; i++) {
+        if (
+            bird.x + bird.width > gifts[i].x &&
+            bird.x < gifts[i].x + config.GIFT_WIDTH && // Giả sử hộp quà có chiều rộng là config.GIFT_WIDTH
+            bird.y + bird.height > gifts[i].y &&
+            bird.y < gifts[i].y + config.GIFT_HEIGHT // Giả sử hộp quà có chiều cao là config.GIFT_HEIGHT
+        ) {
+            dispatch({type: "GIFT_EATEN", payload: i});
+        }
+    }
 }
 
 const mapStateToProps = ({game}) => ({status: game.status});
@@ -118,4 +122,3 @@ const mapStateToProps = ({game}) => ({status: game.status});
 const mapDispatchToProps = {start, fly};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
-

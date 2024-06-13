@@ -1,49 +1,54 @@
-/* Ensure you include necessary styles for the sidebar */
+/* Base styles for the sidebar */
 .sidebar {
     position: fixed;
-    top: 0.5vh;
-    right: 0.5vh; /* Position it to the right */
-    width: 5vh; /* Adjust the width as needed */
-    background-color: #a74343;
-    transition: width 0.3s ease; /* Smooth transition for expanding/collapsing */
-    overflow-x: hidden;
+    top: 10px;
+    right: 10px; /* Keep the sidebar on the right edge */
+    width: 50px; /* Fixed width */
+    height: 50px; /* Initial collapsed height */
+    background-color: #2C3E50; /* Darker shade for modern look */
+    transition: height 0.3s ease; /* Transition now applied to height */
+    overflow-y: hidden; /* Hide vertical overflow */
     z-index: 1000; /* Ensure it stays on top */
     display: flex;
     flex-direction: column;
     align-items: center; /* Center icons vertically */
-    justify-content: center;
-    border-radius: 2.5vh 2.5vh 2.5vh 2.5vh; /* Rounded corners for collapsed state */
-
+    justify-content: flex-start; /* Start aligning items from the top */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
 }
 
+/* Styling the toggle button with an increased area for easier clicking */
 .sidebar-toggle {
     background-color: transparent;
     border: none;
     cursor: pointer;
+    padding: 10px; /* Adjusted padding */
+    width: 100%; /* Full width */
+    color: #ecf0f1; /* Light text color for contrast */
+    display: flex;
+    justify-content: center; /* Center the icon horizontally */
+    align-items: center; /* Center the icon vertically */
 }
 
+/* Common styles for all buttons in the sidebar */
 .sidebar-button {
-    display: block;
     background-color: transparent;
     border: none;
     cursor: pointer;
-    transition: transform 0.3s ease; /* Smooth zoom effect */
-    margin: 10px 0; /* Add some margin for better spacing */
+    padding: 10px; /* Consistent padding */
+    width: 100%; /* Full width for easier clicking */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth color and scale transitions */
+    color: #ecf0f1; /* Light text color for contrast */
 }
 
-.sidebar-button img {
-    width: 4vh;
-    height: 4vh;
-    overflow: hidden;
-    border-radius: 50%; /* Make the icon circular */
-}
-
+/* Adding hover effects for interactivity */
 .sidebar-button:hover {
-    transform: scale(1.2); /* Zoom in on hover */
-    transform-origin: center; /* Prevent overflow */
+    background-color: #34495e; /* Slightly lighter background on hover */
+    transform: scale(1.05); /* Gentle zoom effect */
 }
 
-.sidebar img {
-    display: block;
-    margin: 0 auto; /* Center the icons */
+/* Responsiveness for expanding and collapsing */
+.sidebar.expanded {
+    height: 30vh; /* Expand to full height of the viewport */
+    width: 50px; /* Maintain width */
 }

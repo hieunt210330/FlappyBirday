@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import exitIcon from '../../.../../images/icons/exit.png'; 
-import rulesIcon from '../../.../../images/icons/rules.png';
-import checkinIcon from '../../.../../images/icons/checkin.png';
-import scoreboardIcon from '../../.../../images/icons/scoreboard.png';
-import puzzleIcon from '../../.../../images/icons/puzzle.png';
-import volumeIcon from '../../.../../images/icons/volume.png';
-import bugIcon from '../../.../../images/icons/bug.png';
-import toggleIcon from '../../.../../images/icons/sidebar.png';
-import rewardIcon from '../../.../../images/icons/reward.png';
+import React, { useState } from "react";
+import { connect } from "react-redux";
 
-import '../style/sidebar.css';
+import "../style/sidebar.css";
+import {
+  LogOut,
+  CircleHelp,
+  CalendarCheck2,
+  Trophy,
+  Menu,
+  TicketCheck,
+  Puzzle,
+  Volume2,
+  BugOff,
+} from "lucide-react";
 
-const Sidebar = ({dispatchDisplay}) => {
-
+const Sidebar = ({ dispatchDisplay }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleSidebar = () => {
@@ -21,21 +22,57 @@ const Sidebar = ({dispatchDisplay}) => {
   };
 
   return (
-    <div style={{ overflow: 'hidden' }}>
-      <div className={`sidebar ${isExpanded ? 'expanded' : 'collapsed'}`}>
+    <div>
+      <div className={`sidebar ${isExpanded ? "expanded" : "collapsed"}`}>
         <button className="sidebar-toggle" onClick={toggleSidebar}>
-          <img src={toggleIcon} alt="Toggle" />
+          <Menu color="currentColor" alt="Toggle" />
         </button>
         {isExpanded && (
           <>
-            <button className="sidebar-button"><img src={exitIcon} alt="Exit" /></button>
-            <button className="sidebar-button"><img src={rulesIcon} alt="Rules" /></button>
-            <button className="sidebar-button" onClick={() => dispatchDisplay('DISPLAY_CHECKIN')}><img src={checkinIcon} alt="Checkin" /></button>
-            <button className="sidebar-button" onClick={() => dispatchDisplay('DISPLAY_SCOREBOARD')}><img src={scoreboardIcon} alt="Scoreboard" /></button>
-            <button className="sidebar-button" onClick={() => dispatchDisplay('DISPLAY_CHECKIN')}><img src={rewardIcon} alt="Reward" /></button>
-            <button className="sidebar-button" onClick={() => dispatchDisplay('DISPLAY_REWARD')}><img src={puzzleIcon} alt="Puzzle" /></button>
-            <button className="sidebar-button"><img src={volumeIcon} alt="Volume" /></button>
-            <button className="sidebar-button" onClick={() => dispatchDisplay('DISPLAY_BUG_REPORT')}><img src={bugIcon} alt="Bug Report" /></button>
+            <button className="sidebar-button" title="Exit">
+              <LogOut color="currentColor" alt="Exit" />
+            </button>
+            <button className="sidebar-button" title="Rules">
+              <CircleHelp color="currentColor" alt="Rules" />
+            </button>
+            <button
+              className="sidebar-button"
+              onClick={() => dispatchDisplay("DISPLAY_CHECKIN")}
+              title="Checkin"
+            >
+              <CalendarCheck2 color="currentColor" alt="Checkin" />
+            </button>
+            <button
+              className="sidebar-button"
+              onClick={() => dispatchDisplay("DISPLAY_SCOREBOARD")}
+              title="Scoreboard"
+            >
+              <Trophy color="currentColor" alt="Scoreboard" />
+            </button>
+            <button
+              className="sidebar-button"
+              onClick={() => dispatchDisplay("DISPLAY_CHECKIN")}
+              title="Checkin"
+            >
+              <TicketCheck color="currentColor" alt="ScorRewardeboard" />
+            </button>
+            <button
+              className="sidebar-button"
+              onClick={() => dispatchDisplay("DISPLAY_REWARD")}
+              title="Puzzle"
+            >
+              <Puzzle color="currentColor" alt="Puzzle" />
+            </button>
+            <button className="sidebar-button" title="Volume">
+              <Volume2 color="currentColor" alt="Volume" />
+            </button>
+            <button
+              className="sidebar-button"
+              onClick={() => dispatchDisplay("DISPLAY_BUG_REPORT")}
+              title="Report a Bug"
+            >
+              <BugOff color="currentColor" alt="Bug Report" />
+            </button>
           </>
         )}
       </div>
@@ -45,12 +82,12 @@ const Sidebar = ({dispatchDisplay}) => {
 
 const dispatchDisplay = (diplayTypeStr) => {
   return (dispatch) => {
-      dispatch({type: diplayTypeStr})
-  }
-}
+    dispatch({ type: diplayTypeStr });
+  };
+};
 
 const mapStateToProps = ({}) => ({});
 
-const mapDispatchToProps = {dispatchDisplay};
+const mapDispatchToProps = { dispatchDisplay };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

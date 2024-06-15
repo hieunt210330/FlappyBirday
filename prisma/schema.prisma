@@ -14,6 +14,7 @@ model User {
   id          Int       @id @default(autoincrement())
   email       String    @unique
   name        String
+  turnLeft    Int       @default(3)
   vouchers    Voucher[]
   highScores  HighScore[]
   maxScore    Int      @default(0)

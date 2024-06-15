@@ -1,6 +1,6 @@
 const FPS = 60;
 const PIPE_SPEED = 10/FPS;
-const PIPE_GENERATE_TIME = 1500; //ms
+const GENERATE_TIME = 1500; //ms
 const PIPE_HOLE = 20; // vh
 const PIPE_DISTANCE = 40; // vh
 const PIPE_WIDTH = 10; // vh
@@ -22,7 +22,7 @@ export default
     JUMP_HEIGHT,
     JUMP_TIME,
     JUMP_ANGLE,
-    PIPE_GENERATE_TIME,
+    GENERATE_TIME,
     PIPE_HOLE,
     PIPE_DISTANCE,
     PIPE_WIDTH,

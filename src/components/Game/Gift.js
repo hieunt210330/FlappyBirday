@@ -2,11 +2,9 @@ import React from "react";
 
 import { connect } from "react-redux";
 
-import config from "../../gameconfig";
-
 import "../../style.css";
 
-const Gift = ({gifts, d}) => {
+const Gift = ({gifts}) => {
     return (
         <div>
             {
@@ -16,7 +14,6 @@ const Gift = ({gifts, d}) => {
                         <div key={`gift-${index}`}>
                             <div className="gift" style={{
                                 left: pos_x,
-                                display: d,
                                 top: y + "vh",
                             }}></div>
                         </div>
@@ -28,7 +25,7 @@ const Gift = ({gifts, d}) => {
 }
 
 
-const mapStateToProps = ({pipe}) => ({gifts: pipe.gifts, d: pipe.d});
+const mapStateToProps = ({gift}) => ({gifts: gift.gifts});
 
 const mapDispatchToProps = {};
 

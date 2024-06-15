@@ -10,7 +10,7 @@ import config from "../gameconfig"
 import "../style.css";
 
 let gameAnimation;
-let pipeGenrator;
+let genrator;
 
 let effect_on = false;
 
@@ -41,8 +41,8 @@ const Game = ({status, start, fly}) => {
         }}>
             <Bird />
             <Pipe />
-            <Foreground />
             <Gift />
+            <Foreground />
         </div>
     )
 }
@@ -65,17 +65,19 @@ const start = () => {
             gameAnimation = setInterval(() => {
                 dispatch({type: "BIRD_FALL"});
                 dispatch({type: "PIPE_MOVE"});
+                dispatch({type: "GIFT_MOVE"});
                 check(dispatch, getState);
             }, 1000/config.FPS);
 
-            pipeGenrator = setInterval(() => {
+            genrator = setInterval(() => {
                 try{
                     dispatch({type: "PIPE_GENERATE"});
+                    dispatch({type: "GIFT_GENERATE", pipes: getState().pipe.pipes, pipeCount: getState().pipe.pipeCount});
                 }
                 catch(e){
                 }
         
-            }, config.PIPE_GENERATE_TIME);
+            }, config.GENERATE_TIME);
 
             dispatch({type: "START"});
         }
@@ -88,7 +90,7 @@ const check = (dispatch, getState) => {
     const state = getState();
     const bird = state.bird;
     const pipes = state.pipe.pipes;
-    const gifts = state.pipe.gifts;
+    const gifts = state.gift.gifts;
 
     for (let i = 0; i < pipes.length; i++) {
         if (
@@ -99,7 +101,7 @@ const check = (dispatch, getState) => {
             effect_on = false;
             inGame = false;
             clearInterval(gameAnimation);
-            clearInterval(pipeGenrator);
+            clearInterval(genrator);
             dispatch({type: "DISPLAY_END_GAME"});
         }
     }
@@ -112,7 +114,7 @@ const check = (dispatch, getState) => {
             bird.y + bird.height > gifts[i].y &&
             bird.y < gifts[i].y + config.GIFT_HEIGHT // Giả sử hộp quà có chiều cao là config.GIFT_HEIGHT
         ) {
-            dispatch({type: "GIFT_EATEN", payload: i});
+            dispatch({type: "GIFT_EATEN", eaten_index: i});
         }
     }
 }

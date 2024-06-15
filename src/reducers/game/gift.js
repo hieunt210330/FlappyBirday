@@ -1,57 +1,59 @@
 import config from "../../gameconfig";
 
-const default_x = 200;
-
 const initialState = {
     gifts: [],
-    pipeCount: 0,
+    lastGenerate: 0,
 }
 
-export default (state = initialState, {type, payload} = {pipes}) => {
+export default (state = initialState, {type, pipes, eaten_index, pipeCount} = {}) => {
     let tmp_pipes = pipes;
     let gifts = state.gifts;
-    let pipeCount = state.pipeCount;
-
+    let lastGenerate = state.lastGenerate;
     switch (type) {
         case 'DISPLAY_END_GAME':
-            return {...state, gifts: [], pipeCount: 0};
+            return {...state, gifts: []};
         case 'GIFT_MOVE':
             if (!gifts.length) {
                 return state;
             }
-            
+            let cnt = 1;
             try {
                 gifts = gifts.map(({x, y}) => {
                     x = x - config.PIPE_SPEED;
+                    if (cnt === 1){
+                        console.log(x);
+                        cnt++;
+                    }
                     return {x: x, y: y};
                 });
             } catch (e) {
             }            
             
-            while(gifts.length && gifts[0].x <= -100) {
-                gifts.shift();
-            }
-
-            return {...state, pipes: tmp_pipes, gifts: gifts};
+            return {...state, gifts: gifts};
         case 'GIFT_GENERATE':
             try {
-                while(tmp_pipes.length && tmp_pipes[tmp_pipes.length - 1].x <= 5000) {
-                    pipeCount++;
-                    
-                    if (pipeCount % 1 === 0) {
-                        const previousPipe = tmp_pipes[tmp_pipes.length - 2];
-                        const currentPipe = tmp_pipes[tmp_pipes.length - 1];
+                for (let i = lastGenerate; i < tmp_pipes.length; i++) {
+                    lastGenerate = i;
+                    if (i < 1)
+                    {
+                        continue;
+                    }
+                    if (pipeCount >= 0) {
+                        const previousPipe = tmp_pipes[i - 1];
+                        const currentPipe = tmp_pipes[i];
                         const giftX = (previousPipe.x + currentPipe.x) / 2;
                         const giftY = (previousPipe.topHeight + (100 - currentPipe.topHeight)) / 2; // Giả sử chiều cao của canvas là 100
                         gifts.push({x: giftX, y: giftY});
+                        console.log(gifts);
                     }
                 }
             } catch (e) {
+                console.log(e);
             }
 
-            return {...state, gifts: gifts, pipeCount: pipeCount};
+            return {...state, gifts: gifts, lastGenerate: lastGenerate};
         case 'GIFT_EATEN':
-            gifts = gifts.filter((_, index) => index !== payload);
+            gifts = gifts.filter((_, index) => index !== eaten_index);
             return {...state, gifts: gifts};
         default:
             return state;

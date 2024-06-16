@@ -15,10 +15,11 @@ model User {
   email       String    @unique
   name        String
   turnLeft    Int       @default(3)
+  scores      Score[]
+  checkIn     CheckIn[]
+  puzzleCount Int       @default(0)
   vouchers    Voucher[]
-  highScores  HighScore[]
   maxScore    Int      @default(0)
-  puzzlePieces Int     @default(0)
   feedbacks   Feedback[]
 }
 
@@ -31,18 +32,29 @@ model Feedback {
 }
 
 model Voucher {
-  id          Int       @id @default(autoincrement())
-  code        String    @unique
-  discount    Float
-  expiryDate  DateTime?
-  used        Boolean   @default(false)
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
+  id                  Int       @id @default(autoincrement())
+  code                String
+  discountPercentage  Float?    
+  maxDiscountValue    Int?      
+  minOrderValue       Int?      
+  discountValue       Int?      
+  expiryDate          DateTime?
+  used                Boolean   @default(false)
+  userId              Int
+  user                User      @relation(fields: [userId], references: [id])
 }
 
-model HighScore {
+model Score {
   id          Int       @id @default(autoincrement())
   score       Int
   userId      Int
+  createdAt   DateTime  @default(now()) 
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model CheckIn {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  createdAt   DateTime  @default(now())
   user        User      @relation(fields: [userId], references: [id])
 }

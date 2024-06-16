@@ -234,6 +234,30 @@ async function getCheckInDates(userId, month, year) {
 	return checkIns.map(checkIn => checkIn.createdAt);
 }
 
+export default {
+	getUserIdByEmail,
+	createUser,
+	getTurnLeft,
+	decrementTurnLeft,
+	incrementTurnLeft,
+	getUserName,
+	updateScore,
+	getUserScores,
+	getUserMaxScore,
+	getAllMaxScores,
+	getPuzzleCount,
+	incrementPuzzleCount,
+	resetPuzzleCount,
+	getUserVouchers,
+	createVoucher,
+	getUserFeedbacks,
+	saveUserFeedback,
+	saveCheckInDate,
+	getCheckInDates,
+}
+	
+
+/*
 // Example usage
 (async () => {
 
@@ -276,3 +300,4 @@ async function getCheckInDates(userId, month, year) {
 
 	prisma.$disconnect();
 })();
+*/

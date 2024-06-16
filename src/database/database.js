@@ -234,7 +234,7 @@ async function getCheckInDates(userId, month, year) {
 	return checkIns.map(checkIn => checkIn.createdAt);
 }
 
-export default {
+export {
 	getUserIdByEmail,
 	createUser,
 	getTurnLeft,

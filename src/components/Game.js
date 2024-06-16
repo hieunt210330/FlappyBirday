@@ -62,6 +62,9 @@ const start = () => {
     return (dispatch, getState) => {
         const status = getState().game.status;
         if (status !== 'playing') {
+
+            dispatch({type: "START"});
+
             gameAnimation = setInterval(() => {
                 dispatch({type: "BIRD_FALL"});
                 dispatch({type: "PIPE_MOVE"});
@@ -79,7 +82,6 @@ const start = () => {
         
             }, config.GENERATE_TIME);
 
-            dispatch({type: "START"});
         }
     }
 }
@@ -93,8 +95,7 @@ const check = (dispatch, getState) => {
     const gifts = state.gift.gifts;
 
     for (let i = 0; i < pipes.length; i++) {
-        if (
-            bird.x + bird.width > pipes[i].x &&
+        if (bird.x + bird.width > pipes[i].x &&
             bird.x < pipes[i].x + config.PIPE_WIDTH &&
             (bird.y < pipes[i].topHeight || bird.y + bird.height > pipes[i].topHeight + config.PIPE_HOLE)
         ) {
@@ -104,17 +105,21 @@ const check = (dispatch, getState) => {
             clearInterval(genrator);
             dispatch({type: "DISPLAY_END_GAME"});
         }
+        if (pipes[i].passed === false && bird.x > pipes[i].x + config.PIPE_WIDTH) {
+            dispatch({type: "PIPE_PASS", payload: i});
+            dispatch({type: "SCORE_INCREASEMENT"});
+        }
     }
 
-    // Kiểm tra va chạm giữa con chim và hộp quà
     for (let i = 0; i < gifts.length; i++) {
         if (
             bird.x + bird.width > gifts[i].x &&
-            bird.x < gifts[i].x + config.GIFT_WIDTH && // Giả sử hộp quà có chiều rộng là config.GIFT_WIDTH
+            bird.x < gifts[i].x + config.GIFT_WIDTH &&
             bird.y + bird.height > gifts[i].y &&
-            bird.y < gifts[i].y + config.GIFT_HEIGHT // Giả sử hộp quà có chiều cao là config.GIFT_HEIGHT
+            bird.y < gifts[i].y + config.GIFT_HEIGHT
         ) {
             dispatch({type: "GIFT_EATEN", eaten_index: i});
+            break;
         }
     }
 }

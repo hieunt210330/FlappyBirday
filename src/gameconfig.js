@@ -1,7 +1,7 @@
 const FPS = 60;
 const PIPE_SPEED = 10/FPS;
 const GENERATE_TIME = 1500; //ms
-const PIPE_HOLE = 20; // vh
+const PIPE_HOLE = 30; // vh
 const PIPE_DISTANCE = 40; // vh
 const PIPE_WIDTH = 10; // vh
 

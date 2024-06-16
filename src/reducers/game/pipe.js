@@ -1,61 +1,54 @@
 import config from "../../gameconfig";
 
-const default_x = 200;
-
 const initialState = {
-    pipes: [
-        {
-            topHeight: 50,
-            x: default_x, //vh
-        },
-    ],
+    pipes: [],
     pipeCount: 0, 
 }
 
 export default (state = initialState, {type, payload} = {}) => {
-    let pipes = state.pipes;
-    let tmp_pipes = pipes;
-    let pipeCount = state.pipeCount;
-
     switch (type) {
+        case 'START':
+            let first_pipe_x = 100 * document.documentElement.clientWidth / document.documentElement.clientHeight;
+            return {...state, pipes: [{topHeight: 50, x: first_pipe_x, passed: false}], pipeCount: 0};
         case 'DISPLAY_END_GAME':
-            return {...state, pipes: [{topHeight: 50, x: default_x}], gifts: [], pipeCount: 0};
+            return {...state, pipes: [], pipeCount: 0};
+        case 'PIPE_PASS':
+            const updatedPipes = state.pipes.map((pipe, index) => {
+                if (index === payload) {
+                    return {...pipe, passed: true};
+                }
+                return pipe;
+            });
+            return {...state, pipes: updatedPipes};
         case 'PIPE_MOVE':
             if (!state.pipes.length) {
                 return state;
             }
-            
-            try {
-                tmp_pipes = tmp_pipes.map(({topHeight, x}) => {
-                    x = x - config.PIPE_SPEED;
-                    return {x: x, topHeight: topHeight};
-                });
-            } catch (e) {
-            }            
-            
-            /*
-            while(tmp_pipes.length && tmp_pipes[0].x <= -100) {
-                tmp_pipes.shift();
-            }
-            */
-            return {...state, pipes: tmp_pipes};
 
+            const movedPipes = state.pipes.map(({topHeight, x, passed}) => ({
+                topHeight,
+                x: x - config.PIPE_SPEED,
+                passed
+            }));
+            
+            return {...state, pipes: movedPipes};
         case 'PIPE_GENERATE':
-            let topHeight;
-            if (tmp_pipes.length == 0) {
-                topHeight = Math.floor(Math.random() * 50) + 10;
-                tmp_pipes.push({x: default_x, topHeight: topHeight});
+            let newPipes = [...state.pipes];
+            let pipeCount = state.pipeCount;
+
+            if (newPipes.length === 0) {
+                const topHeight = Math.floor(Math.random() * 50) + 10;
+                newPipes.push({x: default_x, topHeight, passed: false});
             }
 
-            try {
-                while(tmp_pipes.length && tmp_pipes[tmp_pipes.length - 1].x <= 5000) {
-                    topHeight = Math.floor(Math.random() * 50) + 10;
-                    tmp_pipes.push({x: tmp_pipes[tmp_pipes.length - 1].x + config.PIPE_DISTANCE, topHeight: topHeight});
-                    pipeCount++;
-                }
-            } catch (e) {
+            while(newPipes.length && newPipes[newPipes.length - 1].x <= 5000) {
+                const topHeight = Math.floor(Math.random() * 50) + 10;
+                const old_x = newPipes[newPipes.length - 1].x;
+                newPipes.push({x: old_x + config.PIPE_DISTANCE, topHeight, passed: false});
+                pipeCount++;
             }
-            return {...state, pipes: tmp_pipes, pipeCount: pipeCount};
+
+            return {...state, pipes: newPipes, pipeCount};
         default:
             return state;
     }

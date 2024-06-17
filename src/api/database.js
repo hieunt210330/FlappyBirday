@@ -138,7 +138,7 @@ async function saveUserFeedback(userId, message) {
 // Function to call POST /api/users/:id/check-in
 async function saveCheckInDate(userId) {
 	await fetch(`${serverUrl}/api/users/${userId}/check-in`, {
-	method: 'POST'
+		method: 'POST'
 	});
 }
 

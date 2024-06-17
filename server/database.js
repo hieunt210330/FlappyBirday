@@ -30,7 +30,7 @@ async function createUser(email, name) {
 	}
 }  
 
-// Get the remaining turns of a user
+// Get the remaining turns of an user
 async function getTurnLeft(userId) {
 	try
 	{
@@ -46,7 +46,7 @@ async function getTurnLeft(userId) {
 	}
 }
 
-// Decrease the remaining turns of a user by 1
+// Decrease the remaining turns of an user by 1
 async function decrementTurnLeft(userId) {
 	userId = parseInt(userId);
 	if (await getTurnLeft(userId) >= 0) {
@@ -57,7 +57,7 @@ async function decrementTurnLeft(userId) {
 	}
 }
 
-// Increase the remaining turns of a user by 1
+// Increase the remaining turns of an user by 1
 async function incrementTurnLeft(userId) {
 	userId = parseInt(userId);
 	await prisma.user.update({
@@ -66,7 +66,7 @@ async function incrementTurnLeft(userId) {
 	});
 }
 
-// Get the name of a user
+// Get the name of an user
 async function getUserName(userId) {
 	userId = parseInt(userId);
 	const user = await prisma.user.findUnique({
@@ -76,7 +76,7 @@ async function getUserName(userId) {
 	return user?.name ?? '';
 }
 
-// Update the score of a user
+// Update the score of an user
 async function updateScore(userId, score) {
 	userId = parseInt(userId);
 	score = parseInt(score);
@@ -100,7 +100,7 @@ async function updateScore(userId, score) {
 	}
 }
 
-// Get the list of scores of a user
+// Get the list of scores of an user
 async function getUserScores(userId) {
 	userId = parseInt(userId);
 	const scores = await prisma.score.findMany({
@@ -110,14 +110,19 @@ async function getUserScores(userId) {
 	return scores.map(scoreObj => scoreObj.score);
 }
 
-// Get the highest score of a user
+// Get the highest score of an user
 async function getUserMaxScore(userId) {
-	userId = parseInt(userId);
-	const user = await prisma.user.findUnique({
-		where: { id: userId },
-		select: { maxScore: true },
-	});
-	return user?.maxScore ?? 0;
+	try{
+		userId = parseInt(userId);
+		const user = await prisma.user.findUnique({
+			where: { id: userId },
+			select: { maxScore: true },
+		});
+		return user?.maxScore ?? 0;
+	}
+	catch (error) {
+		return 0;
+	}
 }
 
 // Get the list of highest scores of all users sorted
@@ -139,17 +144,21 @@ async function getAllMaxScores() {
 	}));
 }
 
-// Get the number of puzzle pieces of a user
+// Get the number of puzzle pieces of an user
 async function getPuzzleCount(userId){
-	userId = parseInt(userId);
-	const user = await prisma.user.findUnique({
-		where: { id: userId },
-		select: { puzzleCount: true },
-	});
-	return user?.puzzleCount ?? 0;
+	try{
+		userId = parseInt(userId);	
+		const user = await prisma.user.findUnique({
+			where: { id: userId },
+			select: { puzzleCount: true },
+		});
+		return user?.puzzleCount ?? 0;
+	} catch (error) {
+		return 0;
+	}
 }
 
-// Increase the number of puzzle pieces of a user by 1
+// Increase the number of puzzle pieces of an user by 1
 async function incrementPuzzleCount(userId) {
 	userId = parseInt(userId);
 	await prisma.user.update({
@@ -158,7 +167,7 @@ async function incrementPuzzleCount(userId) {
 	});
 }
 
-// Decrease the number of puzzle pieces of a user by 10
+// Decrease the number of puzzle pieces of an user by 10
 async function resetPuzzleCount(userId) {
 	userId = parseInt(userId);
 	await prisma.user.update({
@@ -167,14 +176,19 @@ async function resetPuzzleCount(userId) {
 	});
 }
 
-// Get the list of vouchers of a user
+// Get the list of vouchers of an user
 async function getUserVouchers(userId) {
-	userId = parseInt(userId);
-	const user = await prisma.user.findUnique({
-		where: { id: userId },
-		select: { vouchers: true },
-	});
-	return user?.vouchers ?? [];
+	try
+	{
+		userId = parseInt(userId);
+		const user = await prisma.user.findUnique({
+			where: { id: userId },
+			select: { vouchers: true },
+		});
+		return user?.vouchers ?? [];
+	} catch (error) {
+		return [];
+	}
 }
 
 // Create a new voucher
@@ -198,17 +212,22 @@ async function createVoucher(userId, code, discountPercentage, maxDiscountValue,
 	});
 }
 
-// Get the list of feedbacks of a user
+// Get the list of feedbacks of an user
 async function getUserFeedbacks(userId) {
-	userId = parseInt(userId);
-	const user = await prisma.user.findUnique({
-		where: { id: userId },
-		select: { feedbacks: true },
-	});
-	return user?.feedbacks ?? [];
+	try{
+		userId = parseInt(userId);
+		const user = await prisma.user.findUnique({
+			where: { id: userId },
+			select: { feedbacks: true },
+		});
+		return user?.feedbacks ?? [];
+	}
+	catch (error) {
+		return [];
+	}
 }
 
-// Save feedback of a user
+// Save feedback of an user
 async function saveUserFeedback(userId, message) {
 	userId = parseInt(userId);
 	await prisma.feedback.create({
@@ -219,7 +238,7 @@ async function saveUserFeedback(userId, message) {
 	});
 }
 
-// Save the check-in date of a user
+// Save the check-in date of an user
 async function saveCheckInDate(userId) {
 	userId = parseInt(userId);
 	const today = new Date(new Date().setHours(0, 0, 0, 0));
@@ -243,7 +262,7 @@ async function saveCheckInDate(userId) {
 	});
 }
 
-// Get the check-in dates in a month of a user
+// Get the check-in dates in a month of an user
 async function getCheckInDates(userId, month, year) {
 	userId = parseInt(userId);
 	const checkIns = await prisma.checkIn.findMany({

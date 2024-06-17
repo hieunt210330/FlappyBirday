@@ -7,7 +7,7 @@ import Game from './Game';
 import Sidebar from './SideBar';
 import Info from './Info';
 import Puzzle from "./Puzzle";
-import BugReport from "./BugReport";
+import Feedback from "./Feedback";
 import Volume from "./Volume";
 import Rules from "./Rules";
 import Reward from './Reward';
@@ -55,9 +55,9 @@ const Display = ({ displayList, dispatchDisplay }) => {
     if (displayList.displayPuzzle) {
         displayComponents.push(<Puzzle key="puzzle" />);
     }
-    // Add more components as needed, e.g., BugReport, Volume, Rules
-    if (displayList.displayBugReport) {
-        displayComponents.push(<BugReport key="bugReport" />);
+
+    if (displayList.displayFeedback) {
+        displayComponents.push(<Feedback key="bugReport" />);
     }
     if (displayList.displayVolume) {
         displayComponents.push(<Volume key="volume" />);

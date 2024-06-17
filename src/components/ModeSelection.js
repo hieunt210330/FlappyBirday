@@ -1,21 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';  
 
 import '../style/modeselection.css';
 
-function getTurnsLeft() {
-      return 1;
-}
-
-function decrementTurnsLeft() {
-      // decrement turns left
-      // do something
-}
-
+import { 
+      decrementTurnLeft,
+      getTurnLeft
+ } from '../api/database';
 
 const ModeSelection = ({ displayList, dispatchDisplay }) => {
 
       const [gameMode, setGameMode] = useState('');
+      const [turnsLeft, setTurnsLeft] = useState(null);
+      const userId = process.env.USER_ID;
+
+      useEffect(() => {
+            const fetchTurnsLeft = async () => {
+                try {
+                    const turns = await getTurnLeft(userId);
+                    setTurnsLeft(turns);
+                } catch (error) {
+                    console.error('Error fetching turns left:', error);
+                }
+            };
+    
+            fetchTurnsLeft();
+        }, [userId]);
 
       const handleGameModeChange = (e) => {
             setGameMode(e.target.value);
@@ -24,6 +34,14 @@ const ModeSelection = ({ displayList, dispatchDisplay }) => {
 
       const isChallengeMode = gameMode === 'challenge';
       const isEndlessMode = gameMode === 'endless';
+
+      const handlePlayClick = async () => {
+            if (isChallengeMode && turnsLeft > 0) {
+                  await decrementTurnLeft(userId);
+                  setTurnsLeft(turnsLeft - 1);
+            }
+            dispatchDisplay('DISPLAY_GAME');
+      };
 
       return (
             <div className="mode-selection-container">
@@ -39,9 +57,9 @@ const ModeSelection = ({ displayList, dispatchDisplay }) => {
                                                       <input type="radio" id="endless" name="gameMode" value="endless" onChange={handleGameModeChange} />
                                                       <label htmlFor="endless">Endless Journey</label>
                                                 </div>
-                                                <div className="radio-item" style={{ color: (getTurnsLeft() <= 0) ? 'black' : 'gray' }}>
-                                                      <input type="radio" id="challenge" name="gameMode" value="challenge" onChange={handleGameModeChange} disabled={getTurnsLeft() <= 0} />
-                                                      <label htmlFor="challenge" style={{ color: (getTurnsLeft() <= 0) ? '#D3D3D3' : '' }}>Challenge Mode ({getTurnsLeft()} turns left)</label>
+                                                <div className="radio-item" style={{ color: (turnsLeft > 0) ? 'black' : 'gray' }}>
+                                                      <input type="radio" id="challenge" name="gameMode" value="challenge" onChange={handleGameModeChange} disabled={turnsLeft <= 0} />
+                                                      <label htmlFor="challenge" style={{ color: (turnsLeft <= 0) ? '#D3D3D3' : '' }}>Challenge Mode ({turnsLeft} turns left)</label>
                                                 </div>
                                           </div>
                                     </div>
@@ -65,10 +83,8 @@ const ModeSelection = ({ displayList, dispatchDisplay }) => {
                                     <div className="play-option">
                                           <button
                                                 className="play-button"
-                                                onClick={() => {
-                                                      decrementTurnsLeft();
-                                                      dispatchDisplay('DISPLAY_GAME')}}
-                                                disabled={(isChallengeMode && getTurnsLeft() === 0) || (!isEndlessMode && !isChallengeMode && gameMode === '')}
+                                                onClick={handlePlayClick}
+                                                disabled={(isChallengeMode && turnsLeft === 0) || (!isEndlessMode && !isChallengeMode && gameMode === '')}
                                           >
                                                 Play
                                           </button>
@@ -79,6 +95,7 @@ const ModeSelection = ({ displayList, dispatchDisplay }) => {
             </div>
       );
 };
+
 const mapDispatchToProps = (dispatch) => ({
       dispatchDisplay: (displayTypeStr) => dispatch({ type: displayTypeStr })
 });

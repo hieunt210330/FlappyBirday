@@ -68,10 +68,10 @@ const Sidebar = ({ dispatchDisplay }) => {
             </button>
             <button
               className="sidebar-button"
-              onClick={() => dispatchDisplay("DISPLAY_BUG_REPORT")}
-              title="Report a Bug"
+              onClick={() => dispatchDisplay("DISPLAY_FEEDBACK")}
+              title="Feedback"
             >
-              <BugOff color="currentColor" alt="Bug Report" />
+              <BugOff color="currentColor" alt="Feedback" />
             </button>
           </>
         )}

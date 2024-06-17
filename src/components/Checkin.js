@@ -2,23 +2,47 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
 
+import {
+  getCheckInDates,
+  saveCheckInDate,
+} from '../api/database';
+import '../style/checkin.css';
+
 const Checkin = ({ dispatchDisplay }) => {
   const [checkinDays, setCheckinDays] = useState([]);
   const [todayCheckedIn, setTodayCheckedIn] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const userId = process.env.USER_ID;
 
   useEffect(() => {
-    const storedCheckinDays = JSON.parse(localStorage.getItem('checkinDays')) || [];
-    setCheckinDays(storedCheckinDays);
+    const fetchCheckinDays = async () => {
+      try {
+        const checkinDays = await getCheckInDates(userId, currentMonth, currentYear);
+        setCheckinDays(checkinDays);
+        
+        const today = new Date().toISOString().split('T')[0];
+        setTodayCheckedIn(checkinDays.some(day => day.date === today));
+      } catch (error) {
+        console.error('Error fetching check-in dates:', error);
+      }
+    };
 
+    fetchCheckinDays();
+  }, [currentMonth, currentYear, userId]);
+
+  const handleCheckin = async (day) => {
     const today = new Date().toISOString().split('T')[0];
-    setTodayCheckedIn(storedCheckinDays.includes(today));
-  }, []);
+    if (day !== today) return;
 
-  const handleCheckin = (day) => {
-    const newCheckinDays = [...checkinDays, day];
-    setCheckinDays(newCheckinDays);
-    localStorage.setItem('checkinDays', JSON.stringify(newCheckinDays));
-    setTodayCheckedIn(true);
+    try {
+      await saveCheckInDate(userId);
+      setCheckinDays([...checkinDays, { date: today }]);
+      setTodayCheckedIn(true);
+      alert('Check-in successful!');
+    } catch (error) {
+      console.error('Error saving check-in date:', error);
+    }
   };
 
   const isToday = (day) => {
@@ -31,42 +55,46 @@ const Checkin = ({ dispatchDisplay }) => {
     return new Date(day) < new Date(today);
   };
 
-  const renderDayCell = (day, currentMonth) => {
-    const dayString = `${currentMonth}-${String(day).padStart(2, '0')}`;
-    const checkedIn = checkinDays.includes(dayString);
+  const renderDayCell = (day) => {
+    const dayString = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const checkedIn = checkinDays.some(d => d.date === dayString);
+
+    let backgroundColor = 'white';
+    if (checkedIn) {
+      backgroundColor = 'cyan';
+    } else if (isPastDay(dayString)) {
+      backgroundColor = 'gray';
+    }
+
+    const dayStyle = {
+      backgroundColor,
+      cursor: isToday(dayString) && !checkedIn ? 'pointer' : 'default',
+    };
 
     return (
-      <td key={day} className={checkedIn ? 'checked-in' : ''} style={styles.dayCell}>
-        {isPastDay(dayString) ? (
+      <td key={day} style={dayStyle} className="day-cell">
+        {isPastDay(dayString) || checkedIn ? (
           <span>{day}</span>
         ) : (
           <button
             onClick={() => handleCheckin(dayString)}
-            disabled={checkedIn || isPastDay(dayString)}
-            style={checkedIn ? styles.checkedInButton : styles.dayButton}
+            disabled={checkedIn || !isToday(dayString)}
+            className="day-button"
           >
-            {checkedIn ? <Check size={16} /> : day}
+            {day}
           </button>
         )}
       </td>
     );
   };
 
-  const getCurrentMonthString = () => {
-    const currentDate = new Date();
-    return `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
-  };
-
-  const currentMonth = getCurrentMonthString();
-
   const getDaysInMonth = (year, month) => {
     return new Date(year, month, 0).getDate();
   };
 
   const generateCalendar = () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth() + 1;
+    const year = currentYear;
+    const month = currentMonth;
     const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
     const daysInMonth = getDaysInMonth(year, month);
     const daysInPreviousMonth = getDaysInMonth(year, month - 1);
@@ -77,7 +105,7 @@ const Checkin = ({ dispatchDisplay }) => {
     // Fill in the days from the previous month
     for (let i = 0; i < firstDayOfMonth; i++) {
       week.push(
-        <td key={`prev-${i}`} className="prev-month" style={styles.prevMonth}>
+        <td key={`prev-${i}`} className="prev-month day-cell">
           {daysInPreviousMonth - firstDayOfMonth + 1 + i}
         </td>
       );
@@ -85,7 +113,7 @@ const Checkin = ({ dispatchDisplay }) => {
 
     // Fill in the days of the current month
     for (let day = 1; day <= daysInMonth; day++) {
-      week.push(renderDayCell(day, currentMonth));
+      week.push(renderDayCell(day));
       if (week.length === 7) {
         calendar.push(<tr key={`week-${calendar.length}`}>{week}</tr>);
         week = [];
@@ -95,7 +123,7 @@ const Checkin = ({ dispatchDisplay }) => {
     // Fill in the days from the next month
     for (let i = 1; week.length < 7; i++) {
       week.push(
-        <td key={`next-${i}`} className="next-month" style={styles.nextMonth}>
+        <td key={`next-${i}`} className="next-month day-cell">
           {i}
         </td>
       );
@@ -105,185 +133,74 @@ const Checkin = ({ dispatchDisplay }) => {
     return calendar;
   };
 
+  const handlePreviousMonth = () => {
+    if (currentMonth === 1) {
+      setCurrentMonth(12);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (currentMonth === 12) {
+      setCurrentMonth(1);
+      setCurrentYear(currentYear + 1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
+
   return (
-    <div className="checkin-container" style={styles.checkinContainer}>
-      <div className="checkin-content" style={styles.checkinContent}>
-        <div className="calendar-section" style={styles.calendarSection}>
-          <h2 style={styles.title}>Daily Checkin</h2>
-          <div className="calendar-controls" style={styles.calendarControls}>
-            <button style={styles.controlButton}><ChevronLeft /></button>
-            <span>{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
-            <button style={styles.controlButton}><ChevronRight /></button>
+    <div className="checkin-container">
+      <div className="checkin-content">
+        <div className="calendar-section">
+          <h2 className="title">Daily Checkin</h2>
+          <div className="calendar-controls">
+            <button onClick={handlePreviousMonth} className="control-button"><ChevronLeft /></button>
+            <span>{new Date(currentYear, currentMonth - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+            <button onClick={handleNextMonth} className="control-button"><ChevronRight /></button>
           </div>
-          <table className="calendar" style={styles.calendar}>
+          <table className="calendar">
             <thead>
               <tr>
-                <th style={styles.tableHeader}>S</th>
-                <th style={styles.tableHeader}>M</th>
-                <th style={styles.tableHeader}>T</th>
-                <th style={styles.tableHeader}>W</th>
-                <th style={styles.tableHeader}>T</th>
-                <th style={styles.tableHeader}>F</th>
-                <th style={styles.tableHeader}>S</th>
+                <th className="table-header">S</th>
+                <th className="table-header">M</th>
+                <th className="table-header">T</th>
+                <th className="table-header">W</th>
+                <th className="table-header">T</th>
+                <th className="table-header">F</th>
+                <th className="table-header">S</th>
               </tr>
             </thead>
             <tbody>{generateCalendar()}</tbody>
           </table>
         </div>
-        <div className="rewards-section" style={styles.rewardsSection}>
-          <h3 style={styles.subtitle}>Consecutive Check-ins: {checkinDays.length} DAYS!</h3>
-          <h4 style={styles.subtitle}>Received your check-ins rewards!</h4>
-          <ul style={styles.rewardsList}>
-            <li style={styles.rewardItem}>
-              <span style={styles.rewardText}>Hi, my new friend!</span>
-              <button style={styles.rewardButton} disabled>Received!</button>
+        <div className="rewards-section">
+          <h3 className="subtitle">Consecutive Check-ins: {checkinDays.length} DAYS!</h3>
+          <h4 className="subtitle">Received your check-ins rewards!</h4>
+          <ul className="rewards-list">
+            <li className="reward-item">
+              <span className="reward-text">Hi, my new friend!</span>
+              <button className="reward-button" disabled>Received!</button>
             </li>
-            <li style={styles.rewardItem}>
-              <span style={styles.rewardText}>Wow, streak 3 days!</span>
-              <button style={styles.rewardButton}>Receive</button>
+            <li className="reward-item">
+              <span className="reward-text">Wow, streak 3 days!</span>
+              <button className="reward-button">Receive</button>
             </li>
-            <li style={styles.rewardItem}>
-              <span style={styles.rewardText}>Friends for a week now!</span>
-              <button style={styles.rewardButton}>Receive</button>
+            <li className="reward-item">
+              <span className="reward-text">Friends for a week now!</span>
+              <button className="reward-button">Receive</button>
             </li>
-            <li style={styles.rewardItem}>
-              <span style={styles.rewardText}>12-day anniversary!</span>
-              <button style={styles.rewardButton}>Receive</button>
+            <li className="reward-item">
+              <span className="reward-text">12-day anniversary!</span>
+              <button className="reward-button">Receive</button>
             </li>
           </ul>
         </div>
       </div>
     </div>
   );
-};
-
-const styles = {
-  checkinContainer: {
-    height: '100%', // Make the container take the full height of the viewport
-    overflow: 'auto', // Enable scrolling if content overflows
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  checkinContent: {
-    display: 'flex',
-    width: '80%',
-    maxHeight: '90vh', // Limit the height of the checkin component
-    overflow: 'auto', // Enable scrolling within the component
-    margin: '20px auto',
-    padding: '20px',
-    border: '1px solid #ccc',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-    backgroundColor: '#fff',
-  },
-  calendarSection: {
-    width: '70%',
-    paddingRight: '20px',
-    borderRight: '1px solid #ccc',
-  },
-  rewardsSection: {
-    width: '30%',
-    paddingLeft: '20px',
-    textAlign: 'center',
-  },
-  title: {
-    textAlign: 'center',
-    color: '#333',
-    fontSize: '24px',
-    marginBottom: '20px',
-  },
-  calendarControls: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '20px',
-  },
-  controlButton: {
-    backgroundColor: '#ddd',
-    border: 'none',
-    borderRadius: '4px',
-    padding: '10px',
-    cursor: 'pointer',
-  },
-  calendar: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    textAlign: 'center',
-  },
-  tableHeader: {
-    borderBottom: '2px solid #ddd',
-    padding: '10px',
-    textAlign: 'center',
-    backgroundColor: '#f4f4f4',
-    color: '#333',
-  },
-  dayCell: {
-    padding: '20px',
-    textAlign: 'center',
-    fontSize: '18px',
-  },
-  dayButton: {
-    backgroundColor: '#f44336',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    padding: '10px',
-    cursor: 'pointer',
-    fontSize: '16px',
-  },
-  checkedInButton: {
-    backgroundColor: '#4caf50',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    padding: '10px',
-    cursor: 'pointer',
-    fontSize: '16px',
-  },
-  rewards: {
-    marginTop: '20px',
-    textAlign: 'center',
-  },
-  subtitle: {
-    color: '#333',
-    fontSize: '20px',
-    marginBottom: '10px',
-  },
-  rewardsList: {
-    listStyleType: 'none',
-    padding: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  rewardItem: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '10px',
-    width: '100%',
-  },
-  rewardText: {
-    flex: 1,
-    textAlign: 'left',
-  },
-  rewardButton: {
-    marginLeft: '10px',
-    backgroundColor: '#4caf50',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    padding: '5px 10px',
-    cursor: 'pointer',
-    fontSize: '14px',
-  },
-  prevMonth: {
-    color: '#ccc',
-    textAlign: 'center',
-  },
-  nextMonth: {
-    color: '#ccc',
-    textAlign: 'center',
-  },
 };
 
 const dispatchDisplay = (displayTypeStr) => {

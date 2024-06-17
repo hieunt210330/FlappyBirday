@@ -71,8 +71,8 @@ export default (state = intialState, {type} = {}) => {
             displayListTmp.displaySidebar = true;
             return {...state, displayList: displayListTmp};
 
-        case 'DISPLAY_BUG_REPORT':
-            displayListTmp.displayBugReport = true;
+        case 'DISPLAY_FEEDBACK':
+            displayListTmp.displayFeedback = true;
             displayListTmp.displaySidebar = true;
             return {...state, displayList: displayListTmp};
 

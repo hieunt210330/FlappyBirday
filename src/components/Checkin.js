@@ -159,11 +159,10 @@ const Checkin = ({ dispatchDisplay }) => {
 
 const styles = {
   checkinContainer: {
-    height: '100vh', // Make the container take the full height of the viewport
+    height: '100%', // Make the container take the full height of the viewport
     overflow: 'auto', // Enable scrolling if content overflows
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
   },
   checkinContent: {
     display: 'flex',

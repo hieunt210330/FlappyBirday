@@ -43,7 +43,7 @@ const Checkin = ({ dispatchDisplay }) => {
           <button
             onClick={() => handleCheckin(dayString)}
             disabled={checkedIn || isPastDay(dayString)}
-            style={styles.dayButton}
+            style={checkedIn ? styles.checkedInButton : styles.dayButton}
           >
             {checkedIn ? <Check size={16} /> : day}
           </button>
@@ -200,6 +200,15 @@ const styles = {
     fontSize: '18px',
   },
   dayButton: {
+    backgroundColor: '#f44336',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    padding: '10px',
+    cursor: 'pointer',
+    fontSize: '16px',
+  },
+  checkedInButton: {
     backgroundColor: '#4caf50',
     color: '#fff',
     border: 'none',
@@ -266,4 +275,3 @@ const mapStateToProps = ({}) => ({});
 const mapDispatchToProps = { dispatchDisplay };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Checkin);
-  

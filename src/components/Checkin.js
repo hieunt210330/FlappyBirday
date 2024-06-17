@@ -3,9 +3,18 @@ import { connect } from 'react-redux';
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import {
-  getCheckInDates,
-  saveCheckInDate,
+	saveCheckInDate,
+	getCheckInDates,
+	hasCheckedInToday,
+	getConsecutiveCheckIns,
+	hasReceivedStreakRewardThree,
+	hasReceivedStreakRewardFive,
+	hasReceivedStreakRewardTwelve,
+	receiveStreakRewardThree,
+	receiveStreakRewardFive,
+	receiveStreakRewardTwelve,
 } from '../api/database';
+
 import '../style/checkin.css';
 
 const Checkin = ({ dispatchDisplay }) => {
@@ -20,9 +29,9 @@ const Checkin = ({ dispatchDisplay }) => {
       try {
         const checkinDays = await getCheckInDates(userId, currentMonth, currentYear);
         setCheckinDays(checkinDays);
-        
-        const today = new Date().toISOString().split('T')[0];
-        setTodayCheckedIn(checkinDays.some(day => day.date === today));
+
+        const checkedInToday = await hasCheckedInToday(userId);
+        setTodayCheckedIn(checkedInToday);
       } catch (error) {
         console.error('Error fetching check-in dates:', error);
       }
@@ -37,7 +46,7 @@ const Checkin = ({ dispatchDisplay }) => {
 
     try {
       await saveCheckInDate(userId);
-      setCheckinDays([...checkinDays, { date: today }]);
+      setCheckinDays([...checkinDays, today]);
       setTodayCheckedIn(true);
       alert('Check-in successful!');
     } catch (error) {
@@ -57,7 +66,7 @@ const Checkin = ({ dispatchDisplay }) => {
 
   const renderDayCell = (day) => {
     const dayString = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    const checkedIn = checkinDays.some(d => d.date === dayString);
+    const checkedIn = checkinDays.includes(dayString);
 
     let backgroundColor = 'white';
     if (checkedIn) {

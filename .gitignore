@@ -129,3 +129,6 @@ dist
 .env.production.local
 .env.local
 
+/prisma/migrations
+.env
+.env

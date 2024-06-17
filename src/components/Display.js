@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import Home from './Home';
+import EndScreen from './EndScreen';
 import ModeSelection from './ModeSelection';
 import Game from './Game';
-import Sidebar from './Sidebar';
+import Sidebar from './SideBar';
 import Info from './Info';
 import Puzzle from "./Puzzle";
 import BugReport from "./BugReport";
@@ -34,7 +35,7 @@ const Display = ({ displayList, dispatchDisplay }) => {
         displayComponents.push(<Game key="game" />);
     }
     if (displayList.displayEndGame) {
-        displayComponents.push(<Home key="endGame" />);
+        displayComponents.push(<EndScreen key="endGame" />);
     }
     if (displayList.displayInfo) {
         displayComponents.push(<Info key="info" />);

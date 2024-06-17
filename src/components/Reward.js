@@ -1,42 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useTable } from 'react-table';
 import '../style/reward.css';
+import { getUserVouchers } from '../api/database';
 
 const Reward = ({ dispatchDisplay }) => {
+    const [vouchers, setVouchers] = useState([]);
     const [selectedVoucher, setSelectedVoucher] = useState(null);
 
-    const data = React.useMemo(
-        () => [
-            { rank: 'Voucher rank 1', username: 'Voucher Brief Info 1', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 2', username: 'Voucher Brief Info 2', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 3', username: 'Voucher Brief Info 3', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 4', username: 'Voucher Brief Info 4', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 5', username: 'Voucher Brief Info 5', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 6', username: 'Voucher Brief Info 6', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 7', username: 'Voucher Brief Info 7', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 8', username: 'Voucher Brief Info 8', score: 'DD/MM/YYYY' },
-        ],
-        []
-    );
+    useEffect(() => {
+        const fetchVouchers = async () => {
+            const userId = process.env.USER_ID; // Adjust based on how you get the user ID
+            const voucherList = await getUserVouchers(userId);
+            setVouchers(voucherList);
+        };
 
-    const columns = React.useMemo(
-        () => [
-            {
-                Header: 'Rank',
-                accessor: 'rank',
-            },
-            {
-                Header: 'Username',
-                accessor: 'username',
-            },
-            {
-                Header: 'Score',
-                accessor: 'score',
-            },
-        ],
-        []
-    );
+        fetchVouchers();
+    }, []);
+
+    const data = React.useMemo(() => {
+        return vouchers.map((voucher, index) => {
+            const voucherData = {
+                number: index + 1,
+                id: voucher.id,
+                expiryDate: voucher.expiryDate ? new Date(voucher.expiryDate).toLocaleDateString() : null,
+                used: voucher.used ? 'Used' : 'Unused',
+            };
+
+            if (voucher.maxDiscountValue) {
+                voucherData.maxDiscountValue = voucher.maxDiscountValue;
+            }
+            if (voucher.minOrderValue) {
+                voucherData.minOrderValue = voucher.minOrderValue;
+            }
+            if (voucher.discountValue) {
+                voucherData.discountValue = voucher.discountValue;
+            }
+
+            return voucherData;
+        });
+    }, [vouchers]);
+
+    const columns = React.useMemo(() => {
+        const cols = [
+            { Header: 'Number', accessor: 'number' },
+            { Header: 'Expiry Date', accessor: 'expiryDate' },
+            { Header: 'Used', accessor: 'used' },
+        ];
+
+        if (data.some(voucher => voucher.maxDiscountValue)) {
+            cols.push({ Header: 'Max Discount Value', accessor: 'maxDiscountValue' });
+        }
+        if (data.some(voucher => voucher.minOrderValue)) {
+            cols.push({ Header: 'Min Order Value', accessor: 'minOrderValue' });
+        }
+        if (data.some(voucher => voucher.discountValue)) {
+            cols.push({ Header: 'Discount Value', accessor: 'discountValue' });
+        }
+
+        return cols;
+    }, [data]);
 
     const {
         getTableProps,
@@ -75,9 +98,9 @@ const Reward = ({ dispatchDisplay }) => {
                             {rows.map(row => {
                                 prepareRow(row);
                                 return (
-                                    <tr 
-                                        {...row.getRowProps()} 
-                                        className="row" 
+                                    <tr
+                                        {...row.getRowProps()}
+                                        className="row"
                                         onClick={() => handleRowClick(row)}
                                     >
                                         {row.cells.map(cell => (
@@ -99,10 +122,12 @@ const Reward = ({ dispatchDisplay }) => {
                                 <button onClick={closeModal} className="close-button">×</button>
                             </div>
                             <div className="modal-content">
-                                <p><strong>Rank:</strong> {selectedVoucher.rank}</p>
-                                <p><strong>Username:</strong> {selectedVoucher.username}</p>
-                                <p><strong>Score:</strong> {selectedVoucher.score}</p>
-                                <p><strong>Details:</strong> {selectedVoucher.username}</p>
+                                <p><strong>Number:</strong> {selectedVoucher.number}</p>
+                                {selectedVoucher.maxDiscountValue && <p><strong>Max Discount Value:</strong> {selectedVoucher.maxDiscountValue}</p>}
+                                {selectedVoucher.minOrderValue && <p><strong>Min Order Value:</strong> {selectedVoucher.minOrderValue}</p>}
+                                {selectedVoucher.discountValue && <p><strong>Discount Value:</strong> {selectedVoucher.discountValue}</p>}
+                                {selectedVoucher.expiryDate && <p><strong>Expiry Date:</strong> {selectedVoucher.expiryDate}</p>}
+                                <p><strong>Used:</strong> {selectedVoucher.used}</p>
                             </div>
                             <div className="modal-footer">
                                 <button onClick={closeModal} className="close-button">Close</button>

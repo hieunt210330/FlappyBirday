@@ -51,7 +51,7 @@ const Sidebar = ({ dispatchDisplay }) => {
             </button>
             <button
               className="sidebar-button"
-              onClick={() => dispatchDisplay("DISPLAY_CHECKIN")}
+              onClick={() => dispatchDisplay("DISPLAY_REWARD")}
               title="Checkin"
             >
               <TicketCheck color="currentColor" alt="ScorRewardeboard" />

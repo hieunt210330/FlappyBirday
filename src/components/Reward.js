@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { useTable } from 'react-table';
+import '../style/reward.css';
 
 const Reward = ({ dispatchDisplay }) => {
+    const [selectedVoucher, setSelectedVoucher] = useState(null);
+
     const data = React.useMemo(
         () => [
-            { rank: 'Voucher rank 1', username: 'Voucher Brief Info', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 2', username: 'Voucher Brief Info', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 3', username: 'Voucher Brief Info', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 4', username: 'Voucher Brief Info', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 5', username: 'Voucher Brief Info', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 6', username: 'Voucher Brief Info', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 1', username: 'Voucher Brief Info', score: 'DD/MM/YYYY' },
-            { rank: 'Voucher rank 2', username: 'Voucher Brief Info', score: 'DD/MM/YYYY' },
+            { rank: 'Voucher rank 1', username: 'Voucher Brief Info 1', score: 'DD/MM/YYYY' },
+            { rank: 'Voucher rank 2', username: 'Voucher Brief Info 2', score: 'DD/MM/YYYY' },
+            { rank: 'Voucher rank 3', username: 'Voucher Brief Info 3', score: 'DD/MM/YYYY' },
+            { rank: 'Voucher rank 4', username: 'Voucher Brief Info 4', score: 'DD/MM/YYYY' },
+            { rank: 'Voucher rank 5', username: 'Voucher Brief Info 5', score: 'DD/MM/YYYY' },
+            { rank: 'Voucher rank 6', username: 'Voucher Brief Info 6', score: 'DD/MM/YYYY' },
+            { rank: 'Voucher rank 7', username: 'Voucher Brief Info 7', score: 'DD/MM/YYYY' },
+            { rank: 'Voucher rank 8', username: 'Voucher Brief Info 8', score: 'DD/MM/YYYY' },
         ],
         []
     );
@@ -43,17 +46,25 @@ const Reward = ({ dispatchDisplay }) => {
         prepareRow,
     } = useTable({ columns, data });
 
+    const handleRowClick = (row) => {
+        setSelectedVoucher(row.original);
+    };
+
+    const closeModal = () => {
+        setSelectedVoucher(null);
+    };
+
     return (
-        <div style={styles.container}>
-            <div style={styles.content}>
-                <h2 style={styles.title}>Rewards</h2>
-                <div style={styles.tableContainer}>
-                    <table {...getTableProps()} style={styles.table}>
+        <div className="container">
+            <div className="content">
+                <h2 className="title">Rewards</h2>
+                <div className="table-container">
+                    <table {...getTableProps()} className="table">
                         <thead>
                             {headerGroups.map(headerGroup => (
                                 <tr {...headerGroup.getHeaderGroupProps()}>
                                     {headerGroup.headers.map(column => (
-                                        <th {...column.getHeaderProps()} style={styles.header}>
+                                        <th {...column.getHeaderProps()} className="header">
                                             {column.render('Header')}
                                         </th>
                                     ))}
@@ -64,9 +75,13 @@ const Reward = ({ dispatchDisplay }) => {
                             {rows.map(row => {
                                 prepareRow(row);
                                 return (
-                                    <tr {...row.getRowProps()} style={styles.row}>
+                                    <tr 
+                                        {...row.getRowProps()} 
+                                        className="row" 
+                                        onClick={() => handleRowClick(row)}
+                                    >
                                         {row.cells.map(cell => (
-                                            <td {...cell.getCellProps()} style={styles.cell}>
+                                            <td {...cell.getCellProps()} className="cell">
                                                 {cell.render('Cell')}
                                             </td>
                                         ))}
@@ -76,62 +91,28 @@ const Reward = ({ dispatchDisplay }) => {
                         </tbody>
                     </table>
                 </div>
+                {selectedVoucher && (
+                    <div className="modal-overlay">
+                        <div className="modal">
+                            <div className="modal-header">
+                                <h3>Voucher Details</h3>
+                                <button onClick={closeModal} className="close-button">×</button>
+                            </div>
+                            <div className="modal-content">
+                                <p><strong>Rank:</strong> {selectedVoucher.rank}</p>
+                                <p><strong>Username:</strong> {selectedVoucher.username}</p>
+                                <p><strong>Score:</strong> {selectedVoucher.score}</p>
+                                <p><strong>Details:</strong> {selectedVoucher.username}</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button onClick={closeModal} className="close-button">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
-};
-
-const styles = {
-    container: {
-        fontFamily: 'Arial, sans-serif',
-        width: '80%',
-        margin: '20px auto',
-        borderRadius: '8px',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-        overflow: 'hidden',
-        backgroundColor: '#fff',
-
-    },
-    content: {
-        padding: '20px',
-    },
-    title: {
-        textAlign: 'center',
-        margin: '10px 0',
-        color: '#333',
-        fontSize: '24px',
-    },
-    tableContainer: {
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        maxHeight: '400px',
-        overflowY: 'auto',
-        width: '100%',
-    },
-    table: {
-        width: '100%',
-        borderCollapse: 'collapse',
-    },
-    header: {
-        borderBottom: '2px solid #ddd',
-        padding: '10px',
-        textAlign: 'left',
-        backgroundColor: '#f4f4f4',
-        color: '#333',
-    },
-    cell: {
-        borderBottom: '1px solid #ddd',
-        padding: '10px',
-        backgroundColor: '#fff',
-    },
-    row: {
-        '&:nth-child(even)': {
-            backgroundColor: '#f9f9f9',
-        },
-        '&:hover': {
-            backgroundColor: '#f1f1f1',
-        },
-    },
 };
 
 const dispatchDisplay = (displayTypeStr) => {

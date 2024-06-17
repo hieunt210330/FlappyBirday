@@ -13,7 +13,7 @@ async function getUserIdByEmail(email) {
 	} catch (error) {
 		return null;
 	}
-}  
+}
 
 // Function to create a new user
 async function createUser(email, name) {
@@ -28,25 +28,23 @@ async function createUser(email, name) {
 	} catch (error) {
 		return null;
 	}
-}  
+}
 
-// Get the remaining turns of an user
+// Get the remaining turns of a user
 async function getTurnLeft(userId) {
-	try
-	{
+	try {
 		userId = parseInt(userId);
 		const user = await prisma.user.findUnique({
 			where: { id: userId },
 			select: { turnLeft: true },
 		});
 		return user?.turnLeft ?? 0;
-	}
-	catch (error) {
+	} catch (error) {
 		return 0;
 	}
 }
 
-// Decrease the remaining turns of an user by 1
+// Decrease the remaining turns of a user by 1
 async function decrementTurnLeft(userId) {
 	userId = parseInt(userId);
 	if (await getTurnLeft(userId) >= 0) {
@@ -57,7 +55,7 @@ async function decrementTurnLeft(userId) {
 	}
 }
 
-// Increase the remaining turns of an user by 1
+// Increase the remaining turns of a user by 1
 async function incrementTurnLeft(userId) {
 	userId = parseInt(userId);
 	await prisma.user.update({
@@ -66,7 +64,7 @@ async function incrementTurnLeft(userId) {
 	});
 }
 
-// Get the name of an user
+// Get the name of a user
 async function getUserName(userId) {
 	userId = parseInt(userId);
 	const user = await prisma.user.findUnique({
@@ -76,7 +74,7 @@ async function getUserName(userId) {
 	return user?.name ?? '';
 }
 
-// Update the score of an user
+// Update the score of a user
 async function updateScore(userId, score) {
 	userId = parseInt(userId);
 	score = parseInt(score);
@@ -100,7 +98,7 @@ async function updateScore(userId, score) {
 	}
 }
 
-// Get the list of scores of an user
+// Get the list of scores of a user
 async function getUserScores(userId) {
 	userId = parseInt(userId);
 	const scores = await prisma.score.findMany({
@@ -110,17 +108,16 @@ async function getUserScores(userId) {
 	return scores.map(scoreObj => scoreObj.score);
 }
 
-// Get the highest score of an user
+// Get the highest score of a user
 async function getUserMaxScore(userId) {
-	try{
+	try {
 		userId = parseInt(userId);
 		const user = await prisma.user.findUnique({
 			where: { id: userId },
 			select: { maxScore: true },
 		});
 		return user?.maxScore ?? 0;
-	}
-	catch (error) {
+	} catch (error) {
 		return 0;
 	}
 }
@@ -128,8 +125,8 @@ async function getUserMaxScore(userId) {
 // Get the list of highest scores of all users sorted
 async function getAllMaxScores() {
 	const scores = await prisma.score.findMany({
-			orderBy: { score: 'desc' },
-			include: {
+		orderBy: { score: 'desc' },
+		include: {
 			user: {
 				select: { name: true },
 			},
@@ -144,10 +141,10 @@ async function getAllMaxScores() {
 	}));
 }
 
-// Get the number of puzzle pieces of an user
-async function getPuzzleCount(userId){
-	try{
-		userId = parseInt(userId);	
+// Get the number of puzzle pieces of a user
+async function getPuzzleCount(userId) {
+	try {
+		userId = parseInt(userId);
 		const user = await prisma.user.findUnique({
 			where: { id: userId },
 			select: { puzzleCount: true },
@@ -158,7 +155,7 @@ async function getPuzzleCount(userId){
 	}
 }
 
-// Increase the number of puzzle pieces of an user by 1
+// Increase the number of puzzle pieces of a user by 1
 async function incrementPuzzleCount(userId) {
 	userId = parseInt(userId);
 	await prisma.user.update({
@@ -167,7 +164,7 @@ async function incrementPuzzleCount(userId) {
 	});
 }
 
-// Decrease the number of puzzle pieces of an user by 10
+// Decrease the number of puzzle pieces of a user by 10
 async function resetPuzzleCount(userId) {
 	userId = parseInt(userId);
 	await prisma.user.update({
@@ -176,26 +173,23 @@ async function resetPuzzleCount(userId) {
 	});
 }
 
-// Get the list of vouchers of an user
+// Get the list of vouchers of a user
 async function getUserVouchers(userId) {
-	try
-	{
+	try {
 		userId = parseInt(userId);
-		const user = await prisma.user.findUnique({
-			where: { id: userId },
-			select: { vouchers: true },
+		const vouchers = await prisma.voucher.findMany({
+			where: { userId },
 		});
-		return user?.vouchers ?? [];
+		return vouchers ?? [];
 	} catch (error) {
 		return [];
 	}
 }
 
 // Create a new voucher
-async function createVoucher(userId, code, discountPercentage, maxDiscountValue, minOrderValue, discountValue, expiryDate) 
-{
+async function createVoucher(userId, code, discountPercentage, maxDiscountValue, minOrderValue, discountValue, expiryDate) {
 	userId = parseInt(userId);
-	discountPercentage = parseInt(discountPercentage);
+	discountPercentage = parseFloat(discountPercentage);
 	maxDiscountValue = parseInt(maxDiscountValue);
 	minOrderValue = parseInt(minOrderValue);
 	discountValue = parseInt(discountValue);
@@ -212,22 +206,20 @@ async function createVoucher(userId, code, discountPercentage, maxDiscountValue,
 	});
 }
 
-// Get the list of feedbacks of an user
+// Get the list of feedbacks of a user
 async function getUserFeedbacks(userId) {
-	try{
+	try {
 		userId = parseInt(userId);
-		const user = await prisma.user.findUnique({
-			where: { id: userId },
-			select: { feedbacks: true },
+		const feedbacks = await prisma.feedback.findMany({
+			where: { userId },
 		});
-		return user?.feedbacks ?? [];
-	}
-	catch (error) {
+		return feedbacks ?? [];
+	} catch (error) {
 		return [];
 	}
 }
 
-// Save feedback of an user
+// Save feedback of a user
 async function saveUserFeedback(userId, message) {
 	userId = parseInt(userId);
 	await prisma.feedback.create({
@@ -238,12 +230,12 @@ async function saveUserFeedback(userId, message) {
 	});
 }
 
-// Save the check-in date of an user
+// Save the check-in date of a user
 async function saveCheckInDate(userId) {
 	userId = parseInt(userId);
 	const today = new Date(new Date().setHours(0, 0, 0, 0));
-	// check if the user has already checked in today
-	const checkIn = await prisma.checkIn.findFirst({
+
+	const checkIn = await prisma.checkInDate.findFirst({
 		where: {
 			userId,
 			createdAt: today,
@@ -254,18 +246,18 @@ async function saveCheckInDate(userId) {
 		return;
 	}
 
-	await prisma.checkIn.create({
+	await prisma.checkInDate.create({
 		data: {
 			userId,
-			createdAt: today
+			createdAt: today,
 		},
 	});
 }
 
-// Get the check-in dates in a month of an user
+// Get the check-in dates in a month of a user
 async function getCheckInDates(userId, month, year) {
 	userId = parseInt(userId);
-	const checkIns = await prisma.checkIn.findMany({
+	const checkIns = await prisma.checkInDate.findMany({
 		where: {
 			userId,
 			createdAt: {
@@ -276,7 +268,90 @@ async function getCheckInDates(userId, month, year) {
 		select: { createdAt: true },
 	});
 
-	return checkIns.map(checkIn => checkIn.createdAt);
+	return checkIns.map(checkIn => checkIn.createdAt.toISOString().split('T')[0]);
+}
+
+// Function to check if the user has checked in today
+async function hasCheckedInToday(userId) {
+	userId = parseInt(userId);
+	const checkIns = await getCheckInDates(userId, new Date().getMonth() + 1, new Date().getFullYear());
+	const today = new Date().toISOString().split('T')[0];
+	return checkIns.includes(today);
+}
+
+// Function to check if the user has checked in consecutively for 3, 7, or 12 days
+async function getConsecutiveCheckIns(userId, days) {
+	userId = parseInt(userId);
+	days = parseInt(days);
+	const checkIns = await getCheckInDates(userId, new Date().getMonth() + 1, new Date().getFullYear());
+	let consecutiveCount = 0;
+
+	for (let i = 0; i < checkIns.length; i++) {
+		if (new Date(checkIns[i]).getTime() === new Date(new Date().setDate(new Date().getDate() - consecutiveCount)).getTime()) {
+			consecutiveCount++;
+			if (consecutiveCount === days) return true;
+		} else {
+			consecutiveCount = 0;
+		}
+	}
+	return false;
+}
+
+// Check if the user has received streak rewards for 3, 7, or 12 days
+async function hasReceivedStreakReward(userId, days) {
+	userId = parseInt(userId);
+	days = parseInt(days);
+	const checkIn = await prisma.checkIn.findUnique({
+		where: { userId },
+		select: {
+			streakThree: days === 3,
+			streakSeven: days === 7,
+			streakTwelve: days === 12,
+		},
+	});
+
+	const now = new Date();
+	const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+	const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+	if (days === 3 && checkIn.streakThree && checkIn.streakThree >= monthStart && checkIn.streakThree <= monthEnd) {
+		return true;
+	}
+	if (days === 7 && checkIn.streakSeven && checkIn.streakSeven >= monthStart && checkIn.streakSeven <= monthEnd) {
+		return true;
+	}
+	if (days === 12 && checkIn.streakTwelve && checkIn.streakTwelve >= monthStart && checkIn.streakTwelve <= monthEnd) {
+		return true;
+	}
+
+	return false;
+}
+
+// Receive streak reward for 3, 7, or 12 days
+async function receiveStreakReward(userId, days) {
+	userId = parseInt(userId);
+	days = parseInt(days);
+	if (await hasReceivedStreakReward(userId, days)) {
+		return false;
+	}
+
+	const now = new Date();
+	const data = {};
+
+	if (days === 3) {
+		data.streakThree = now;
+	} else if (days === 7) {
+		data.streakFive = now;
+	} else if (days === 12) {
+		data.streakTwelve = now;
+	}
+
+	await prisma.checkIn.update({
+		where: { userId },
+		data: data,
+	});
+
+	return true;
 }
 
 export {
@@ -299,4 +374,8 @@ export {
 	saveUserFeedback,
 	saveCheckInDate,
 	getCheckInDates,
-}
+	hasCheckedInToday,
+	getConsecutiveCheckIns,
+	hasReceivedStreakReward,
+	receiveStreakReward,
+};

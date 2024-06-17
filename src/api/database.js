@@ -1,16 +1,16 @@
 const serverUrl = 'http://localhost:3000';
-  
+
 // Function to call POST /api/users
 async function createUser(email, name) {
 	const response = await fetch(`${serverUrl}/api/users`, {
-	method: 'POST',
-	headers: {
-		'Content-Type': 'application/json'
-	},
-	body: JSON.stringify({ email, name })
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ email, name })
 	});
 	if (!response.ok) {
-	throw new Error(`HTTP error! status: ${response.status}`);
+		throw new Error(`HTTP error! status: ${response.status}`);
 	}
 	return response.json();
 }
@@ -32,14 +32,14 @@ async function getTurnLeft(userId) {
 // Function to call POST /api/users/:id/turns/decrement
 async function decrementTurnLeft(userId) {
 	await fetch(`${serverUrl}/api/users/${userId}/turns/decrement`, {
-	method: 'POST'
+		method: 'POST'
 	});
 }
 
 // Function to call POST /api/users/:id/turns/increment
 async function incrementTurnLeft(userId) {
 	await fetch(`${serverUrl}/api/users/${userId}/turns/increment`, {
-	method: 'POST'
+		method: 'POST'
 	});
 }
 
@@ -53,11 +53,11 @@ async function getUserName(userId) {
 // Function to call POST /api/users/:id/score
 async function updateScore(userId, score) {
 	await fetch(`${serverUrl}/api/users/${userId}/score`, {
-	method: 'POST',
-	headers: {
-		'Content-Type': 'application/json'
-	},
-	body: JSON.stringify({ score })
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ score })
 	});
 }
 
@@ -90,14 +90,14 @@ async function getPuzzleCount(userId) {
 // Function to call POST /api/users/:id/puzzle-count/increment
 async function incrementPuzzleCount(userId) {
 	await fetch(`${serverUrl}/api/users/${userId}/puzzle-count/increment`, {
-	method: 'POST'
+		method: 'POST'
 	});
 }
 
 // Function to call POST /api/users/:id/puzzle-count/reset
 async function resetPuzzleCount(userId) {
 	await fetch(`${serverUrl}/api/users/${userId}/puzzle-count/reset`, {
-	method: 'POST'
+		method: 'POST'
 	});
 }
 
@@ -110,11 +110,11 @@ async function getUserVouchers(userId) {
 // Function to call POST /api/vouchers
 async function createVoucher(userId, code, discountPercentage, maxDiscountValue, minOrderValue, discountValue, expiryDate) {
 	await fetch(`${serverUrl}/api/vouchers`, {
-	method: 'POST',
-	headers: {
-		'Content-Type': 'application/json'
-	},
-	body: JSON.stringify({ userId, code, discountPercentage, maxDiscountValue, minOrderValue, discountValue, expiryDate })
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ userId, code, discountPercentage, maxDiscountValue, minOrderValue, discountValue, expiryDate })
 	});
 }
 
@@ -127,11 +127,11 @@ async function getUserFeedbacks(userId) {
 // Function to call POST /api/feedbacks
 async function saveUserFeedback(userId, message) {
 	await fetch(`${serverUrl}/api/feedbacks`, {
-	method: 'POST',
-	headers: {
-		'Content-Type': 'application/json'
-	},
-	body: JSON.stringify({ userId, message })
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ userId, message })
 	});
 }
 
@@ -146,6 +146,62 @@ async function saveCheckInDate(userId) {
 async function getCheckInDates(userId, month, year) {
 	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins?month=${month}&year=${year}`);
 	return response.json();
+}
+
+// Function to check if the user has checked in today
+async function hasCheckedInToday(userId) {
+	const response = await fetch(`${serverUrl}/api/users/${userId}/check-in/today`);
+	const data = await response.json();
+	return data.hasCheckedIn;
+}
+
+// Function to check if the user has checked in consecutively for 3, 5, or 12 days
+async function getConsecutiveCheckIns(userId, days) {
+	const response = await fetch(`${serverUrl}/api/users/${userId}/consecutive-check-ins?days=${days}`);
+	const data = await response.json();
+	return data.consecutive;
+}
+
+// Function to call GET /api/users/:id/check-ins/rewards/3
+async function hasReceivedStreakRewardThree(userId) {
+	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/3`);
+	const data = await response.json();
+	return data.hasReceived;
+}
+
+// Function to call GET /api/users/:id/check-ins/rewards/5
+async function hasReceivedStreakRewardFive(userId) {
+	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/5`);
+	const data = await response.json();
+	return data.hasReceived;
+}
+
+// Function to call GET /api/users/:id/check-ins/rewards/12
+async function hasReceivedStreakRewardTwelve(userId) {
+	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/12`);
+	const data = await response.json();
+	return data.hasReceived;
+}
+
+// Function to call POST /api/users/:id/check-ins/rewards/3
+async function receiveStreakRewardThree(userId) {
+	await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/3`, {
+		method: 'POST'
+	});
+}
+
+// Function to call POST /api/users/:id/check-ins/rewards/5
+async function receiveStreakRewardFive(userId) {
+	await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/5`, {
+		method: 'POST'
+	});
+}
+
+// Function to call POST /api/users/:id/check-ins/rewards/12
+async function receiveStreakRewardTwelve(userId) {
+	await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/12`, {
+		method: 'POST'
+	});
 }
 
 export {
@@ -168,4 +224,12 @@ export {
 	saveUserFeedback,
 	saveCheckInDate,
 	getCheckInDates,
-}
+	hasCheckedInToday,
+	getConsecutiveCheckIns,
+	hasReceivedStreakRewardThree,
+	hasReceivedStreakRewardFive,
+	hasReceivedStreakRewardTwelve,
+	receiveStreakRewardThree,
+	receiveStreakRewardFive,
+	receiveStreakRewardTwelve,
+};

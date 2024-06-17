@@ -19,7 +19,9 @@ import {
   getUserFeedbacks,
   saveUserFeedback,
   saveCheckInDate,
-  getCheckInDates
+  getCheckInDates,
+  hasCheckedInToday,
+  getConsecutiveCheckIns,
 } from './database.js'; // Đường dẫn tới file database.js
 
 const app = express();
@@ -127,6 +129,17 @@ app.get('/api/users/:id/check-ins', async (req, res) => {
   const { month, year } = req.query;
   const checkIns = await getCheckInDates(req.params.id, parseInt(month), parseInt(year));
   res.json(checkIns);
+});
+
+app.get('/api/users/:id/check-in-today', async (req, res) => {
+  const hasCheckedIn = await hasCheckedInToday(req.params.id);
+  res.json({ hasCheckedIn });
+});
+
+app.get('/api/users/:id/check-in-streak', async (req, res) => {
+  const { days } = req.query;
+  const hasStreak = await getConsecutiveCheckIns(req.params.id, parseInt(days));
+  res.json({ hasStreak });
 });
 
 app.listen(port, () => {

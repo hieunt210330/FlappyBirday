@@ -7,28 +7,30 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  email       String    @unique
+  id          Int            @id @default(autoincrement())
+  email       String         @unique
   name        String
-  turnLeft    Int       @default(3)
+  turnLeft    Int            @default(3)
   scores      Score[]
-  checkIn     CheckIn[]
-  puzzleCount Int       @default(0)
+  checkIns    CheckIn[]
+  checkInDates CheckInDate[]
+  puzzleCount Int            @default(0)
   vouchers    Voucher[]
-  maxScore    Int      @default(0)
+  maxScore    Int            @default(0)
   feedbacks   Feedback[]
 }
 
 model Feedback {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  message     String
-  createdAt   DateTime @default(now()) 
-  user        User     @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  message   String
+  response  String?
+  createdAt DateTime @default(now()) 
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Voucher {
@@ -45,16 +47,28 @@ model Voucher {
 }
 
 model Score {
-  id          Int       @id @default(autoincrement())
-  score       Int
-  userId      Int
-  createdAt   DateTime  @default(now()) 
-  user        User      @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  score     Int
+  userId    Int
+  createdAt DateTime @default(now()) 
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model CheckIn {
-  id          Int       @id @default(autoincrement())
-  userId      Int
-  createdAt   DateTime  @default(now())
-  user        User      @relation(fields: [userId], references: [id])
+  id           Int            @id @default(autoincrement())
+  userId       Int
+  user         User           @relation(fields: [userId], references: [id])
+  streakThree  DateTime? 
+  streakSeven   DateTime?
+  streakTwelve DateTime?
+  checkInDates CheckInDate[]
+}
+
+model CheckInDate {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  checkInId  Int
+  checkIn    CheckIn  @relation(fields: [checkInId], references: [id])
 }

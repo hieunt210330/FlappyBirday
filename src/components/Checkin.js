@@ -106,63 +106,86 @@ const Checkin = ({ dispatchDisplay }) => {
   };
 
   return (
-    <div className="checkin" style={styles.checkin}>
-      <h2 style={styles.title}>Daily Checkin</h2>
-      <div className="calendar-controls" style={styles.calendarControls}>
-        <button style={styles.controlButton}><ChevronLeft /></button>
-        <span>{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
-        <button style={styles.controlButton}><ChevronRight /></button>
-      </div>
-      <table className="calendar" style={styles.calendar}>
-        <thead>
-          <tr>
-            <th style={styles.tableHeader}>S</th>
-            <th style={styles.tableHeader}>M</th>
-            <th style={styles.tableHeader}>T</th>
-            <th style={styles.tableHeader}>W</th>
-            <th style={styles.tableHeader}>T</th>
-            <th style={styles.tableHeader}>F</th>
-            <th style={styles.tableHeader}>S</th>
-          </tr>
-        </thead>
-        <tbody>{generateCalendar()}</tbody>
-      </table>
-      <div className="rewards" style={styles.rewards}>
-        <h3 style={styles.subtitle}>Consecutive Check-ins: {checkinDays.length} DAYS!</h3>
-        <h4 style={styles.subtitle}>Received your check-ins rewards!</h4>
-        <ul style={styles.rewardsList}>
-          <li style={styles.rewardItem}>
-            <span style={styles.rewardText}>Hi, my new friend!</span>
-            <button style={styles.rewardButton} disabled>Received!</button>
-          </li>
-          <li style={styles.rewardItem}>
-            <span style={styles.rewardText}>Wow, streak 3 days!</span>
-            <button style={styles.rewardButton}>Receive</button>
-          </li>
-          <li style={styles.rewardItem}>
-            <span style={styles.rewardText}>Friends for a week now!</span>
-            <button style={styles.rewardButton}>Receive</button>
-          </li>
-          <li style={styles.rewardItem}>
-            <span style={styles.rewardText}>12-day anniversary!</span>
-            <button style={styles.rewardButton}>Receive</button>
-          </li>
-        </ul>
+    <div className="checkin-container" style={styles.checkinContainer}>
+      <div className="checkin-content" style={styles.checkinContent}>
+        <div className="calendar-section" style={styles.calendarSection}>
+          <h2 style={styles.title}>Daily Checkin</h2>
+          <div className="calendar-controls" style={styles.calendarControls}>
+            <button style={styles.controlButton}><ChevronLeft /></button>
+            <span>{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+            <button style={styles.controlButton}><ChevronRight /></button>
+          </div>
+          <table className="calendar" style={styles.calendar}>
+            <thead>
+              <tr>
+                <th style={styles.tableHeader}>S</th>
+                <th style={styles.tableHeader}>M</th>
+                <th style={styles.tableHeader}>T</th>
+                <th style={styles.tableHeader}>W</th>
+                <th style={styles.tableHeader}>T</th>
+                <th style={styles.tableHeader}>F</th>
+                <th style={styles.tableHeader}>S</th>
+              </tr>
+            </thead>
+            <tbody>{generateCalendar()}</tbody>
+          </table>
+        </div>
+        <div className="rewards-section" style={styles.rewardsSection}>
+          <h3 style={styles.subtitle}>Consecutive Check-ins: {checkinDays.length} DAYS!</h3>
+          <h4 style={styles.subtitle}>Received your check-ins rewards!</h4>
+          <ul style={styles.rewardsList}>
+            <li style={styles.rewardItem}>
+              <span style={styles.rewardText}>Hi, my new friend!</span>
+              <button style={styles.rewardButton} disabled>Received!</button>
+            </li>
+            <li style={styles.rewardItem}>
+              <span style={styles.rewardText}>Wow, streak 3 days!</span>
+              <button style={styles.rewardButton}>Receive</button>
+            </li>
+            <li style={styles.rewardItem}>
+              <span style={styles.rewardText}>Friends for a week now!</span>
+              <button style={styles.rewardButton}>Receive</button>
+            </li>
+            <li style={styles.rewardItem}>
+              <span style={styles.rewardText}>12-day anniversary!</span>
+              <button style={styles.rewardButton}>Receive</button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );
 };
 
 const styles = {
-  checkin: {
-    fontFamily: 'Arial, sans-serif',
+  checkinContainer: {
+    height: '100vh', // Make the container take the full height of the viewport
+    overflow: 'auto', // Enable scrolling if content overflows
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkinContent: {
+    display: 'flex',
     width: '80%',
+    maxHeight: '90vh', // Limit the height of the checkin component
+    overflow: 'auto', // Enable scrolling within the component
     margin: '20px auto',
     padding: '20px',
     border: '1px solid #ccc',
     borderRadius: '8px',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
     backgroundColor: '#fff',
+  },
+  calendarSection: {
+    width: '70%',
+    paddingRight: '20px',
+    borderRight: '1px solid #ccc',
+  },
+  rewardsSection: {
+    width: '30%',
+    paddingLeft: '20px',
+    textAlign: 'center',
   },
   title: {
     textAlign: 'center',
@@ -238,7 +261,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: '10px',
-    width: '80%',
+    width: '100%',
   },
   rewardText: {
     flex: 1,

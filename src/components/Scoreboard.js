@@ -1,37 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTable } from 'react-table';
+// import '../style/scoreboard.css';
+import { getAllMaxScores } from '../api/database';
 
 const Scoreboard = ({ dispatchDisplay }) => {
-    const data = React.useMemo(
-        () => [
-            { code: 'Voucher Code 1', detail: 'Voucher Brief Info', date: 'DD/MM/YYYY' },
-            { code: 'Voucher Code 2', detail: 'Voucher Brief Info', date: 'DD/MM/YYYY' },
-            { code: 'Voucher Code 3', detail: 'Voucher Brief Info', date: 'DD/MM/YYYY' },
-            { code: 'Voucher Code 4', detail: 'Voucher Brief Info', date: 'DD/MM/YYYY' },
-            { code: 'Voucher Code 5', detail: 'Voucher Brief Info', date: 'DD/MM/YYYY' },
-            { code: 'Voucher Code 6', detail: 'Voucher Brief Info', date: 'DD/MM/YYYY' },
-        ],
-        []
-    );
+    const [scores, setScores] = useState([]);
 
-    const columns = React.useMemo(
-        () => [
-            {
-                Header: 'Scoreboard Code',
-                accessor: 'code',
-            },
-            {
-                Header: 'Detail',
-                accessor: 'detail',
-            },
-            {
-                Header: 'Date Received',
-                accessor: 'date',
-            },
-        ],
-        []
-    );
+    useEffect(() => {
+        const fetchScores = async () => {
+            const scoreList = await getAllMaxScores();
+            setScores(scoreList);
+        };
+
+        fetchScores();
+    }, []);
+
+    const data = React.useMemo(() => scores, [scores]);
+
+    const columns = React.useMemo(() => [
+        { Header: 'User ID', accessor: 'userId' },
+        { Header: 'Name', accessor: 'name' },
+        { Header: 'Max Score', accessor: 'maxScore' },
+        { Header: 'Achieved At', accessor: 'achievedAt', Cell: ({ value }) => new Date(value).toLocaleDateString() },
+    ], []);
 
     const {
         getTableProps,
@@ -88,7 +80,6 @@ const styles = {
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
         overflow: 'hidden',
         backgroundColor: '#fff',
-
     },
     content: {
         padding: '20px',

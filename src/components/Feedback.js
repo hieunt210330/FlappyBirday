@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
-import '../style/home.css';
+import '../style/feedback.css';
 
 import {
   getUserFeedbacks,
@@ -78,7 +78,7 @@ const Feedback = ({ dispatchDisplay }) => {
               placeholder="Enter your feedback here"
               required
             />
-            <button type="submit">Submit</button>
+            <button type="submit" className="submit-button">Submit</button>
           </form>
           <button className="feedback-button" onClick={handleViewFeedbacks}>View your Feedbacks</button>
         </div>

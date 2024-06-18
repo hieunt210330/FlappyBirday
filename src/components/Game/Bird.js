@@ -16,9 +16,6 @@ const Bird = ({y, dY, r, d}) => {
             style={{
                 top: y + "vh",
                 left: x + "vh",
-                //transform: `rotate(${r}deg)`,
-                //display: d,
-                //transition: "transform 100ms, top 100ms",
             }}>
         </div>
     )

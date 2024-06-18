@@ -8,7 +8,6 @@ import Sidebar from './SideBar';
 import Info from './Info';
 import Puzzle from "./Puzzle";
 import Feedback from "./Feedback";
-import Volume from "./Volume";
 import Rules from "./Rules";
 import Reward from './Reward';
 import Scoreboard from './Scoreboard';
@@ -58,9 +57,6 @@ const Display = ({ displayList, dispatchDisplay }) => {
 
     if (displayList.displayFeedback) {
         displayComponents.push(<Feedback key="bugReport" />);
-    }
-    if (displayList.displayVolume) {
-        displayComponents.push(<Volume key="volume" />);
     }
     if (displayList.displayRules) {
         displayComponents.push(<Rules key="rules" />);

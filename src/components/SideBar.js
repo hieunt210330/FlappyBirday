@@ -10,7 +10,6 @@ import {
   Menu,
   TicketCheck,
   Puzzle,
-  Volume2,
   BugOff,
 } from "lucide-react";
 
@@ -29,9 +28,6 @@ const Sidebar = ({ dispatchDisplay }) => {
         </button>
         {isExpanded && (
           <>
-            <button className="sidebar-button" title="Exit">
-              <LogOut color="currentColor" alt="Exit" />
-            </button>
             <button className="sidebar-button" title="Rules">
               <CircleHelp color="currentColor" alt="Rules" />
             </button>
@@ -62,9 +58,6 @@ const Sidebar = ({ dispatchDisplay }) => {
               title="Puzzle"
             >
               <Puzzle color="currentColor" alt="Puzzle" />
-            </button>
-            <button className="sidebar-button" title="Volume">
-              <Volume2 color="currentColor" alt="Volume" />
             </button>
             <button
               className="sidebar-button"

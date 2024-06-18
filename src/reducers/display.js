@@ -12,7 +12,6 @@ const displayList = {
     displayScoreboard: false,
     displayReward: false,
     displayBugReport: false,
-    displayVolume: false,
     displayRules: false,
     displayExit: false,
 
@@ -73,11 +72,6 @@ export default (state = intialState, {type} = {}) => {
 
         case 'DISPLAY_FEEDBACK':
             displayListTmp.displayFeedback = true;
-            displayListTmp.displaySidebar = true;
-            return {...state, displayList: displayListTmp};
-
-        case 'DISPLAY_VOLUME':
-            displayListTmp.displayVolume = true;
             displayListTmp.displaySidebar = true;
             return {...state, displayList: displayListTmp};
 

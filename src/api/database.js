@@ -164,44 +164,51 @@ async function getConsecutiveCheckIns(userId, days) {
 
 // Function to call GET /api/users/:id/check-ins/rewards/3
 async function hasReceivedStreakRewardThree(userId) {
-	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/3`);
+	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/3/isReceived`);
 	const data = await response.json();
 	return data.hasReceived;
 }
 
 // Function to call GET /api/users/:id/check-ins/rewards/5
-async function hasReceivedStreakRewardFive(userId) {
-	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/5`);
+async function hasReceivedStreakRewardSeven(userId) {
+	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/5/isReceived`);
 	const data = await response.json();
 	return data.hasReceived;
 }
 
 // Function to call GET /api/users/:id/check-ins/rewards/12
 async function hasReceivedStreakRewardTwelve(userId) {
-	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/12`);
+	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/12/isReceived`);
 	const data = await response.json();
 	return data.hasReceived;
 }
 
 // Function to call POST /api/users/:id/check-ins/rewards/3
 async function receiveStreakRewardThree(userId) {
-	await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/3`, {
-		method: 'POST'
-	});
+	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/3`, {
+        method: 'POST',
+    });
+    const data = await response.json();
+    return data.isReceived;
 }
 
-// Function to call POST /api/users/:id/check-ins/rewards/5
-async function receiveStreakRewardFive(userId) {
-	await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/5`, {
-		method: 'POST'
-	});
+// Function to call POST /api/users/:id/check-ins/rewards/7
+async function receiveStreakRewardSeven(userId) {
+	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/5`, {
+        method: 'POST',
+    });
+    const data = await response.json();
+    return data.isReceived;
+
 }
 
 // Function to call POST /api/users/:id/check-ins/rewards/12
 async function receiveStreakRewardTwelve(userId) {
-	await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/12`, {
-		method: 'POST'
-	});
+	const response = await fetch(`${serverUrl}/api/users/${userId}/check-ins/rewards/12`, {
+        method: 'POST',
+    });
+    const data = await response.json();
+    return data.isReceived;
 }
 
 export {
@@ -227,9 +234,9 @@ export {
 	hasCheckedInToday,
 	getConsecutiveCheckIns,
 	hasReceivedStreakRewardThree,
-	hasReceivedStreakRewardFive,
+	hasReceivedStreakRewardSeven,
 	hasReceivedStreakRewardTwelve,
 	receiveStreakRewardThree,
-	receiveStreakRewardFive,
+	receiveStreakRewardSeven,
 	receiveStreakRewardTwelve,
 };

@@ -16,8 +16,7 @@ model User {
   name        String
   turnLeft    Int            @default(3)
   scores      Score[]
-  checkIns    CheckIn[]
-  checkInDates CheckInDate[]
+  checkIn     CheckIn?
   puzzleCount Int            @default(0)
   vouchers    Voucher[]
   maxScore    Int            @default(0)
@@ -56,19 +55,17 @@ model Score {
 
 model CheckIn {
   id           Int            @id @default(autoincrement())
-  userId       Int
+  userId       Int            @unique
   user         User           @relation(fields: [userId], references: [id])
   streakThree  DateTime? 
-  streakSeven   DateTime?
+  streakSeven  DateTime?
   streakTwelve DateTime?
   checkInDates CheckInDate[]
 }
 
 model CheckInDate {
   id         Int      @id @default(autoincrement())
-  userId     Int
   createdAt  DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id])
   checkInId  Int
   checkIn    CheckIn  @relation(fields: [checkInId], references: [id])
 }

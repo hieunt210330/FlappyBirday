@@ -1,28 +1,30 @@
 import express from 'express';
 import cors from 'cors';
 import {
-  getUserIdByEmail,
-  createUser,
-  getTurnLeft,
-  decrementTurnLeft,
-  incrementTurnLeft,
-  getUserName,
-  updateScore,
-  getUserScores,
-  getUserMaxScore,
-  getAllMaxScores,
-  getPuzzleCount,
-  incrementPuzzleCount,
-  resetPuzzleCount,
-  getUserVouchers,
-  createVoucher,
-  getUserFeedbacks,
-  saveUserFeedback,
-  saveCheckInDate,
-  getCheckInDates,
-  hasCheckedInToday,
-  getConsecutiveCheckIns,
-} from './database.js'; // Đường dẫn tới file database.js
+	getUserIdByEmail,
+	createUser,
+	getTurnLeft,
+	decrementTurnLeft,
+	incrementTurnLeft,
+	getUserName,
+	updateScore,
+	getUserScores,
+	getUserMaxScore,
+	getAllMaxScores,
+	getPuzzleCount,
+	incrementPuzzleCount,
+	resetPuzzleCount,
+	getUserVouchers,
+	createVoucher,
+	getUserFeedbacks,
+	saveUserFeedback,
+	saveCheckInDate,
+	getCheckInDates,
+	hasCheckedInToday,
+	getConsecutiveCheckIns,
+	hasReceivedStreakReward,
+	receiveStreakReward,
+} from './database.js';
 
 const app = express();
 const port = 3000;
@@ -131,15 +133,47 @@ app.get('/api/users/:id/check-ins', async (req, res) => {
   res.json(checkIns);
 });
 
-app.get('/api/users/:id/check-in-today', async (req, res) => {
+app.get('/api/users/:id/check-in/today', async (req, res) => {
   const hasCheckedIn = await hasCheckedInToday(req.params.id);
   res.json({ hasCheckedIn });
 });
 
-app.get('/api/users/:id/check-in-streak', async (req, res) => {
-  const { days } = req.query;
-  const hasStreak = await getConsecutiveCheckIns(req.params.id, parseInt(days));
-  res.json({ hasStreak });
+app.get('/api/users/:id/consecutive-check-ins', async (req, res) => {
+	try {
+		const userId = parseInt(req.params.id);
+		const { days } = req.query;
+		const consecutiveCheckIns = await getConsecutiveCheckIns(userId, parseInt(days));
+		res.status(200).json({ consecutive: consecutiveCheckIns });
+	} catch (error) {
+    console.log('error:', error);
+	}
+});
+
+app.get('/api/users/:id/check-ins/rewards/:days/isReceived', async (req, res) => {
+	try {
+		const userId = parseInt(req.params.id);
+		const days = parseInt(req.params.days);
+		const hasReceived = await hasReceivedStreakReward(userId, days);
+		res.status(200).json({ hasReceived });
+	} catch (error) {
+		//res.status(500).send({ error: 'Error checking streak rewards' });
+    console.log('error:', error);
+	}
+});
+
+app.post('/api/users/:id/check-ins/rewards/:days', async (req, res) => {
+	try {
+		const userId = parseInt(req.params.id);
+		const days = parseInt(req.params.days);
+		const success = await receiveStreakReward(userId, days);
+		if (success) {
+			res.send({ isReceived: true});
+		} else {
+			res.send({ isReceived: false });
+		}
+	} catch (error) {
+		res.send({ isReceived: false });
+	}
 });
 
 app.listen(port, () => {

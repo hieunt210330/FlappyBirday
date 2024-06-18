@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import {
 	saveCheckInDate,
@@ -8,10 +8,10 @@ import {
 	hasCheckedInToday,
 	getConsecutiveCheckIns,
 	hasReceivedStreakRewardThree,
-	hasReceivedStreakRewardFive,
+	hasReceivedStreakRewardSeven,
 	hasReceivedStreakRewardTwelve,
 	receiveStreakRewardThree,
-	receiveStreakRewardFive,
+	receiveStreakRewardSeven,
 	receiveStreakRewardTwelve,
 } from '../api/database';
 
@@ -22,6 +22,11 @@ const Checkin = ({ dispatchDisplay }) => {
   const [todayCheckedIn, setTodayCheckedIn] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [rewards, setRewards] = useState({
+    threeDays: { received: false, eligible: false },
+    fiveDays: { received: false, eligible: false },
+    twelveDays: { received: false, eligible: false },
+  });
   const userId = process.env.USER_ID;
 
   useEffect(() => {
@@ -82,7 +87,7 @@ const Checkin = ({ dispatchDisplay }) => {
 
     return (
       <td key={day} style={dayStyle} className="day-cell">
-        {isPastDay(dayString) || checkedIn ? (
+        {(isPastDay(dayString) && isToday(dayString)) || checkedIn ? (
           <span>{day}</span>
         ) : (
           <button
@@ -160,6 +165,49 @@ const Checkin = ({ dispatchDisplay }) => {
     }
   };
 
+  const checkAndReceiveRewards = async () => {
+    try {
+      const rewardStatus = {
+        threeDays: { received: await hasReceivedStreakRewardThree(userId), eligible: await getConsecutiveCheckIns(userId, 3) },
+        fiveDays: { received: await hasReceivedStreakRewardSeven(userId), eligible: await getConsecutiveCheckIns(userId, 5) },
+        twelveDays: { received: await hasReceivedStreakRewardTwelve(userId), eligible: await getConsecutiveCheckIns(userId, 12) },
+      };
+
+      setRewards(rewardStatus);
+
+      if (rewardStatus.threeDays.eligible && !rewardStatus.threeDays.received) {
+        await receiveStreakRewardThree(userId);
+        alert('Received reward for 3 consecutive check-ins!');
+      }
+      if (rewardStatus.fiveDays.eligible && !rewardStatus.fiveDays.received) {
+        await receiveStreakRewardSeven(userId);
+        alert('Received reward for 7 consecutive check-ins!');
+      }
+      if (rewardStatus.twelveDays.eligible && !rewardStatus.twelveDays.received) {
+        await receiveStreakRewardTwelve(userId);
+        alert('Received reward for 12 consecutive check-ins!');
+      }
+    } catch (error) {
+      console.error('Error checking and receiving rewards:', error);
+    }
+  };
+
+  useEffect(() => {
+    checkAndReceiveRewards();
+  }, [checkinDays]);
+
+  const renderRewardButton = (eligible, received, receiveFunc, label) => {
+    return (
+      <button
+        className="reward-button"
+        onClick={receiveFunc}
+        disabled={!eligible || received}
+      >
+        {received ? 'Received' : 'Receive'}
+      </button>
+    );
+  };
+
   return (
     <div className="checkin-container">
       <div className="checkin-content">
@@ -190,20 +238,16 @@ const Checkin = ({ dispatchDisplay }) => {
           <h4 className="subtitle">Received your check-ins rewards!</h4>
           <ul className="rewards-list">
             <li className="reward-item">
-              <span className="reward-text">Hi, my new friend!</span>
-              <button className="reward-button" disabled>Received!</button>
-            </li>
-            <li className="reward-item">
               <span className="reward-text">Wow, streak 3 days!</span>
-              <button className="reward-button">Receive</button>
+              {renderRewardButton(rewards.threeDays.eligible, rewards.threeDays.received, () => receiveStreakRewardThree(userId), 'Wow, streak 3 days!')}
             </li>
             <li className="reward-item">
               <span className="reward-text">Friends for a week now!</span>
-              <button className="reward-button">Receive</button>
+              {renderRewardButton(rewards.fiveDays.eligible, rewards.fiveDays.received, () => receiveStreakRewardSeven(userId), 'Friends for a week now!')}
             </li>
             <li className="reward-item">
               <span className="reward-text">12-day anniversary!</span>
-              <button className="reward-button">Receive</button>
+              {renderRewardButton(rewards.twelveDays.eligible, rewards.twelveDays.received, () => receiveStreakRewardTwelve(userId), '12-day anniversary!')}
             </li>
           </ul>
         </div>

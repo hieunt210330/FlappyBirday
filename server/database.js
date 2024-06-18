@@ -204,18 +204,80 @@ async function createVoucher(userId, code, discountPercentage, maxDiscountValue,
 	minOrderValue = parseInt(minOrderValue);
 	discountValue = parseInt(discountValue);
 	expiryDate = new Date(expiryDate);
-	await prisma.voucher.create({
-		data: {
-			code,
-			discountPercentage,
-			maxDiscountValue,
-			minOrderValue,
-			discountValue,
-			expiryDate,
-			userId,
-		},
-	});
+	let voucher;
+	try {
+		voucher = await prisma.voucher.create({
+			data: {
+				code,
+				discountPercentage,
+				maxDiscountValue,
+				minOrderValue,
+				discountValue,
+				expiryDate,
+				userId,
+			},
+		});
+		return voucher;
+	}
+	catch (error) {
+		return null;
+	}
 }
+
+// Create a new prize
+async function createPrize(userId) {
+	if (Math.floor(Math.random()*1000) >= 200) {
+
+		let expiryDate = new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0];
+		if (Math.floor(Math.random()*1000) >= 500) 
+		{
+			let discountPercentage = Math.floor(Math.random() * 20) + 1;
+			let maxdiscountValue = 0;
+			let minOrderValue = 0;
+			let discountValue = 0;
+			let expiryDate = new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0];
+			if (Math.floor(Math.random()*1000) >= 500) 
+			{
+				maxdiscountValue = Math.floor(Math.random() * 100) + 1;
+			}
+			if (Math.floor(Math.random()*1000) >= 500) 
+			{
+				minOrderValue = Math.floor(Math.random() * 1000) + 1;
+			}
+		
+			const voucher = createVoucher(userId, `DISCOUNT${discountPercentage}$`, discountPercentage, maxdiscountValue, minOrderValue, discountValue, expiryDate);
+			return {
+				message: `You got a ${discountPercentage}% discount voucher!`,
+				voucher: voucher,
+				type: "voucher",
+			};
+		}
+		else
+		{
+			let discountPercentage = 0;
+			let maxdiscountValue = 0;
+			let minOrderValue = 0;
+			let discountValue = Math.floor(Math.random() * 10) + 1;
+			if (Math.floor(Math.random()*1000) >= 500) 
+			{
+				minOrderValue = Math.floor(Math.random() * 1000) + 1;
+			}
+			createVoucher(userId, `DISCOUNT${discountPercentage}$`, discountPercentage, maxdiscountValue, minOrderValue, discountValue, expiryDate);
+			return {
+				message: `You got a ${discountValue}$ discount voucher!`,
+				voucher: voucher,
+				type: "voucher",
+			};
+		}
+	}
+	else
+	{
+		incrementPuzzleCount(process.env.USER_ID);
+		return {type: "puzzle", message: 'You got a puzzle piece!'};
+	}
+
+}
+
 
 // Get the list of feedbacks of a user
 async function getUserFeedbacks(userId) {
@@ -418,6 +480,7 @@ export {
 	resetPuzzleCount,
 	getUserVouchers,
 	createVoucher,
+	createPrize,
 	getUserFeedbacks,
 	saveUserFeedback,
 	saveCheckInDate,

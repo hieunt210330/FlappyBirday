@@ -1,44 +1,10 @@
 import config from "../../gameconfig";
 
 import {
-    createVoucher,
-    incrementPuzzleCount
+    createPrize,
 } from "../../api/database"
 
 const generateVoucher = () => {
-    let expiryDate = new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0];
-    if (Math.floor(Math.random()*1000) >= 500) 
-    {
-        let discountPercentage = Math.floor(Math.random() * 20) + 1;
-        let maxdiscountValue = 0;
-        let minOrderValue = 0;
-        let discountValue = 0;
-        let expiryDate = new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0];
-        if (Math.floor(Math.random()*1000) >= 500) 
-        {
-            maxdiscountValue = Math.floor(Math.random() * 100) + 1;
-        }
-        if (Math.floor(Math.random()*1000) >= 500) 
-        {
-            minOrderValue = Math.floor(Math.random() * 1000) + 1;
-        }
-    
-        createVoucher(process.env.USER_ID, `DISCOUNT${discountPercentage}$`, discountPercentage, maxdiscountValue, minOrderValue, discountValue, expiryDate);
-        return `You got a ${discountPercentage}% discount voucher!`
-    }
-    else
-    {
-        let discountPercentage = 0;
-        let maxdiscountValue = 0;
-        let minOrderValue = 0;
-        let discountValue = Math.floor(Math.random() * 10) + 1;
-        if (Math.floor(Math.random()*1000) >= 500) 
-        {
-            minOrderValue = Math.floor(Math.random() * 1000) + 1;
-        }
-        createVoucher(process.env.USER_ID, `DISCOUNT${discountPercentage}$`, discountPercentage, maxdiscountValue, minOrderValue, discountValue, expiryDate);
-        return `You got a ${discountValue}$ discount voucher!`
-    }
 }
 
 
@@ -89,17 +55,11 @@ export default (state = initialState, {type, pipes, eaten_index, pipeCount} = {}
 
             return {...state, gifts: gifts, lastGen: lastGen};
         case 'GIFT_EATEN':
-            if (Math.floor(Math.random()*1000) >= 200) {
+            const prize = createPrize(process.env.USER_ID);
+            gifts = gifts.filter((_, index) => index !== eaten_index);
 
-                gifts = gifts.filter((_, index) => index !== eaten_index);
-                return {...state, gifts: gifts, giftMessage: generateVoucher()};
-            }
-            else
-            {
-                incrementPuzzleCount(process.env.USER_ID);
-                gifts = gifts.filter((_, index) => index !== eaten_index);
-                return {...state, gifts: gifts, giftMessage: 'You got a puzzle piece!'};
-            }
+            return {...state, gifts: gifts, giftMessage: prize?.message};
+
         default:
             return state;
     }

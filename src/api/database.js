@@ -118,6 +118,12 @@ async function createVoucher(userId, code, discountPercentage, maxDiscountValue,
 	});
 }
 
+// Function to call GET /api/prize
+async function createPrize(userId) {
+	const response = await fetch(`${serverUrl}/api/users/${userId}/prize`);
+	return response.json();
+}
+
 // Function to call GET /api/users/:id/feedbacks
 async function getUserFeedbacks(userId) {
 	const response = await fetch(`${serverUrl}/api/users/${userId}/feedbacks`);
@@ -227,6 +233,7 @@ export {
 	resetPuzzleCount,
 	getUserVouchers,
 	createVoucher,
+	createPrize,
 	getUserFeedbacks,
 	saveUserFeedback,
 	saveCheckInDate,

@@ -16,6 +16,7 @@ import {
 	resetPuzzleCount,
 	getUserVouchers,
 	createVoucher,
+	createPrize,
 	getUserFeedbacks,
 	saveUserFeedback,
 	saveCheckInDate,
@@ -107,8 +108,13 @@ app.get('/api/users/:id/vouchers', async (req, res) => {
 
 app.post('/api/vouchers', async (req, res) => {
   const { userId, code, discountPercentage, maxDiscountValue, minOrderValue, discountValue, expiryDate } = req.body;
-  await createVoucher(userId, code, discountPercentage, maxDiscountValue, minOrderValue, discountValue, expiryDate);
-  res.status(201).send('Voucher created');
+  const response = await createVoucher(userId, code, discountPercentage, maxDiscountValue, minOrderValue, discountValue, expiryDate);
+  res.json(response);
+});
+
+app.get('/api/users/:id/prize', async (req, res) => {
+	const response = await createPrize(req.params.id);
+	res.json(response);
 });
 
 app.get('/api/users/:id/feedbacks', async (req, res) => {

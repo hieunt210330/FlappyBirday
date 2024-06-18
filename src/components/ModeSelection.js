@@ -11,6 +11,7 @@ import {
 const ModeSelection = ({ displayList, dispatchDisplay }) => {
 
       const [gameMode, setGameMode] = useState('');
+      const [gameLevel, setGameLevel] = useState('');
       const [turnsLeft, setTurnsLeft] = useState(null);
       const userId = process.env.USER_ID;
 
@@ -32,6 +33,10 @@ const ModeSelection = ({ displayList, dispatchDisplay }) => {
             document.getElementById("normal").checked = true;
       };
 
+      const handleGameLevelChange = (e) => {
+            setGameLevel(e.target.value);
+      }
+
       const isChallengeMode = gameMode === 'challenge';
       const isEndlessMode = gameMode === 'endless';
 
@@ -40,7 +45,19 @@ const ModeSelection = ({ displayList, dispatchDisplay }) => {
                   await decrementTurnLeft(userId);
                   setTurnsLeft(turnsLeft - 1);
             }
-            dispatchDisplay('DISPLAY_GAME');
+            if (isEndlessMode)
+            {
+                  const payload = { gameMode: gameMode, gameLevel: gameLevel};
+                  //dispatch({type: "DISPLAY_GAME", payload: payload });
+                  dispatchDisplay('DISPLAY_GAME', payload);
+            }
+            else
+            {
+                  const payload = {gameMode: gameMode, gameLevel: 'normal'};
+                  //dispatch({type:"DISPLAY_GAME", payload: payload });
+                  dispatchDisplay('DISPLAY_GAME', payload);
+
+            }
       };
 
       return (
@@ -67,15 +84,15 @@ const ModeSelection = ({ displayList, dispatchDisplay }) => {
                                           <label>Game Level</label>
                                           <div className="radio-group">
                                                 <div className="radio-item">
-                                                      <input type="radio" id="easy" name="gameLevel" value="easy" disabled={!isEndlessMode} />
+                                                      <input type="radio" id="easy" name="gameLevel" value="easy" onChange={handleGameLevelChange} disabled={!isEndlessMode} />
                                                       <label htmlFor="easy">Easy</label>
                                                 </div>
                                                 <div className="radio-item">
-                                                      <input type="radio" id="normal" name="gameLevel" value="normal" disabled={!isEndlessMode} />
+                                                      <input type="radio" id="normal" name="gameLevel" value="normal" onChange={handleGameLevelChange} disabled={!isEndlessMode} />
                                                       <label htmlFor="normal">Normal</label>
                                                 </div>
                                                 <div className="radio-item">
-                                                      <input type="radio" id="hard" name="gameLevel" value="hard" disabled={!isEndlessMode} />
+                                                      <input type="radio" id="hard" name="gameLevel" value="hard" onChange={handleGameLevelChange} disabled={!isEndlessMode} />
                                                       <label htmlFor="hard">Hard</label>
                                                 </div>
                                           </div>
@@ -97,7 +114,7 @@ const ModeSelection = ({ displayList, dispatchDisplay }) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-      dispatchDisplay: (displayTypeStr) => dispatch({ type: displayTypeStr })
+      dispatchDisplay: (displayTypeStr, payload) => dispatch({ type: displayTypeStr, payload: payload})
 });
 
 const mapStateToProps = ({ display }) => ({

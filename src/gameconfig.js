@@ -1,5 +1,11 @@
 const FPS = 60;
-const PIPE_SPEED = 10/FPS;
+
+const PIPE_SPEED_EASY = 5/FPS;
+const PIPE_SPEED_NORMAL = 10/FPS;
+const PIPE_SPEED_HARD = 20/FPS;
+
+var PIPE_SPEED = PIPE_SPEED_NORMAL;
+
 const GENERATE_TIME = 1500; //ms
 const PIPE_HOLE = 30; // vh
 const PIPE_DISTANCE = 40; // vh
@@ -27,5 +33,8 @@ export default
     PIPE_DISTANCE,
     PIPE_WIDTH,
     GIFT_HEIGHT,
-    GIFT_WIDTH
+    GIFT_WIDTH,
+    PIPE_SPEED_EASY,
+    PIPE_SPEED_NORMAL,
+    PIPE_SPEED_HARD,
 } 

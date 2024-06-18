@@ -8,6 +8,7 @@ import Gift from "./Game/Gift";
 
 import config from "../gameconfig";
 import "../style.css";
+import game from "../reducers/game/game";
 
 let gameAnimation;
 let genrator;
@@ -65,6 +66,7 @@ const fly = () => {
 const start = () => {
     return (dispatch, getState) => {
         const status = getState().game.status;
+        const gameMode = getState().game.gameMode;
         if (status !== 'playing') {
 
             dispatch({ type: "START" });
@@ -72,14 +74,19 @@ const start = () => {
             gameAnimation = setInterval(() => {
                 dispatch({ type: "BIRD_FALL" });
                 dispatch({ type: "PIPE_MOVE" });
-                dispatch({ type: "GIFT_MOVE" });
+                if (gameMode === 'challenge') {
+                    dispatch({ type: "GIFT_MOVE" });
+                }
                 check(dispatch, getState);
             }, 1000 / config.FPS);
 
             genrator = setInterval(() => {
                 try {
                     dispatch({ type: "PIPE_GENERATE" });
-                    dispatch({ type: "GIFT_GENERATE", pipes: getState().pipe.pipes, pipeCount: getState().pipe.pipeCount });
+                    if (gameMode === 'challenge')
+                    {
+                        dispatch({ type: "GIFT_GENERATE", pipes: getState().pipe.pipes, pipeCount: getState().pipe.pipeCount });
+                    }
                 } catch (e) {
                 }
 
@@ -94,6 +101,7 @@ const check = (dispatch, getState) => {
     const bird = state.bird;
     const pipes = state.pipe.pipes;
     const gifts = state.gift.gifts;
+    const gameMode = getState().game.gameMode;
 
     for (let i = 0; i < pipes.length; i++) {
         if (bird.x + bird.width > pipes[i].x &&
@@ -111,23 +119,24 @@ const check = (dispatch, getState) => {
             dispatch({ type: "SCORE_INCREASEMENT" });
         }
     }
-
-    for (let i = 0; i < gifts.length; i++) {
-        if (
-            bird.x + bird.width > gifts[i].x &&
-            bird.x < gifts[i].x + config.GIFT_WIDTH &&
-            bird.y + bird.height > gifts[i].y &&
-            bird.y < gifts[i].y + config.GIFT_HEIGHT
-        ) {
-            dispatch({ type: "GIFT_EATEN", eaten_index: i });
-            // Hiển thị thông báo khi ăn hộp quà
-            //fade(state.gift.giftMessage);
-            fadeOutEffect(state.gift.giftMessage, gifts[i]);
-            state.gift.giftMessage = null;
-
-            break;
+    if (gameMode === 'challenge')
+    {
+        for (let i = 0; i < gifts.length; i++) {
+            if (
+                bird.x + bird.width > gifts[i].x &&
+                bird.x < gifts[i].x + config.GIFT_WIDTH &&
+                bird.y + bird.height > gifts[i].y &&
+                bird.y < gifts[i].y + config.GIFT_HEIGHT
+            ) {
+                dispatch({ type: "GIFT_EATEN", eaten_index: i });
+                fadeOutEffect(state.gift.giftMessage, gifts[i]);
+                state.gift.giftMessage = null;
+    
+                break;
+            }
         }
     }
+    
 };
 
 const mapStateToProps = ({ game, gift }) => ({ status: game.status, score: game.score, giftMessage: gift.giftMessage});

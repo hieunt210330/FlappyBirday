@@ -64,3 +64,52 @@ img {
     height: 100%; 
     object-fit: contain;
 }
+
+
+.day-cell, .prev-month, .next-month {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.day-button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.score-panel {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: rgb(0, 0, 0);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 30px;
+    display: block;
+}
+
+.gift-message {
+    position: absolute;
+    transform: translateX(-50%);
+    color: black;
+    font-size: 20px;
+    z-index: 10;
+    display: "none";
+    
+}
+
+@keyframes fadeOutUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+}

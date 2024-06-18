@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
 import Bird from "./Game/Bird";
@@ -6,7 +6,7 @@ import Pipe from "./Game/Pipe";
 import Foreground from "./Game/Foreground";
 import Gift from "./Game/Gift";
 
-import config from "../gameconfig"
+import config from "../gameconfig";
 import "../style.css";
 
 let gameAnimation;
@@ -16,77 +16,78 @@ let effect_on = false;
 
 let inGame = false;
 
-const Game = ({status, start, fly}) => {
+let giftMessage = null;
+
+const Game = ({ status, start, fly, score, giftMessage }) => {
     inGame = true;
+
     useEffect(() => {
         const handleKeyPress = (e) => {
-            if (inGame === false)
-            {
+            if (inGame === false) {
                 return;
             }
             start();
             if (e.code === "Space") {
                 fly();
             }
-        }
-        if (effect_on == false) {
-            effect_on = true;        
+        };
+        if (effect_on === false) {
+            effect_on = true;
             document.addEventListener("keydown", handleKeyPress, false);
         }
+        
     }, []);
 
     return (
-        <div style={{
-            overflow: "hidden",
-        }}>
+        <div>
+        <div style={{ position: "fixed", overflow: "hidden" }}>
             <Bird />
             <Pipe />
             <Gift />
             <Foreground />
         </div>
-    )
+        <div className="score-panel">Score: {score}</div>
+        <div className="gift-message" style={{display: "none"}}>{giftMessage}</div>
+        </div>
+    );
 }
 
 const fly = () => {
     return (dispatch) => {
-        try{
-            dispatch({type: "BIRD_FLY"});
-        }
-        catch(e){
+        try {
+            dispatch({ type: "BIRD_FLY" });
+        } catch (e) {
             //console.log(e);
         }
-    }
-}
+    };
+};
 
 const start = () => {
     return (dispatch, getState) => {
         const status = getState().game.status;
         if (status !== 'playing') {
 
-            dispatch({type: "START"});
+            dispatch({ type: "START" });
 
             gameAnimation = setInterval(() => {
-                dispatch({type: "BIRD_FALL"});
-                dispatch({type: "PIPE_MOVE"});
-                dispatch({type: "GIFT_MOVE"});
+                dispatch({ type: "BIRD_FALL" });
+                dispatch({ type: "PIPE_MOVE" });
+                dispatch({ type: "GIFT_MOVE" });
                 check(dispatch, getState);
-            }, 1000/config.FPS);
+            }, 1000 / config.FPS);
 
             genrator = setInterval(() => {
-                try{
-                    dispatch({type: "PIPE_GENERATE"});
-                    dispatch({type: "GIFT_GENERATE", pipes: getState().pipe.pipes, pipeCount: getState().pipe.pipeCount});
+                try {
+                    dispatch({ type: "PIPE_GENERATE" });
+                    dispatch({ type: "GIFT_GENERATE", pipes: getState().pipe.pipes, pipeCount: getState().pipe.pipeCount });
+                } catch (e) {
                 }
-                catch(e){
-                }
-        
+
             }, config.GENERATE_TIME);
 
         }
-    }
-}
-
-let cnt = 0;
+    };
+};
 
 const check = (dispatch, getState) => {
     const state = getState();
@@ -103,11 +104,11 @@ const check = (dispatch, getState) => {
             inGame = false;
             clearInterval(gameAnimation);
             clearInterval(genrator);
-            dispatch({type: "DISPLAY_END_GAME"});
+            dispatch({ type: "DISPLAY_END_GAME", payload: state.game.score });
         }
         if (pipes[i].passed === false && bird.x > pipes[i].x + config.PIPE_WIDTH) {
-            dispatch({type: "PIPE_PASS", payload: i});
-            dispatch({type: "SCORE_INCREASEMENT"});
+            dispatch({ type: "PIPE_PASS", payload: i });
+            dispatch({ type: "SCORE_INCREASEMENT" });
         }
     }
 
@@ -118,14 +119,48 @@ const check = (dispatch, getState) => {
             bird.y + bird.height > gifts[i].y &&
             bird.y < gifts[i].y + config.GIFT_HEIGHT
         ) {
-            dispatch({type: "GIFT_EATEN", eaten_index: i});
+            dispatch({ type: "GIFT_EATEN", eaten_index: i });
+            // Hiển thị thông báo khi ăn hộp quà
+            //fade(state.gift.giftMessage);
+            fadeOutEffect(state.gift.giftMessage, gifts[i]);
+            state.gift.giftMessage = null;
+
             break;
         }
     }
-}
+};
 
-const mapStateToProps = ({game}) => ({status: game.status});
+const mapStateToProps = ({ game, gift }) => ({ status: game.status, score: game.score, giftMessage: gift.giftMessage});
 
-const mapDispatchToProps = {start, fly};
+const mapDispatchToProps = { start, fly };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
+
+
+function fadeOutEffect(msg, gift_pos) {
+    var fadeTarget = document.getElementsByClassName("gift-message")[0];
+    fadeTarget.innerText = msg;
+    fadeTarget.style.opacity = 1;
+    
+    let cur_top = gift_pos.y - 10;
+
+    fadeTarget.style.left = (gift_pos.x - 5) + "vh";
+    fadeTarget.style.top = cur_top + "vh";
+    fadeTarget.style.display = "";
+
+    var fadeEffect = setInterval(function () {
+        if (!fadeTarget.style.opacity) {
+            fadeTarget.style.opacity = 1;
+        }
+        if (fadeTarget.style.opacity > 0) {
+            fadeTarget.style.opacity -= 0.1/12;
+            cur_top -= 1/12;
+            fadeTarget.style.top = cur_top + "vh";
+
+        } else {
+            fadeTarget.style.display = "none";
+            clearInterval(fadeEffect);
+
+        }
+    }, 1000/config.FPS);
+}

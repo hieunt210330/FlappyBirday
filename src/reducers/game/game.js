@@ -1,4 +1,7 @@
-import { stat } from "fs";
+
+import {
+    updateScore,
+} from "../../api/database"
 
 const initialState = {
     score: 0,
@@ -10,7 +13,8 @@ export default (state = initialState, {type} = {payload}) => {
         case 'START':
             return {...state, score:0, status: 'playing'}
         case 'DISPLAY_END_GAME':
-            return {...state, score: 0, status: 'end'}
+            updateScore(process.env.USER_ID, state.score);
+            return {...state, status: 'end'}
         case 'SCORE_INCREASEMENT':
             return {...state, score: state.score + 1}
         default:

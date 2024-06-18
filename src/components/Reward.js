@@ -27,14 +27,18 @@ const Reward = ({ dispatchDisplay }) => {
                 used: voucher.used ? 'Used' : 'Unused',
             };
 
+            if (voucher.discountPercentage) {
+                voucherData.discountPercentage = voucher.discountPercentage + "%";
+            }
+        
             if (voucher.maxDiscountValue) {
-                voucherData.maxDiscountValue = voucher.maxDiscountValue;
+                voucherData.maxDiscountValue = voucher.maxDiscountValue + " USD";
             }
             if (voucher.minOrderValue) {
-                voucherData.minOrderValue = voucher.minOrderValue;
+                voucherData.minOrderValue = voucher.minOrderValue + " USD";
             }
             if (voucher.discountValue) {
-                voucherData.discountValue = voucher.discountValue;
+                voucherData.discountValue = voucher.discountValue + " USD";
             }
 
             return voucherData;
@@ -47,6 +51,10 @@ const Reward = ({ dispatchDisplay }) => {
             { Header: 'Expiry Date', accessor: 'expiryDate' },
             { Header: 'Used', accessor: 'used' },
         ];
+
+        if (data.some(voucher => voucher.discountPercentage)) {
+            cols.push({ Header: 'Discount Percentage', accessor: 'discountPercentage' });
+        }
 
         if (data.some(voucher => voucher.maxDiscountValue)) {
             cols.push({ Header: 'Max Discount Value', accessor: 'maxDiscountValue' });

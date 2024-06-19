@@ -3,16 +3,16 @@ import { connect } from 'react-redux';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import {
-	saveCheckInDate,
-	getCheckInDates,
-	hasCheckedInToday,
-	getConsecutiveCheckIns,
-	hasReceivedStreakRewardThree,
-	hasReceivedStreakRewardSeven,
-	hasReceivedStreakRewardTwelve,
-	receiveStreakRewardThree,
-	receiveStreakRewardSeven,
-	receiveStreakRewardTwelve,
+  saveCheckInDate,
+  getCheckInDates,
+  hasCheckedInToday,
+  getConsecutiveCheckIns,
+  hasReceivedStreakRewardThree,
+  hasReceivedStreakRewardSeven,
+  hasReceivedStreakRewardTwelve,
+  receiveStreakRewardThree,
+  receiveStreakRewardSeven,
+  receiveStreakRewardTwelve,
 } from '../api/database';
 
 import '../style/checkin.css';
@@ -197,9 +197,16 @@ const Checkin = ({ dispatchDisplay }) => {
   }, [checkinDays]);
 
   const renderRewardButton = (eligible, received, receiveFunc, label) => {
+    const buttonStyle = {
+      backgroundColor: 'gray',
+      cursor: 'default',
+      opacity: eligible && !received ? 1 : 0.6,
+    };
+
     return (
       <button
         className="reward-button"
+        style={buttonStyle}
         onClick={receiveFunc}
         disabled={!eligible || received}
       >

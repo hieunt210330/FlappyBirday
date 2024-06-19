@@ -8,7 +8,7 @@ const Gift = ({gifts}) => {
     return (
         <div>
             {
-                gifts.map(({x, y}, index) => {
+                gifts.getGifts().map(({x, y}, index) => {
                     const pos_x = x + "vh";
                     return (
                         <div key={`gift-${index}`}>

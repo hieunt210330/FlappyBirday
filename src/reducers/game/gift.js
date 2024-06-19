@@ -1,66 +1,39 @@
-import config from "../../class/gameconfig";
+// giftReducer.js
 
-import {
-    createPrize,
-} from "../../api/database"
-
-const generateVoucher = () => {
-}
-
+import Gifts from '../../class/gifts';
 
 const initialState = {
-    gifts: [],
-    lastGen: 0,
-    gitf_message: ''
-}
+    gifts: new Gifts()
+};
 
-export default (state = initialState, {type, pipes, eaten_index, pipeCount} = {}) => {
-    let tmp_pipes = pipes;
-    let gifts = state.gifts;
-    let lastGen = state.lastGen;
-    switch (type) {
+const giftReducer = (state = initialState, action) => {
+    let gifts = null;
+    switch (action.type) {
         case 'DISPLAY_END_GAME':
-            return {...state, gifts: [], lastGen: 0};
+            return { ...state, gifts: new Gifts() };
         case 'GIFT_MOVE':
-            if (!gifts.length) {
-                return state;
-            }
-            try {
-                gifts = gifts.map(({x, y}) => {
-                    x = x - config.getPipeSpeed();
-                    return {x: x, y: y};
-                });
-            } catch (e) {
-            }
+            gifts = new Gifts();
+            gifts.copy(state.gifts);
+            gifts.moveGifts();
+            return { ...state, gifts: gifts };
 
-            return {...state, gifts: gifts};
         case 'GIFT_GENERATE':
-            try {
-                for (let i = lastGen; i < tmp_pipes.length; i++) {
-                    if (i < 1 || tmp_pipes[i-1].passed === true)
-                    {
-                        continue;
-                    }
-                    if (pipeCount >= 0) {
-                        const previousPipe = tmp_pipes[i - 1];
-                        const currentPipe = tmp_pipes[i];
-                        const giftX = (previousPipe.x + currentPipe.x) / 2;
-                        const giftY = (previousPipe.topHeight + (100 - currentPipe.topHeight)) / 2; // Giả sử chiều cao của canvas là 100
-                        gifts.push({x: giftX, y: giftY});
-                        lastGen = i;
-                    }
-                }
-            } catch (e) {
-            }
+            gifts = new Gifts();
+            gifts.copy(state.gifts);
+            const pipeCount = action.pipes.getPipeCount();
+            const pipes = action.pipes.getPipes();
+            gifts.generateGifts(pipes, pipeCount);
+            return { ...state, gifts: gifts };
 
-            return {...state, gifts: gifts, lastGen: lastGen};
         case 'GIFT_EATEN':
-            const prize = createPrize(process.env.USER_ID);
-            gifts = gifts.filter((_, index) => index !== eaten_index);
-
-            return {...state, gifts: gifts, giftMessage: prize?.message};
+            gifts = new Gifts();
+            gifts.copy(state.gifts);
+            gifts.eatGift(action.eatenIndex, process.env.USER_ID);
+            return { ...state, gifts: gifts };
 
         default:
             return state;
     }
-}
+};
+
+export default giftReducer;

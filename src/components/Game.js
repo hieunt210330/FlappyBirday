@@ -58,7 +58,6 @@ const fly = () => {
         try {
             dispatch({ type: "BIRD_FLY" });
         } catch (e) {
-            //console.log(e);
         }
     };
 };
@@ -85,7 +84,8 @@ const start = () => {
                     dispatch({ type: "PIPE_GENERATE" });
                     if (gameMode === 'challenge')
                     {
-                        dispatch({ type: "GIFT_GENERATE", pipes: getState().pipe.pipes, pipeCount: getState().pipe.pipeCount });
+                        const pipes = getState().pipe.pipes;
+                        dispatch({ type: "GIFT_GENERATE", pipes: pipes });
                     }
                 } catch (e) {
                 }
@@ -100,7 +100,7 @@ const check = (dispatch, getState) => {
     const state = getState();
     const bird = state.bird.bird;
     const pipes = state.pipe.pipes;
-    const gifts = state.gift.gifts;
+    let gifts = state.gift.gifts;
     const gameMode = getState().game.gameMode;
 
     for (let i = 0; i < pipes.getLength(); i++) {
@@ -121,17 +121,16 @@ const check = (dispatch, getState) => {
     }
     if (gameMode === 'challenge')
     {
-        for (let i = 0; i < gifts.length; i++) {
+        for (let i = 0; i < gifts.getLength(); i++) {
             if (
-                bird.getX() + bird.getWidth() > gifts[i].x &&
-                bird.getX() < gifts[i].x + config.getGiftWidth() &&
-                bird.getY() + bird.getHeight() > gifts[i].y &&
-                bird.getY() < gifts[i].y + config.getGiftHeight()
+                bird.getX() + bird.getWidth() > gifts.getGift(i).getX() &&
+                bird.getX() < gifts.getGift(i).getX() + config.getGiftWidth() &&
+                bird.getY() + bird.getHeight() > gifts.getGift(i).getY() &&
+                bird.getY() < gifts.getGift(i).getY() + config.getGiftHeight()
             ) {
-                dispatch({ type: "GIFT_EATEN", eaten_index: i });
-                fadeOutEffect(state.gift.giftMessage, gifts[i]);
-                state.gift.giftMessage = null;
-    
+                dispatch({ type: "GIFT_EATEN", eatenIndex: i });
+                let giftMessage = getState().gift.gifts.getGiftMessage();
+                fadeOutEffect(giftMessage, gifts.getGift(i));
                 break;
             }
         }

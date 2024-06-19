@@ -3,6 +3,43 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // Function to get user ID by email
+async function getAllUser(pattern) {
+	try {
+	  const users = await prisma.user.findMany({
+		where: {
+		  OR: [
+			{
+			  email: {
+				contains: pattern,
+				mode: 'insensitive',
+			  },
+			},
+			{
+			  name: {
+				contains: pattern,
+				mode: 'insensitive',
+			  },
+			},
+		  ],
+		},
+		include: {
+		  scores: false,
+		  checkIn: false,
+		  vouchers: false,
+		  feedbacks: false,
+		},
+	  });
+	  return users.map(user => {
+		const { password, ...userWithoutPassword } = user;
+		return userWithoutPassword;
+	  });
+	} catch (error) {
+	  throw null;
+	}
+  }
+  
+
+// Function to get user ID by email
 async function getUserIdByEmail(email) {
 	try {
 		const user = await prisma.user.findUnique({
@@ -478,7 +515,7 @@ async function receiveStreakReward(userId, days) {
 
 export {
 	getUserIdByEmail,
-	getUserByEmail,
+	getAllUser,
 	createUser,
 	getTurnLeft,
 	decrementTurnLeft,

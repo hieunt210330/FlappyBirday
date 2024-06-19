@@ -16,7 +16,7 @@ const Login = ({ dispatchDisplay }) => {
       return;
     }
     //dispatchDisplay('DISPLAY_HOME_USER');
-    dispatchDisplay('DISPLAY_HOME_USER');
+    dispatchDisplay('DISPLAY_HOME_ADMIN');
 
   };
 

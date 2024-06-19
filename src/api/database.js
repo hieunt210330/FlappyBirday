@@ -22,12 +22,18 @@ async function getUserIdByEmail(email) {
 	return data.userId;
 }
 
-// Function to call GET /api/users/email/:email
-async function getUserByEmail(email) {
-	const response = await fetch(`${serverUrl}/api/users/email/${email}/all`);
+// Function to call GET /api/users/pattern/:pattern/all
+async function getAllUser(pattern) {
+	if (pattern === '') {
+		const response = await fetch(`${serverUrl}/api/users/all`);
+		const data = await response.json();
+		return data;
+	}
+	const response = await fetch(`${serverUrl}/api/users/pattern/${pattern}/all`);
 	const data = await response.json();
 	return data;
 }
+
 
 // Function to call GET /api/users/:id/turns
 async function getTurnLeft(userId) {
@@ -227,7 +233,7 @@ async function receiveStreakRewardTwelve(userId) {
 export {
 	createUser,
 	getUserIdByEmail,
-	getUserByEmail,
+	getAllUser,
 	getTurnLeft,
 	decrementTurnLeft,
 	incrementTurnLeft,

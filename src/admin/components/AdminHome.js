@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import '../style/AdminHome.css';
-
+import User from "./User";
 const AdminHome = ({ dispatchDisplay }) => {
 
   const [activeTab, setActiveTab] = useState('Users');
-  const [data, setData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchPattern, setSearchPattern] = useState('');
 
   const fetchData = async (model) => {
     //const response = await fetch(`/api/${model.toLowerCase()}`);
@@ -18,48 +17,9 @@ const AdminHome = ({ dispatchDisplay }) => {
     fetchData(activeTab.toLowerCase());
   }, [activeTab]);
 
-  const handleDelete = async (id) => {
-    /*
-    await fetch(`/api/${activeTab.toLowerCase()}/${id}`, {
-      method: 'DELETE',
-    });
-    fetchData(activeTab.toLowerCase());
-    */
-  };
-
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+    setSearchPattern(e.target.value);
   };
-
-  const filteredData = data.filter(item =>
-    Object.values(item).some(value =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
-
-  const renderTable = () => (
-    <table>
-      <thead>
-        <tr>
-          {data.length > 0 &&
-            Object.keys(data[0]).map((key) => <th key={key}>{key}</th>)}
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {filteredData.map((item) => (
-          <tr key={item.id}>
-            {Object.values(item).map((value, index) => (
-              <td key={index}>{value}</td>
-            ))}
-            <td>
-              <button onClick={() => handleDelete(item.id)}>Delete</button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
 
   return (
     <div className="admin-panel">
@@ -78,11 +38,11 @@ const AdminHome = ({ dispatchDisplay }) => {
         <input
           type="text"
           placeholder={`Search ${activeTab}`}
-          value={searchTerm}
+          value={searchPattern}
           onChange={handleSearch}
         />
-        {renderTable()}
       </div>
+      {activeTab === 'Users' && <User searchPattern={searchPattern}/>}
     </div>
   );
 };

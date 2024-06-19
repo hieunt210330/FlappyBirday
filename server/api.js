@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import {
 	getUserIdByEmail,
-	getUserByEmail,
+	getAllUser,
 	createUser,
 	getTurnLeft,
 	decrementTurnLeft,
@@ -40,11 +40,15 @@ app.get('/api/users/email/:email/id', async (req, res) => {
   res.json({ userId });
 });
 
-app.get('/api/users/email/:email/all', async (req, res) => {
-	const user = await getUserByEmail(req.params.email);
-	res.json({ user });
-  });
-  
+app.get('/api/users/pattern/:pattern/all', async (req, res) => {
+	const users = await getAllUser(req.params.pattern);
+	res.json(users);
+});
+
+app.get('/api/users/all', async (req, res) => {
+	const users = await getAllUser('');
+	res.json(users);
+});
 
 app.post('/api/users', async (req, res) => {
   const { email, name } = req.body;

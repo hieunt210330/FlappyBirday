@@ -13,12 +13,14 @@ const EndScreen = ({ score, dispatchDisplay }) => {
         </div>
         <div className="button-row">
           <button className="icon-button replay-button" onClick={() => dispatchDisplay('DISPLAY_GAME')}>
-            <RotateCcw />
-            <span>Replay</span>
+            {/* <RotateCcw /> */}
+            {/* <span>Replay</span> */}
+            Replay
           </button>
           <button className="icon-button home-button" onClick={() => dispatchDisplay('DISPLAY_HOME')}>
-            <Home />
-            <span>Home</span>
+            {/* <Home />
+            <span>Home</span> */}
+            Home
           </button>
         </div>
       </div>

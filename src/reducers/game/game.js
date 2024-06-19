@@ -3,7 +3,7 @@ import {
     updateScore,
 } from "../../api/database"
 
-import config from "../../gameconfig";
+import config from "../../class/GameConfig";
 
 const initialState = {
     score: 0,

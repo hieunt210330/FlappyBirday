@@ -6,9 +6,9 @@ import Pipe from "./Game/Pipe";
 import Foreground from "./Game/Foreground";
 import Gift from "./Game/Gift";
 
-import config from "../gameconfig";
+import config from "../class/GameConfig";
+
 import "../style.css";
-import game from "../reducers/game/game";
 
 let gameAnimation;
 let genrator;
@@ -98,15 +98,15 @@ const start = () => {
 
 const check = (dispatch, getState) => {
     const state = getState();
-    const bird = state.bird;
+    const bird = state.bird.bird;
     const pipes = state.pipe.pipes;
     const gifts = state.gift.gifts;
     const gameMode = getState().game.gameMode;
 
     for (let i = 0; i < pipes.length; i++) {
-        if (bird.x + bird.width > pipes[i].x &&
-            bird.x < pipes[i].x + config.PIPE_WIDTH &&
-            (bird.y < pipes[i].topHeight || bird.y + bird.height > pipes[i].topHeight + config.PIPE_HOLE)
+        if (bird.getX() + bird.getWidth() > pipes[i].x &&
+            bird.getX() < pipes[i].x + config.PIPE_WIDTH &&
+            (bird.getY() < pipes[i].topHeight || bird.getY() + bird.getHeight() > pipes[i].topHeight + config.PIPE_HOLE)
         ) {
             effect_on = false;
             inGame = false;
@@ -114,7 +114,7 @@ const check = (dispatch, getState) => {
             clearInterval(genrator);
             dispatch({ type: "DISPLAY_END_GAME", payload: state.game.score });
         }
-        if (pipes[i].passed === false && bird.x > pipes[i].x + config.PIPE_WIDTH) {
+        if (pipes[i].passed === false && bird.getX() > pipes[i].x + config.PIPE_WIDTH) {
             dispatch({ type: "PIPE_PASS", payload: i });
             dispatch({ type: "SCORE_INCREASEMENT" });
         }
@@ -123,10 +123,10 @@ const check = (dispatch, getState) => {
     {
         for (let i = 0; i < gifts.length; i++) {
             if (
-                bird.x + bird.width > gifts[i].x &&
-                bird.x < gifts[i].x + config.GIFT_WIDTH &&
-                bird.y + bird.height > gifts[i].y &&
-                bird.y < gifts[i].y + config.GIFT_HEIGHT
+                bird.getX() + bird.getWidth() > gifts[i].x &&
+                bird.getX() < gifts[i].x + config.GIFT_WIDTH &&
+                bird.getY() + bird.getHeight() > gifts[i].y &&
+                bird.getY() < gifts[i].y + config.GIFT_HEIGHT
             ) {
                 dispatch({ type: "GIFT_EATEN", eaten_index: i });
                 fadeOutEffect(state.gift.giftMessage, gifts[i]);

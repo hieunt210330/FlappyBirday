@@ -2,14 +2,14 @@ import React from "react";
 
 import { connect } from "react-redux";
 
-import config from "../../gameconfig";
-
 import "../../style.css";
 
 
-const Bird = ({y, dY, r, d}) => {
+const Bird = ({bird}) => {
     
-    const x = 47.5 * document.documentElement.clientWidth / document.documentElement.clientHeight;
+    let y = bird.getY();
+    let x = bird.getX();
+    x = 47.5 * document.documentElement.clientWidth / document.documentElement.clientHeight;
 
     return (
         <div className="bird"
@@ -21,7 +21,7 @@ const Bird = ({y, dY, r, d}) => {
     )
 }
 
-const mapStateToProps = ({bird}) => ({y: bird.y, dY: bird.dY, r: bird.r, d: bird.d});
+const mapStateToProps = ({bird}) => ({bird: bird.bird});
 const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Bird);

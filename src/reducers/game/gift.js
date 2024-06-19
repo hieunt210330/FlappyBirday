@@ -1,4 +1,4 @@
-import config from "../../gameconfig";
+import config from "../../class/GameConfig";
 
 import {
     createPrize,

@@ -2,7 +2,7 @@ import React from "react";
 
 import { connect } from "react-redux";
 
-import config from "../../gameconfig";
+import config from "../../class/GameConfig";
 
 import "../../style.css";
 

@@ -54,7 +54,7 @@ const Sidebar = ({ dispatchDisplay }) => {
             </button>
             <button
               className="sidebar-button"
-              onClick={() => dispatchDisplay("DISPLAY_REWARD")}
+              onClick={() => dispatchDisplay("DISPLAY_PUZZLE")}
               title="Puzzle"
             >
               <Puzzle color="currentColor" alt="Puzzle" />

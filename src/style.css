@@ -25,7 +25,7 @@
     background-size: contain;
 }
 
-.pipe-top{
+.pipe-top {
     position: fixed;
     /*left: 45vw;*/
     width: 10vh;
@@ -36,7 +36,7 @@
     background-position: center bottom;
 }
 
-.pipe-bottom{
+.pipe-bottom {
     position: fixed;
     /*left: 45vw;*/
     top: 55vh;
@@ -52,7 +52,7 @@
     position: fixed;
     width: 7vh;
     height: 7vh;
-    background-image: url('../images/gift-image.png'); 
+    background-image: url('../images/gift-image.png');
     background-repeat: no-repeat;
     background-size: 120% 120%;
     background-position: center top;
@@ -60,13 +60,16 @@
 
 
 img {
-    width: 100%; /* or any custom size */
-    height: 100%; 
+    width: 100%;
+    /* or any custom size */
+    height: 100%;
     object-fit: contain;
 }
 
 
-.day-cell, .prev-month, .next-month {
+.day-cell,
+.prev-month,
+.next-month {
     width: 40px;
     height: 40px;
     text-align: center;
@@ -100,7 +103,7 @@ img {
     font-size: 20px;
     z-index: 10;
     display: "none";
-    
+
 }
 
 @keyframes fadeOutUp {
@@ -108,8 +111,94 @@ img {
         opacity: 1;
         transform: translateY(0);
     }
+
     100% {
         opacity: 0;
         transform: translateY(-50px);
     }
+}
+
+.puzzle-container {
+    /* Container styling */
+    text-align: center;
+}
+
+.puzzle-header {
+    /* Header styling */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-button {
+    /* Close button styling */
+    cursor: pointer;
+}
+
+.puzzle-status {
+    /* Status text styling */
+}
+
+.puzzle-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 0;
+    /* No gap between grid items */
+    width: 200px;
+    /* Adjust the width to match the combined width of the pieces */
+    height: 200px;
+    /* Adjust the height to match the combined height of the pieces */
+    margin: 20px auto;
+    /* Center the grid */
+}
+
+.puzzle-piece {
+    width: 100px;
+    /* Adjust the size as needed */
+    height: 100px;
+    /* Adjust the size as needed */
+    background-size: cover;
+    background-position: center;
+}
+
+.piece-1 {
+    background-image: url('../images/shop-high-contrast/image1.png');
+    /* Replace with your actual image path */
+}
+
+.piece-2 {
+    background-image: url('../images/shop-high-contrast/image2.png');
+    /* Replace with your actual image path */
+}
+
+.piece-3 {
+    background-image: url('../images/shop-high-contrast/image3.png');
+    /* Replace with your actual image path */
+}
+
+.piece-4 {
+    background-image: url('../images/shop-high-contrast/image4.png');
+    /* Replace with your actual image path */
+}
+
+.piece-1-not-collected {
+    background-image: url('../images/shop-low-contrast/image1.png'); /* Replace with your actual not collected image path */
+  }
+  
+  .piece-2-not-collected {
+    background-image: url('../images/shop-low-contrast/image2.png'); /* Replace with your actual not collected image path */
+  }
+  
+  .piece-3-not-collected {
+    background-image: url('../images/shop-low-contrast/image3.png'); /* Replace with your actual not collected image path */
+  }
+  
+  .piece-4-not-collected {
+    background-image: url('../images/shop-low-contrast/image4.png'); /* Replace with your actual not collected image path */
+  }
+  
+
+.reward-button {
+    /* Reward button styling */
+    cursor: pointer;
 }

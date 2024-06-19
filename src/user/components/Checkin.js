@@ -13,7 +13,7 @@ import {
   receiveStreakRewardThree,
   receiveStreakRewardSeven,
   receiveStreakRewardTwelve,
-} from '../api/database';
+} from '../../api/database';
 
 import '../style/checkin.css';
 

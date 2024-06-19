@@ -6,7 +6,7 @@ import '../style/modeselection.css';
 import { 
       decrementTurnLeft,
       getTurnLeft
- } from '../api/database';
+ } from '../../api/database';
 
 const ModeSelection = ({ displayList, dispatchDisplay }) => {
 
@@ -64,7 +64,7 @@ const ModeSelection = ({ displayList, dispatchDisplay }) => {
             <div className="mode-selection-container">
                   <div className="mode-selection-screen">
                         <div className="mode-selection-content">
-                              <button className="turn-back-button" onClick={() => dispatchDisplay('DISPLAY_HOME')}>Home</button>
+                              <button className="turn-back-button" onClick={() => dispatchDisplay('DISPLAY_HOME_USER')}>Home</button>
                               <h2>New Game</h2>
                               <div className="options">
                                     <div className="option">

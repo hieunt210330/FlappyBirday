@@ -15,11 +15,18 @@ async function createUser(email, name) {
 	return response.json();
 }
 
-// Function to call GET /api/users/email/:email
+// Function to call GET /api/users/email/:email/id
 async function getUserIdByEmail(email) {
-	const response = await fetch(`${serverUrl}/api/users/email/${email}`);
+	const response = await fetch(`${serverUrl}/api/users/email/${email}/id`);
 	const data = await response.json();
 	return data.userId;
+}
+
+// Function to call GET /api/users/email/:email
+async function getUserByEmail(email) {
+	const response = await fetch(`${serverUrl}/api/users/email/${email}/all`);
+	const data = await response.json();
+	return data;
 }
 
 // Function to call GET /api/users/:id/turns
@@ -220,6 +227,7 @@ async function receiveStreakRewardTwelve(userId) {
 export {
 	createUser,
 	getUserIdByEmail,
+	getUserByEmail,
 	getTurnLeft,
 	decrementTurnLeft,
 	incrementTurnLeft,

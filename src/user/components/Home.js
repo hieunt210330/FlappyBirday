@@ -6,7 +6,7 @@ import '../style/home.css';
 import {
     getUserMaxScore,
     getTurnLeft
-} from '../api/database';
+} from '../../api/database';
 
 const Home = ({ dispatchDisplay }) => {
     const [highScore, setHighScore] = useState(null);

@@ -6,7 +6,7 @@ import '../style/feedback.css';
 import {
   getUserFeedbacks,
   saveUserFeedback
-} from '../api/database';
+} from '../../api/database';
 
 const Feedback = ({ dispatchDisplay }) => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -54,7 +54,7 @@ const Feedback = ({ dispatchDisplay }) => {
 
   return (
     <div className="feedback-container">
-      <button className="home-button" onClick={() => dispatchDisplay('DISPLAY_HOME')}>Home</button>
+      <button className="home-button" onClick={() => dispatchDisplay('DISPLAY_HOME_USER')}>Home</button>
       {viewingFeedbacks ? (
         <div className="feedback-list">
           <h2>Your Feedbacks</h2>

@@ -6,7 +6,7 @@ import Pipe from "./Game/Pipe";
 import Foreground from "./Game/Foreground";
 import Gift from "./Game/Gift";
 
-import config from "../class/gameconfig";
+import config from "../../class/gameconfig";
 
 import "../style.css";
 

@@ -1,9 +1,9 @@
 
 import {
     updateScore,
-} from "../../api/database"
+} from "../../../api/database"
 
-import config from "../../class/gameconfig";
+import config from "../../../class/gameconfig";
 
 const initialState = {
     score: 0,

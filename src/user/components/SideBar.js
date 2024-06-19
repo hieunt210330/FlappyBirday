@@ -28,7 +28,11 @@ const Sidebar = ({ dispatchDisplay }) => {
         </button>
         {isExpanded && (
           <>
-            <button className="sidebar-button" title="Rules">
+            <button
+              className="sidebar-button"
+              onClick={() => dispatchDisplay("DISPLAY_RULES")}
+              title="Rules"
+            >
               <CircleHelp color="currentColor" alt="Rules" />
             </button>
             <button

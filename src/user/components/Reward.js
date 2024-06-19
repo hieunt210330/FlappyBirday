@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useTable } from 'react-table';
 import '../style/reward.css';
-import { getUserVouchers } from '../api/database';
+import { getUserVouchers } from '../../api/database';
 
 const Reward = ({ dispatchDisplay }) => {
     const [vouchers, setVouchers] = useState([]);

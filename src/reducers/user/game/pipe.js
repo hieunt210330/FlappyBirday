@@ -1,4 +1,4 @@
-import Pipes from '../../class/pipes';
+import Pipes from '../../../class/pipes';
 
 const initialState = {
     pipes: new Pipes()

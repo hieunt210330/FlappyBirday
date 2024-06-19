@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import {
 	getUserIdByEmail,
+	getUserByEmail,
 	createUser,
 	getTurnLeft,
 	decrementTurnLeft,
@@ -34,10 +35,16 @@ app.use(cors());
 
 app.use(express.json());
 
-app.get('/api/users/email/:email', async (req, res) => {
+app.get('/api/users/email/:email/id', async (req, res) => {
   const userId = await getUserIdByEmail(req.params.email);
   res.json({ userId });
 });
+
+app.get('/api/users/email/:email/all', async (req, res) => {
+	const user = await getUserByEmail(req.params.email);
+	res.json({ user });
+  });
+  
 
 app.post('/api/users', async (req, res) => {
   const { email, name } = req.body;

@@ -15,6 +15,18 @@ async function getUserIdByEmail(email) {
 	}
 }
 
+// Function to get user ID by email
+async function getUserByEmail(email) {
+	try {
+		const user = await prisma.user.findUnique({
+			where: { email: email }
+		});
+		return user?.id ?? null;
+	} catch (error) {
+		return null;
+	}
+}
+
 // Function to create a new user
 async function createUser(email, name) {
 	try {
@@ -466,6 +478,7 @@ async function receiveStreakReward(userId, days) {
 
 export {
 	getUserIdByEmail,
+	getUserByEmail,
 	createUser,
 	getTurnLeft,
 	decrementTurnLeft,

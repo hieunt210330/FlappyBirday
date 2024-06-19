@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-// import './Puzzle.css'; // Assuming you have a separate CSS file for styling
+import '../style/puzzle.css'; // Import the CSS file
 
 const Puzzle = ({ dispatchDisplay }) => {
-  const [piecesCollected, setPiecesCollected] = useState([true, false, false, false]); // Initial state indicating all pieces are not collected, modify to true if a piece is collected
+  const [piecesCollected, setPiecesCollected] = useState([true, false, false, false]); // Trạng thái ban đầu cho các mảnh ghép
   const totalPieces = 4;
 
   const handleClose = () => {
-    dispatchDisplay('DISPLAY_HOME');
+    dispatchDisplay('DISPLAY_HOME_USER');
   };
 
   const handleReward = () => {
-    // Logic to handle reward
-    console.log('Reward received');
+    // Logic để nhận phần thưởng
+    console.log('Phần thưởng đã nhận');
   };
 
   return (
     <div className="puzzle-container">
       <div className="puzzle-header">
-        <h2>Hidden Puzzle</h2>
-        <button className="close-button" onClick={handleClose}>✖</button>
+        <button className="home-button" onClick={handleClose}>Home</button>
+        <h2 className="header-text">Puzzle</h2>
       </div>
       <p className="puzzle-status">
         <span className="collected-count">{piecesCollected.filter(Boolean).length}</span>/{totalPieces} Pieces Collected!

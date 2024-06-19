@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTable } from 'react-table';
 // import '../style/scoreboard.css';
-import { getAllMaxScores } from '../api/database';
+import { getAllMaxScores } from '../../api/database';
 
 const Scoreboard = ({ dispatchDisplay }) => {
     const [scores, setScores] = useState([]);

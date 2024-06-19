@@ -1,6 +1,6 @@
 // giftReducer.js
 
-import Gifts from '../../class/gifts';
+import Gifts from '../../../class/gifts';
 
 const initialState = {
     gifts: new Gifts()

@@ -15,6 +15,9 @@ const displayList = {
     displayRules: false,
     displayExit: false,
 
+    displayLogin: false,
+    displayAdminHome: false,
+
 }
 
 const intialState = {
@@ -24,7 +27,7 @@ const intialState = {
 export default (state = intialState, {type} = {}) => {
     let displayListTmp = {displayList};
     switch (type) {
-        case 'DISPLAY_HOME':
+        case 'DISPLAY_HOME_USER':
             displayListTmp.displayHome = true;
             displayListTmp.displaySidebar = true;
             return {...state, displayList: displayListTmp};
@@ -80,6 +83,14 @@ export default (state = intialState, {type} = {}) => {
             displayListTmp.displaySidebar = true;
             return {...state, displayList: displayListTmp};
         
+        case 'DISPLAY_LOGIN':
+            displayListTmp.displayLogin = true;
+            return {...state, displayList: displayListTmp};
+        
+        case 'DISPLAY_HOME_ADMIN':
+            displayListTmp.displayAdminHome = true;
+            return {...state, displayList: displayListTmp};
+
         default:
             return state;
     }

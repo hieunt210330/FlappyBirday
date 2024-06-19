@@ -1,24 +1,26 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import Home from './Home';
-import EndScreen from './EndScreen';
-import ModeSelection from './ModeSelection';
-import Game from './Game';
-import Sidebar from './SideBar';
-import Info from './Info';
-import Puzzle from "./Puzzle";
-import Feedback from "./Feedback";
-import Rules from "./Rules";
-import Reward from './Reward';
-import Scoreboard from './Scoreboard';
-import Checkin from './Checkin';
+import Home from './user/components/Home';
+import EndScreen from './user/components/EndScreen';
+import ModeSelection from './user/components/ModeSelection';
+import Game from './user/components/Game';
+import Sidebar from './user/components/SideBar';
+import Info from './user/components/Info';
+import Puzzle from "./user/components/Puzzle";
+import Feedback from "./user/components/Feedback";
+import Rules from "./user/components/Rules";
+import Reward from './user/components/Reward';
+import Scoreboard from './user/components/Scoreboard';
+import Checkin from './user/components/Checkin';
 
-import '../style/home.css';
+import Login from "./common/components/Login";
+
+import AdminHome from "./admin/components/AdminHome";
 
 const Display = ({ displayList, dispatchDisplay }) => {
     useEffect(() => {
         if (!Object.values(displayList).some(value => value === true)) {
-            dispatchDisplay('DISPLAY_HOME');
+            dispatchDisplay('DISPLAY_LOGIN');
         }
     }, [displayList, dispatchDisplay]);
 
@@ -54,12 +56,18 @@ const Display = ({ displayList, dispatchDisplay }) => {
     if (displayList.displayPuzzle) {
         displayComponents.push(<Puzzle key="puzzle" />);
     }
-
     if (displayList.displayFeedback) {
         displayComponents.push(<Feedback key="bugReport" />);
     }
     if (displayList.displayRules) {
+        console.log("Displaying rules");
         displayComponents.push(<Rules key="rules" />);
+    }
+    if (displayList.displayLogin) {
+        displayComponents.push(<Login key="login" />);
+    }
+    if (displayList.displayAdminHome) {
+        displayComponents.push(<AdminHome key="adminHome" />);
     }
     return (
         <div>

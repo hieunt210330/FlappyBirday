@@ -28,7 +28,7 @@ const Info = ({ dispatchDisplay }) => {
     <div style={styles.container}>
       <button
         className="return-button"
-        onClick={() => dispatchDisplay("DISPLAY_HOME")}
+        onClick={() => dispatchDisplay("DISPLAY_HOME_USER")}
       >
         Return to Home
       </button>
@@ -86,11 +86,13 @@ const styles = {
     width: "90%",
   },
   activeTab: {
-    backgroundColor: "#dfeaff",
+    backgroundColor: "cyan",
     fontWeight: "bold",
+    color: "black",
   },
   inactiveTab: {
     backgroundColor: "#f9f9f9",
+    color: "black",
   },
   content: {
     padding: "20px",

@@ -1,4 +1,4 @@
-import config from "../../class/GameConfig";
+import config from "../../class/gameconfig";
 
 import {
     createPrize,
@@ -27,7 +27,7 @@ export default (state = initialState, {type, pipes, eaten_index, pipeCount} = {}
             }
             try {
                 gifts = gifts.map(({x, y}) => {
-                    x = x - config.PIPE_SPEED;
+                    x = x - config.getPipeSpeed();
                     return {x: x, y: y};
                 });
             } catch (e) {

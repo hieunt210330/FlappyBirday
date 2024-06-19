@@ -6,7 +6,7 @@ import Pipe from "./Game/Pipe";
 import Foreground from "./Game/Foreground";
 import Gift from "./Game/Gift";
 
-import config from "../class/GameConfig";
+import config from "../class/gameconfig";
 
 import "../style.css";
 
@@ -78,7 +78,7 @@ const start = () => {
                     dispatch({ type: "GIFT_MOVE" });
                 }
                 check(dispatch, getState);
-            }, 1000 / config.FPS);
+            }, 1000 / config.getFPS());
 
             genrator = setInterval(() => {
                 try {
@@ -90,7 +90,7 @@ const start = () => {
                 } catch (e) {
                 }
 
-            }, config.GENERATE_TIME);
+            }, config.getGenerateTime());
 
         }
     };
@@ -103,10 +103,10 @@ const check = (dispatch, getState) => {
     const gifts = state.gift.gifts;
     const gameMode = getState().game.gameMode;
 
-    for (let i = 0; i < pipes.length; i++) {
-        if (bird.getX() + bird.getWidth() > pipes[i].x &&
-            bird.getX() < pipes[i].x + config.PIPE_WIDTH &&
-            (bird.getY() < pipes[i].topHeight || bird.getY() + bird.getHeight() > pipes[i].topHeight + config.PIPE_HOLE)
+    for (let i = 0; i < pipes.getLength(); i++) {
+        if (bird.getX() + bird.getWidth() > pipes.getPipe(i).getX() &&
+            bird.getX() < pipes.getPipe(i).getX() + config.getPipeWidth() &&
+            (bird.getY() < pipes.getPipe(i).getTopHeight() || bird.getY() + bird.getHeight() > pipes.getPipe(i).getTopHeight() + config.getPipeHole())
         ) {
             effect_on = false;
             inGame = false;
@@ -114,7 +114,7 @@ const check = (dispatch, getState) => {
             clearInterval(genrator);
             dispatch({ type: "DISPLAY_END_GAME", payload: state.game.score });
         }
-        if (pipes[i].passed === false && bird.getX() > pipes[i].x + config.PIPE_WIDTH) {
+        if (pipes.getPipe(i).isPassed() === false && bird.getX() > pipes.getPipe(i).getX() + config.getPipeWidth()) {
             dispatch({ type: "PIPE_PASS", payload: i });
             dispatch({ type: "SCORE_INCREASEMENT" });
         }
@@ -124,9 +124,9 @@ const check = (dispatch, getState) => {
         for (let i = 0; i < gifts.length; i++) {
             if (
                 bird.getX() + bird.getWidth() > gifts[i].x &&
-                bird.getX() < gifts[i].x + config.GIFT_WIDTH &&
+                bird.getX() < gifts[i].x + config.getGiftWidth() &&
                 bird.getY() + bird.getHeight() > gifts[i].y &&
-                bird.getY() < gifts[i].y + config.GIFT_HEIGHT
+                bird.getY() < gifts[i].y + config.getGiftHeight()
             ) {
                 dispatch({ type: "GIFT_EATEN", eaten_index: i });
                 fadeOutEffect(state.gift.giftMessage, gifts[i]);
@@ -171,5 +171,5 @@ function fadeOutEffect(msg, gift_pos) {
             clearInterval(fadeEffect);
 
         }
-    }, 1000/config.FPS);
+    }, 1000/config.getFPS());
 }

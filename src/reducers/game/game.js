@@ -3,7 +3,7 @@ import {
     updateScore,
 } from "../../api/database"
 
-import config from "../../class/GameConfig";
+import config from "../../class/gameconfig";
 
 const initialState = {
     score: 0,
@@ -20,18 +20,7 @@ export default (state = initialState, {type , payload} = {} ) => {
         case 'DISPLAY_GAME':
             return {...state, gameMode: gameMode, gameLevel: gameLevel}
         case 'START':
-            if (gameLevel === 'normal')
-            {
-                config.PIPE_SPEED = config.PIPE_SPEED_NORMAL;
-            }
-            else if (gameLevel === 'hard')
-            {
-                config.PIPE_SPEED = config.PIPE_SPEED_HARD;
-            }
-            else if (gameLevel === 'easy')
-            {
-                config.PIPE_SPEED = config.PIPE_SPEED_EASY;
-            }
+            config.setPipeSpeed(gameLevel);
             return {...state, score:0, status: 'playing'}
         case 'DISPLAY_END_GAME':
             updateScore(process.env.USER_ID, state.score);

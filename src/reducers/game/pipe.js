@@ -1,55 +1,36 @@
-import config from "../../class/GameConfig";
+import Pipes from '../../class/pipes';
 
 const initialState = {
-    pipes: [],
-    pipeCount: 0, 
+    pipes: new Pipes()
 }
 
-export default (state = initialState, {type, payload} = {}) => {
-    switch (type) {
+
+const pipeReducer = (state = initialState, action) => {
+    let pipes = new Pipes();
+    switch (action.type) {
         case 'START':
-            let first_pipe_x = 100 * document.documentElement.clientWidth / document.documentElement.clientHeight;
-            return {...state, pipes: [{topHeight: 50, x: first_pipe_x, passed: false}], pipeCount: 0};
+            pipes.copy(new Pipes());
+            pipes.startGame();
+            return { ...state, pipes: pipes };
         case 'DISPLAY_END_GAME':
-            return {...state, pipes: [], pipeCount: 0};
+            pipes.copy(new Pipes());
+            pipes.endGame();
+            return { ...state, pipes: pipes };
         case 'PIPE_PASS':
-            const updatedPipes = state.pipes.map((pipe, index) => {
-                if (index === payload) {
-                    return {...pipe, passed: true};
-                }
-                return pipe;
-            });
-            return {...state, pipes: updatedPipes};
+            pipes.copy(state.pipes);
+            pipes.passPipe(action.payload);
+            return { ...state, pipes: pipes };
         case 'PIPE_MOVE':
-            if (!state.pipes.length) {
-                return state;
-            }
-
-            const movedPipes = state.pipes.map(({topHeight, x, passed}) => ({
-                topHeight,
-                x: x - config.PIPE_SPEED,
-                passed
-            }));
-            
-            return {...state, pipes: movedPipes};
+            pipes.copy(state.pipes);
+            pipes.movePipes();
+            return { ...state, pipes: pipes };
         case 'PIPE_GENERATE':
-            let newPipes = [...state.pipes];
-            let pipeCount = state.pipeCount;
-
-            if (newPipes.length === 0) {
-                const topHeight = Math.floor(Math.random() * 50) + 10;
-                newPipes.push({x: default_x, topHeight, passed: false});
-            }
-
-            while(newPipes.length && newPipes[newPipes.length - 1].x <= 5000) {
-                const topHeight = Math.floor(Math.random() * 50) + 10;
-                const old_x = newPipes[newPipes.length - 1].x;
-                newPipes.push({x: old_x + config.PIPE_DISTANCE, topHeight, passed: false});
-                pipeCount++;
-            }
-
-            return {...state, pipes: newPipes, pipeCount};
+            pipes.copy(state.pipes);
+            pipes.generatePipes();
+            return { ...state, pipes: pipes };
         default:
             return state;
     }
-}
+};
+
+export default pipeReducer;

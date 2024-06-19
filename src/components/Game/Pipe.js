@@ -2,7 +2,7 @@ import React from "react";
 
 import { connect } from "react-redux";
 
-import config from "../../class/GameConfig";
+import config from "../../class/gameconfig";
 
 import "../../style.css";
 
@@ -10,7 +10,7 @@ const Pipe = ({pipes, d}) => {
     return (
         <div>
             {
-                pipes.map(({x, topHeight}, index) => {
+                pipes.getPipes().map(({x, topHeight}, index) => {
                     const pos_x = x + "vh";
                     return (
                         <div key={`pipe-${index}`}>
@@ -22,7 +22,7 @@ const Pipe = ({pipes, d}) => {
                             <div className="pipe-bottom" style={{
                                 left: pos_x,
                                 display: d,
-                                top: (topHeight + (config.PIPE_HOLE)) + "vh",
+                                top: (topHeight + (config.getPipeHole())) + "vh",
                             }}></div>
                         </div>
                     )
@@ -33,7 +33,7 @@ const Pipe = ({pipes, d}) => {
 }
 
 
-const mapStateToProps = ({pipe}) => ({pipes: pipe.pipes, d: pipe.d});
+const mapStateToProps = ({pipe}) => ({pipes: pipe.pipes});
 
 const mapDispatchToProps = {};
 

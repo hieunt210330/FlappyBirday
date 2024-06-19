@@ -134,10 +134,8 @@ class GameConfig {
         this.PIPE_DISTANCE = distance;
     }
 
-    setPipeSpeed(speed) {
-        this.PIPE_SPEED = speed;
-    }
 }
 
 const config = new GameConfig();
+
 export default config;

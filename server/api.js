@@ -26,6 +26,23 @@ import {
 	getConsecutiveCheckIns,
 	hasReceivedStreakReward,
 	receiveStreakReward,
+
+	updateUser,
+	deleteUser,
+	createVoucher1,
+	updateVoucher,
+	deleteVoucher,
+	getAllVouchers,
+	createScore,
+	updateScore1,
+	deleteScore,
+	getAllScores,
+	createCheckInDate,
+	updateCheckInDate,
+	deleteCheckInDate,
+	getAllCheckInDates,
+	getAllFeedback,
+	updateFeedbackResponse,
 } from './database.js';
 
 const app = express();
@@ -50,11 +67,23 @@ app.get('/api/users/all', async (req, res) => {
 	res.json(users);
 });
 
-app.post('/api/users', async (req, res) => {
-  const { email, name } = req.body;
-  const newUser = await createUser(email, name);
-  res.status(201).json(newUser);
+app.post('/api/users/create', async (req, res) => {
+  const { email, name, password, role } = req.body;
+  const newUser = await createUser(email, name, password, role);
+  res.json(newUser);
 });
+
+app.post('/api/users/update', async (req, res) => {
+	const response = await updateUser(req.body);
+	res.json(response);
+});
+
+app.get('/api/users/delete', async (req, res) => {
+	const { id } = req.query;
+	await deleteUser(id);
+	res.json({ message: 'User deleted successfully' });
+  });
+  
 
 app.get('/api/users/:id/turns', async (req, res) => {
   const turns = await getTurnLeft(req.params.id);
@@ -112,6 +141,28 @@ app.post('/api/users/:id/puzzle-count/reset', async (req, res) => {
   res.status(200).send('Puzzle count reset');
 });
 
+app.get('/api/vouchers/all', async (req, res) => {
+	const vouchers = await getAllVouchers();
+	res.json(vouchers);
+});
+
+app.post('/api/vouchers/create', async (req, res) => {
+	const response = await createVoucher1(req.body);
+	res.json(response);
+});
+
+app.post('/api/vouchers/update', async (req, res) => {
+	const response = await updateVoucher(req.body);
+	res.json(response);
+});
+
+app.get('/api/vouchers/delete', async (req, res) => {
+	const { id } = req.query;
+	await deleteVoucher(id);
+	res.json({ message: 'Voucher deleted successfully' });
+});
+
+
 app.get('/api/users/:id/vouchers', async (req, res) => {
   const vouchers = await getUserVouchers(req.params.id);
   res.json(vouchers);
@@ -128,6 +179,11 @@ app.get('/api/users/:id/prize', async (req, res) => {
 	res.json(response);
 });
 
+app.get('/api/feedbacks/all', async (req, res) => {
+	const feedbacks = await getAllFeedback();
+	res.json(feedbacks);
+});
+
 app.get('/api/users/:id/feedbacks', async (req, res) => {
   const feedbacks = await getUserFeedbacks(req.params.id);
   res.json(feedbacks);
@@ -137,6 +193,12 @@ app.post('/api/feedbacks', async (req, res) => {
   const { userId, message } = req.body;
   await saveUserFeedback(userId, message);
   res.status(201).send('Feedback saved');
+});
+
+app.post('/api/feedbacks/:id/response', async (req, res) => {
+	const { response } = req.body;
+  	await updateFeedbackResponse(req.params.id, response);
+  	res.status(200).send('Feedback response updated');
 });
 
 app.post('/api/users/:id/check-in', async (req, res) => {

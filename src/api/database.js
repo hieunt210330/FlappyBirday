@@ -1,19 +1,36 @@
 const serverUrl = 'http://localhost:3000';
 
 // Function to call POST /api/users
-async function createUser(email, name) {
-	const response = await fetch(`${serverUrl}/api/users`, {
+async function createUser(email, name, password, role) {
+	const response = await fetch(`${serverUrl}/api/users/create`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ email, name })
+		body: JSON.stringify({ email, name, password, role })
 	});
-	if (!response.ok) {
-		throw new Error(`HTTP error! status: ${response.status}`);
-	}
 	return response.json();
 }
+
+// Function to call POST /api/users
+async function updateUser(data) {
+	console.log('data:', data);
+	const response = await fetch(`${serverUrl}/api/users/update`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	});
+	return response.json();
+}
+
+// Function to delete a user
+async function deleteUser(id) {
+	const response = await fetch(`${serverUrl}/api/users/delete?id=${id}`);
+	return response.json();
+}
+  
 
 // Function to call GET /api/users/email/:email/id
 async function getUserIdByEmail(email) {
@@ -114,6 +131,40 @@ async function resetPuzzleCount(userId) {
 	});
 }
 
+// Function to call GET /api/vouchers/all
+export async function getAllVouchers() {
+	const response = await fetch(`${serverUrl}/api/vouchers/all`);
+	return response.json();
+}
+
+// Function to call POST /api/vouchers/create
+export async function createVoucher1(data) {
+	await fetch(`${serverUrl}/api/vouchers/create`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	});
+}
+
+// Function to call POST /api/vouchers/update
+export async function updateVoucher(data) {
+	await fetch(`${serverUrl}/api/vouchers/update`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	});
+}
+
+// Function to call GET /api/vouchers/delete
+export async function deleteVoucher(id) {
+	const response = await fetch(`${serverUrl}/api/vouchers/delete?id=${id}`);
+	return response.json();
+}
+
 // Function to call GET /api/users/:id/vouchers
 async function getUserVouchers(userId) {
 	const response = await fetch(`${serverUrl}/api/users/${userId}/vouchers`);
@@ -135,6 +186,22 @@ async function createVoucher(userId, code, discountPercentage, maxDiscountValue,
 async function createPrize(userId) {
 	const response = await fetch(`${serverUrl}/api/users/${userId}/prize`);
 	return response.json();
+}
+
+// Function to call GET /api/users/:id/feedbacks/all
+async function getAllFeedback() {
+	const response = await fetch(`${serverUrl}/api/feedbacks/all`);
+	return response.json();
+}
+
+export async function updateFeedbackResponse(id, response) {
+	await fetch(`${serverUrl}/api/feedbacks/${id}/response`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({response})
+	});
 }
 
 // Function to call GET /api/users/:id/feedbacks
@@ -260,4 +327,8 @@ export {
 	receiveStreakRewardThree,
 	receiveStreakRewardSeven,
 	receiveStreakRewardTwelve,
+
+	updateUser,
+	deleteUser,
+	getAllFeedback,
 };

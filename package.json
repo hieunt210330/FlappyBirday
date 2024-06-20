@@ -18,7 +18,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@prisma/client": "^5.15.0",
+    "@prisma/client": "^5.15.1",
     "@reduxjs/toolkit": "^2.2.5",
     "@types/react": "^18.3.2",
     "conf": "^12.0.0",

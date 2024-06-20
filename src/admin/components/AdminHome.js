@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import '../style/AdminHome.css';
 import User from "./User";
+import Feedback from "./Feedback";
+import Voucher from "./Voucher";
+
+
 const AdminHome = ({ dispatchDisplay }) => {
 
   const [activeTab, setActiveTab] = useState('Users');
@@ -43,6 +47,8 @@ const AdminHome = ({ dispatchDisplay }) => {
         />
       </div>
       {activeTab === 'Users' && <User searchPattern={searchPattern}/>}
+      {activeTab === 'Feedbacks' && <Feedback searchPattern={searchPattern}/>}
+      {activeTab === 'Vouchers' && <Voucher searchPattern={searchPattern}/>}
     </div>
   );
 };

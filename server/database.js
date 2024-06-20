@@ -52,26 +52,16 @@ async function getUserIdByEmail(email) {
 	}
 }
 
-// Function to get user ID by email
-async function getUserByEmail(email) {
-	try {
-		const user = await prisma.user.findUnique({
-			where: { email: email }
-		});
-		return user?.id ?? null;
-	} catch (error) {
-		return null;
-	}
-}
-
 // Function to create a new user
-async function createUser(email, name) {
+async function createUser(email, name, password, role) {
 	try {
 		const newUser = await prisma.$transaction(async (prisma) => {
 			const user = await prisma.user.create({
 				data: {
 					email: email,
 					name: name,
+					password: password,
+					isAdmin: role === 'Admin',
 				},
 			});
 			await prisma.checkIn.create({
@@ -100,6 +90,56 @@ async function getTurnLeft(userId) {
 		return 0;
 	}
 }
+
+
+async function updateUser(data) {
+	let newData = {};
+	if (data?.id === undefined) {
+		return;
+	}
+	if (data?.name !== undefined && (data.name !== '')) {
+		newData.name = data.name;
+	}
+	if (data?.email !== undefined && (data.email !== '')) {
+		newData.email = data.email;
+	}
+	if (data?.role !== undefined) {
+		if (data.role === 'Admin')
+		{
+			newData.isAdmin = true;
+		}
+		if (data.role === 'User')
+		{
+			newData.isAdmin = false;
+		}
+	}
+	if (data?.password !== undefined && (data.password !== '')) {
+		newData.password = data.password;
+	}
+	if (data?.turnLeft !== undefined) {
+		newData.turnLeft = parseInt(data.turnLeft);
+	}
+	if (data?.maxScore !== undefined) {
+		newData.maxScore = parseInt(data.maxScore);
+	}
+	if (data?.puzzleCount !== undefined) {
+		newData.puzzleCount = parseInt(data.puzzleCount);
+	}
+	newData.id = parseInt(data.id);
+	data = newData;
+	return prisma.user.update({ where: { id: parseInt(data.id) }, data });
+}
+
+async function deleteUser(id) {
+	const userId = parseInt(id);
+	await prisma.feedback.deleteMany({ where: { userId } });
+	await prisma.voucher.deleteMany({ where: { userId } });
+	await prisma.score.deleteMany({ where: { userId } });
+	await prisma.checkInDate.deleteMany({ where: { checkIn: { userId } } });
+	await prisma.checkIn.deleteMany({ where: { userId } });
+	return prisma.user.delete({ where: { id: userId } });
+}
+
 
 // Decrease the remaining turns of a user by 1
 async function decrementTurnLeft(userId) {
@@ -245,6 +285,93 @@ async function getUserVouchers(userId) {
 	}
 }
 
+// Voucher functions
+async function createVoucher1(data) {
+	data.userId = parseInt(data.userId);
+	return prisma.voucher.create({ data });
+}
+
+async function updateVoucher(data) {
+	//let userId = parseInt(data.userId);
+	let newData = {};
+	if (data?.id !== undefined) {
+		newData.id = data.id;
+	}
+	if (data?.code !== undefined) {
+		newData.code = data.code;
+	}
+	if (data?.discountPercentage !== undefined) {
+		newData.discountPercentage = parseInt(data.discountPercentage);
+	}
+	if (data?.maxDiscountValue !== undefined) {
+		newData.maxDiscountValue = parseInt(data.maxDiscountValue);
+	}
+	if (data?.minOrderValue !== undefined) {
+		newData.minOrderValue = parseInt(data.minOrderValue);
+	}
+	if (data?.discountValue !== undefined) {
+		newData.discountValue = parseInt(data.discountValue);
+	}
+	if (data?.expiryDate !== undefined) {
+		newData.expiryDate = new Date(data.expiryDate);
+	}
+	if (data?.userId !== undefined) {
+		newData.userId = parseInt(data.userId);
+	}
+	if (data?.used !== undefined) {
+		if (data.used === 'Yes') {
+			newData.used = true;
+		}
+		if (data.used === 'No') {
+			newData.used = false;
+		}
+	}
+	data = newData;
+	return prisma.voucher.update({ where: { id: parseInt(data.id) }, data });
+  }
+  
+async function deleteVoucher(id) {
+	return prisma.voucher.delete({ where: { id: parseInt(id) } });
+}
+
+async function getAllVouchers() {
+	return prisma.voucher.findMany();
+}  
+
+// Score functions
+async function createScore(data) {
+	return prisma.score.create({ data });
+}
+  
+async function updateScore1(id, data) {
+	return prisma.score.update({ where: { id: parseInt(id) }, data });
+}
+  
+async function deleteScore(id) {
+	return prisma.score.delete({ where: { id: parseInt(id) } });
+ }
+  
+async function getAllScores() {
+	return prisma.score.findMany();
+}
+
+// Check-in functions
+async function createCheckInDate(data) {
+	return prisma.checkIn.create({ data });
+}
+  
+async function updateCheckInDate(id, data) {
+	return prisma.checkIn.update({ where: { id: parseInt(id) }, data });
+}
+  
+async function deleteCheckInDate(id) {
+	return prisma.checkIn.delete({ where: { id: parseInt(id) } });
+  }
+  
+async function getAllCheckInDates() {
+	return prisma.checkIn.findMany();
+}
+
 // Create a new voucher
 async function createVoucher(userId, code, discountPercentage, maxDiscountValue, minOrderValue, discountValue, expiryDate) {
 	userId = parseInt(userId);
@@ -327,6 +454,14 @@ async function createPrize(userId) {
 
 }
 
+export async function getAllFeedback()
+{
+	return prisma.feedback.findMany();
+}
+
+export async function updateFeedbackResponse(id, response) {
+	return prisma.feedback.update({ where: { id: parseInt(id) }, data: { response: response } });
+}
 
 // Get the list of feedbacks of a user
 async function getUserFeedbacks(userId) {
@@ -539,4 +674,19 @@ export {
 	getConsecutiveCheckIns,
 	hasReceivedStreakReward,
 	receiveStreakReward,
+
+	updateUser,
+	deleteUser,
+	createVoucher1,
+	updateVoucher,
+	deleteVoucher,
+	getAllVouchers,
+	createScore,
+	updateScore1,
+	deleteScore,
+	getAllScores,
+	createCheckInDate,
+	updateCheckInDate,
+	deleteCheckInDate,
+	getAllCheckInDates,
 };

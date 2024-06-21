@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 
-import {getUserByEmail} from '../../api/database';
-
-import {setCurUserId} from '../../class/user'
-
+import { getUserByEmail } from '../../api/database';
+import { setCurUserId } from '../../class/user';
 import '../style/login.css'; // Import the CSS file
 
 const Login = ({ dispatchDisplay }) => {
@@ -20,21 +18,19 @@ const Login = ({ dispatchDisplay }) => {
       return;
     }
     if (password === user.password) {
-      if(user.isAdmin === true)
-      {
+      if (user.isAdmin === true) {
         dispatchDisplay('DISPLAY_HOME_ADMIN');
-      }
-      else if (user.isAdmin === false)
-      {
+      } else if (user.isAdmin === false) {
         setCurUserId(user.id);
         dispatchDisplay('DISPLAY_HOME_USER');
       }
-    }
-    else {
+    } else {
       alert('Invalid password');
     }
-    return;
+  };
 
+  const handleRegister = () => {
+    dispatchDisplay('DISPLAY_REGISTER');
   };
 
   return (
@@ -62,6 +58,7 @@ const Login = ({ dispatchDisplay }) => {
           </div>
           <button type="submit" className="login-button">Login</button>
         </form>
+        <p className="register-link" onClick={handleRegister}>Register</p>
       </div>
     </div>
   );

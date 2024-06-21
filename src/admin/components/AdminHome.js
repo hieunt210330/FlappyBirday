@@ -7,6 +7,10 @@ import Voucher from "./Voucher";
 import Score from "./Score";
 import CheckIn from "./CheckIn";
 
+import {
+  LogOut,
+} from "lucide-react";
+
 const AdminHome = ({ dispatchDisplay }) => {
 
   const [activeTab, setActiveTab] = useState('Users');
@@ -28,6 +32,14 @@ const AdminHome = ({ dispatchDisplay }) => {
 
   return (
     <div className="admin-panel">
+      <button
+              className="sidebar-button"
+              onClick={() => dispatchDisplay("DISPLAY_LOGIN")}
+              title="Logout"
+      >
+        <LogOut color="currentColor" alt="Logout" />
+      </button>
+
       <nav>
         {['Users', 'Feedbacks', 'Vouchers', 'Scores', 'CheckIns'].map((tab) => (
           <button

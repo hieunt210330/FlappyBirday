@@ -114,7 +114,7 @@ const styles = {
         backgroundColor: '#fff',
     },
     row: {
-        '&:nth-child(even)': {
+        '&:nthChild(even)': {
             backgroundColor: '#f9f9f9',
         },
     },

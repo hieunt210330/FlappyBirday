@@ -14,6 +14,7 @@ import Scoreboard from './user/components/Scoreboard';
 import Checkin from './user/components/Checkin';
 
 import Login from "./common/components/Login";
+import Register from "./common/components/Register";
 
 import AdminHome from "./admin/components/AdminHome";
 
@@ -60,7 +61,6 @@ const Display = ({ displayList, dispatchDisplay }) => {
         displayComponents.push(<Feedback key="bugReport" />);
     }
     if (displayList.displayRules) {
-        console.log("Displaying rules");
         displayComponents.push(<Rules key="rules" />);
     }
     if (displayList.displayLogin) {
@@ -68,6 +68,9 @@ const Display = ({ displayList, dispatchDisplay }) => {
     }
     if (displayList.displayAdminHome) {
         displayComponents.push(<AdminHome key="adminHome" />);
+    }
+    if (displayList.displayRegister) {
+        displayComponents.push(<Register key="register" />);
     }
     return (
         <div>

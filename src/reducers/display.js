@@ -17,7 +17,7 @@ const displayList = {
 
     displayLogin: false,
     displayAdminHome: false,
-
+    displayRegister: false
 }
 
 const intialState = {
@@ -86,7 +86,11 @@ export default (state = intialState, {type} = {}) => {
         case 'DISPLAY_LOGIN':
             displayListTmp.displayLogin = true;
             return {...state, displayList: displayListTmp};
-        
+         
+        case 'DISPLAY_REGISTER':
+            displayListTmp.displayRegister = true;
+            return {...state, displayList: displayListTmp};
+
         case 'DISPLAY_HOME_ADMIN':
             displayListTmp.displayAdminHome = true;
             return {...state, displayList: displayListTmp};

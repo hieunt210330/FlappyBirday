@@ -70,6 +70,14 @@ const Sidebar = ({ dispatchDisplay }) => {
             >
               <BugOff color="currentColor" alt="Feedback" />
             </button>
+            <button
+              className="sidebar-button"
+              onClick={() => dispatchDisplay("DISPLAY_LOGIN")}
+              title="Logout"
+            >
+              <LogOut color="currentColor" alt="Logout" />
+            </button>
+
           </>
         )}
       </div>

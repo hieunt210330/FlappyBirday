@@ -16,6 +16,24 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
+  .home-button {
+    display: flex;
+    top: 0;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+  }
+  
+  .home-button:hover {
+    background-color: #0056b3;
+  }
+
   .rules-container h2 {
     text-align: center;
     color: #333;

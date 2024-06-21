@@ -77,7 +77,7 @@ async function createUser(email, name, password, role) {
 			});
 			await prisma.checkIn.create({
 				data: {
-					userId: user.id,
+					userId: parseInt(user.id),
 				},
 			});
 			return user;
@@ -315,7 +315,7 @@ async function incrementPuzzleCount(userId) {
 // Decrease the number of puzzle pieces of a user by 10
 async function resetPuzzleCount(userId) {
 	let cnt = await getPuzzleCount(userId);
-	let new_cnt = Math.max(0, cnt-10);
+	let new_cnt = Math.max(0, cnt-4);
 	userId = parseInt(userId);
 	await prisma.user.update({
 		where: { id: userId },
@@ -439,7 +439,7 @@ async function getAllCheckInDates() {
 // Create a new voucher
 async function createVoucher(userId, code, discountPercentage, maxDiscountValue, minOrderValue, discountValue, expiryDate) {
 	userId = parseInt(userId);
-	discountPercentage = parseFloat(discountPercentage);
+	discountPercentage = parseInt(discountPercentage);
 	maxDiscountValue = parseInt(maxDiscountValue);
 	minOrderValue = parseInt(minOrderValue);
 	discountValue = parseInt(discountValue);

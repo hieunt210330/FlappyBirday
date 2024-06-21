@@ -6,6 +6,7 @@ import '../style/rules.css';
 const Rules = ({ dispatchDisplay }) => {
   return (
     <div className="rules-container">
+      <button className="home-button" onClick={() => dispatchDisplay('DISPLAY_HOME_USER')}>Home</button>
       <h2>Game Rules</h2>
       <div className="rules-content">
         <div className="rule-section">

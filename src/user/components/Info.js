@@ -1,11 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import "../style/info.css";
 import { Home } from "lucide-react";
 
-const Info = ({ dispatchDisplay }) => {
-  const tabs = ["Global Ranking", "Received Rewards", "Daily Checkin"];
+const Info = ({ displayList, dispatchDisplay }) => {
+  const tabs = ["Daily Checkin", "Global Ranking", "Received Rewards"];
   const [activeTab, setActiveTab] = useState("Global Ranking");
+
+  useEffect(() => {
+    async function fetchData() {
+      if (displayList.displayScoreboard) {
+        setActiveTab("Global Ranking");
+      }
+      else if (displayList.displayReward) {
+        setActiveTab("Received Rewards");
+      }
+      else if (displayList.displayCheckin) {
+        setActiveTab("Daily Checkin");
+      }
+    }
+    fetchData();
+  }, [displayList]);
 
   const fnDisplayTab = (option) => {
     setActiveTab(option);
@@ -57,9 +72,13 @@ const dispatchDisplay = (displayTypeStr) => {
   };
 };
 
-const mapStateToProps = ({}) => ({});
+const mapDispatchToProps = (dispatch) => ({
+    dispatchDisplay: (displayTypeStr) => dispatch({ type: displayTypeStr })
+});
 
-const mapDispatchToProps = { dispatchDisplay };
+const mapStateToProps = ({ display }) => ({
+    displayList: display.displayList
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Info);
 

@@ -36,7 +36,7 @@ import {
 	createScore,
 	updateScore1,
 	deleteScore,
-	getAllScores,
+	getAllScores1,
 	createCheckInDate,
 	updateCheckInDate,
 	deleteCheckInDate,
@@ -105,6 +105,21 @@ app.get('/api/users/:id/name', async (req, res) => {
   res.json({ name });
 });
 
+app.post('/api/users/score/:id/update', async (req, res) => {
+	const response = await updateScore1(req.body);
+	res.json(response);
+});
+
+app.post('/api/users/score/create', async (req, res) => {
+	console.log('req.body:', req.body);
+	const response = await createScore(req.body);
+	res.json(response);
+});
+
+app.post('/api/users/score/:id/delete', async (req, res) => {
+	const response = await deleteScore(req.body.id);
+});
+
 app.post('/api/users/:id/score', async (req, res) => {
   const { score } = req.body;
   await updateScore(req.params.id, score);
@@ -119,6 +134,11 @@ app.get('/api/users/:id/scores', async (req, res) => {
 app.get('/api/users/:id/max-score', async (req, res) => {
   const maxScore = await getUserMaxScore(req.params.id);
   res.json({ maxScore });
+});
+
+app.get('/api/users/scores/all', async (req, res) => {
+	const scores = await getAllScores1();
+  res.json(scores);
 });
 
 app.get('/api/users/scores', async (req, res) => {

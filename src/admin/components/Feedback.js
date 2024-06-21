@@ -40,6 +40,7 @@ const Feedback = ({ dispatchDisplay, searchPattern }) => {
                 message: feedback.message,
                 response: feedback.response || 'No response yet',
                 createdAt: new Date(feedback.createdAt).toLocaleString(),
+                userName: feedback.user.name,
             };
             return feedbackData;
         });
@@ -49,6 +50,7 @@ const Feedback = ({ dispatchDisplay, searchPattern }) => {
         const cols = [
             { Header: 'Number', accessor: 'number' },
             { Header: 'ID', accessor: 'id' },
+            { Header: 'User Name', accessor: 'userName'},
             { Header: 'Message', accessor: 'message' },
             { Header: 'Response', accessor: 'response' },
             { Header: 'Created At', accessor: 'createdAt' },

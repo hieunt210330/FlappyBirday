@@ -81,6 +81,18 @@ async function getUserName(userId) {
 }
 
 // Function to call POST /api/users/:id/score
+export async function updateScore1(score) {
+	console.log('score:', score);
+	await fetch(`${serverUrl}/api/users/score/${score.id}/update`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ score })
+	});
+}
+
+// Function to call POST /api/users/:id/score
 async function updateScore(userId, score) {
 	await fetch(`${serverUrl}/api/users/${userId}/score`, {
 		method: 'POST',
@@ -88,6 +100,28 @@ async function updateScore(userId, score) {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({ score })
+	});
+}
+
+// createScore
+export async function createScore(score) {
+	console.log('score:', score);
+	await fetch(`${serverUrl}/api/users/score/create`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ score })
+	});
+}
+
+export async function deleteScore(id) {
+	await fetch(`${serverUrl}/api/users/score/${id}/delete`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ id })
 	});
 }
 
@@ -102,6 +136,11 @@ async function getUserMaxScore(userId) {
 	const response = await fetch(`${serverUrl}/api/users/${userId}/max-score`);
 	const data = await response.json();
 	return data.maxScore;
+}
+
+export async function getAllScores() {
+	const response = await fetch(`${serverUrl}/api/users/scores/all`);
+	return response.json();
 }
 
 // Function to call GET /api/users/scores

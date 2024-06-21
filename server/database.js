@@ -171,6 +171,14 @@ async function getUserName(userId) {
 	return user?.name ?? '';
 }
 
+async function updateScore1(data) {
+	let newData = data.score;
+	data = newData;
+	let scoreId = parseInt(data.id);
+	let score = parseInt(data.score);
+	return prisma.score.update({ where: { id: scoreId }, data: { score: score } });
+}
+
 // Update the score of a user
 async function updateScore(userId, score) {
 	userId = parseInt(userId);
@@ -217,6 +225,38 @@ async function getUserMaxScore(userId) {
 	} catch (error) {
 		return 0;
 	}
+}
+
+export async function getAllScores1(searchPattern) {
+	searchPattern = searchPattern === undefined ? '' : searchPattern;
+	if (searchPattern === '') {
+		const scores = await prisma.score.findMany({
+			include: {
+				user: {
+					select: { name: true },
+				},
+			},
+		});
+		return scores;
+	}
+	const scores = await prisma.score.findMany({
+		where: {
+			OR: [
+				{
+					score: {
+						contains: searchPattern,
+						mode: 'insensitive',
+					},
+				},
+			],
+		},
+		include: {
+			user: {
+				select: { name: true },
+			},
+		},
+	});
+	return scores;
 }
 
 // Get the list of highest scores of all users sorted
@@ -340,11 +380,11 @@ async function getAllVouchers() {
 
 // Score functions
 async function createScore(data) {
+	console.log(data);
+	data.score.userId = parseInt(data.score.userId);
+	data.score.score = parseInt(data.score.score);
+	data = data.score;
 	return prisma.score.create({ data });
-}
-  
-async function updateScore1(id, data) {
-	return prisma.score.update({ where: { id: parseInt(id) }, data });
 }
   
 async function deleteScore(id) {
@@ -456,7 +496,15 @@ async function createPrize(userId) {
 
 export async function getAllFeedback()
 {
-	return prisma.feedback.findMany();
+	return prisma.feedback.findMany(
+		{
+			include: {
+				user: {
+					select: { name: true },
+				},
+			},
+		}	
+	);
 }
 
 export async function updateFeedbackResponse(id, response) {

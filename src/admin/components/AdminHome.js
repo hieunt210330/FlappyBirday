@@ -4,7 +4,8 @@ import '../style/AdminHome.css';
 import User from "./User";
 import Feedback from "./Feedback";
 import Voucher from "./Voucher";
-
+import Score from "./Score";
+import CheckIn from "./CheckIn";
 
 const AdminHome = ({ dispatchDisplay }) => {
 
@@ -28,7 +29,7 @@ const AdminHome = ({ dispatchDisplay }) => {
   return (
     <div className="admin-panel">
       <nav>
-        {['Users', 'Feedbacks', 'Vouchers', 'Scores', 'CheckIns', 'CheckInDates'].map((tab) => (
+        {['Users', 'Feedbacks', 'Vouchers', 'Scores', 'CheckIns'].map((tab) => (
           <button
             key={tab}
             className={activeTab === tab ? 'active' : ''}
@@ -49,6 +50,8 @@ const AdminHome = ({ dispatchDisplay }) => {
       {activeTab === 'Users' && <User searchPattern={searchPattern}/>}
       {activeTab === 'Feedbacks' && <Feedback searchPattern={searchPattern}/>}
       {activeTab === 'Vouchers' && <Voucher searchPattern={searchPattern}/>}
+      {activeTab === 'Scores' && <Score searchPattern={searchPattern}/>}
+      {activeTab === 'CheckIns' && <CheckIn searchPattern={searchPattern}/>}
     </div>
   );
 };

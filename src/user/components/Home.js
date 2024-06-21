@@ -8,10 +8,12 @@ import {
     getTurnLeft
 } from '../../api/database';
 
+import { curUserId } from '../../class/user';
+
 const Home = ({ dispatchDisplay }) => {
     const [highScore, setHighScore] = useState(null);
     const [turnsLeft, setTurnsLeft] = useState(null);
-    const userId = process.env.USER_ID;
+    const userId = curUserId;
 
     useEffect(() => {
         const fetchData = async () => {

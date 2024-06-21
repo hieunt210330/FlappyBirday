@@ -1,3 +1,5 @@
+import { ppid } from "process";
+
 class User {
     constructor(id, email, name, turnLeft = 3, scores = [], checkIn = null, puzzleCount = 0, vouchers = [], maxScore = 0, feedbacks = []) {
         this.id = id;
@@ -94,3 +96,16 @@ class User {
         this.feedbacks = feedbacks;
     }
 }
+
+let curUserId = 0;
+// set curdUserId
+function setCurUserId(userId) {
+    curUserId = userId;
+}
+
+export
+{
+    curUserId,
+    setCurUserId,
+}
+

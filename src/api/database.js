@@ -39,6 +39,12 @@ async function getUserIdByEmail(email) {
 	return data.userId;
 }
 
+export async function getUserByEmail(email) {
+	const response = await fetch(`${serverUrl}/api/users/email/${email}`);
+	const data = await response.json();
+	return data;
+}
+
 // Function to call GET /api/users/pattern/:pattern/all
 async function getAllUser(pattern) {
 	if (pattern === '') {
@@ -249,6 +255,41 @@ async function getUserFeedbacks(userId) {
 	return response.json();
 }
 
+//getAllCheckIns, deleteCheckIn, updateCheckIn, createCheckIn
+// Function to call get /api/checkindata/all
+export async function getAllCheckIns(pattern) {
+	const response = await fetch(`${serverUrl}/api/checkindata/all`);
+	return response.json();
+}
+// Function to call get /api/checkindata/delete/:id
+export async function deleteCheckIn(id) {
+	const response = await fetch(`${serverUrl}/api/checkindata/delete/${id}`);
+	return response.json();
+}
+// Function to call post /api/checkindata/update/:id
+export async function updateCheckIn(data) {
+	const response = await fetch(`${serverUrl}/api/checkindata/update/${data.id}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	});
+	return response.json();
+}
+// Function to call post /api/checkindata/create
+export async function createCheckIn(data) {
+	const response = await fetch(`${serverUrl}/api/checkindata/create`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	});
+	return response.json();
+}
+
+
 // Function to call POST /api/feedbacks
 async function saveUserFeedback(userId, message) {
 	await fetch(`${serverUrl}/api/feedbacks`, {
@@ -259,6 +300,8 @@ async function saveUserFeedback(userId, message) {
 		body: JSON.stringify({ userId, message })
 	});
 }
+
+
 
 // Function to call POST /api/users/:id/check-in
 async function saveCheckInDate(userId) {

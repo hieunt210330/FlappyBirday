@@ -1,6 +1,7 @@
 // giftReducer.js
 
 import Gifts from '../../../class/gifts';
+import {curUserId} from "../../../class/user";
 
 const initialState = {
     gifts: new Gifts()
@@ -28,7 +29,7 @@ const giftReducer = (state = initialState, action) => {
         case 'GIFT_EATEN':
             gifts = new Gifts();
             gifts.copy(state.gifts);
-            gifts.eatGift(action.eatenIndex, process.env.USER_ID);
+            gifts.eatGift(action.eatenIndex, curUserId);
             return { ...state, gifts: gifts };
 
         default:

@@ -8,11 +8,13 @@ import {
   saveUserFeedback
 } from '../../api/database';
 
+import { curUserId } from '../../class/user';
+
 const Feedback = ({ dispatchDisplay }) => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [feedback, setFeedback] = useState("");
   const [viewingFeedbacks, setViewingFeedbacks] = useState(false);
-  const userId = process.env.USER_ID;
+  const userId = curUserId;
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
@@ -20,7 +22,7 @@ const Feedback = ({ dispatchDisplay }) => {
         const userFeedbacks = await getUserFeedbacks(userId);
         setFeedbacks(userFeedbacks);
       } catch (error) {
-        console.error('Error fetching feedbacks:', error);
+        //console.error('Error fetching feedbacks:', error);
       }
     };
 
@@ -63,7 +65,9 @@ const Feedback = ({ dispatchDisplay }) => {
               <li key={fb.id}>
                 <p>{fb.message}</p>
                 <small>{new Date(fb.createdAt).toLocaleString()}</small>
-              </li>
+                
+                {(fb.response !== null && fb.response !== undefined && fb.response.length !==0) ? (<p>Reply: {fb.response}</p>): null}
+                </li>
             ))}
           </ul>
           <button className="feedback-button" onClick={handleGiveFeedback}>Give a feedback</button>

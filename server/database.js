@@ -52,6 +52,17 @@ async function getUserIdByEmail(email) {
 	}
 }
 
+export async function getUserByEmail(email) {
+	try {
+		const user = await prisma.user.findUnique({
+			where: { email },
+		});
+		return user;
+	} catch (error) {
+		return null;
+	}
+}
+
 // Function to create a new user
 async function createUser(email, name, password, role) {
 	try {
@@ -397,19 +408,32 @@ async function getAllScores() {
 
 // Check-in functions
 async function createCheckInDate(data) {
-	return prisma.checkIn.create({ data });
+	return prisma.checkInDate.create({ data });
 }
   
 async function updateCheckInDate(id, data) {
-	return prisma.checkIn.update({ where: { id: parseInt(id) }, data });
+	return prisma.checkInDate.update({ where: { id: parseInt(id) }, data });
 }
   
 async function deleteCheckInDate(id) {
-	return prisma.checkIn.delete({ where: { id: parseInt(id) } });
+	return prisma.checkInDate.delete({ where: { id: parseInt(id) } });
   }
   
 async function getAllCheckInDates() {
-	return prisma.checkIn.findMany();
+	return prisma.checkInDate.findMany(
+		// include the user name from the check-in field of the check-in date
+		{
+			include: {
+				checkIn: {
+					include: {
+						user: {
+							select: { name: true },
+						},
+					},
+				},
+			},
+		}
+	);
 }
 
 // Create a new voucher
@@ -488,7 +512,7 @@ async function createPrize(userId) {
 	}
 	else
 	{
-		incrementPuzzleCount(process.env.USER_ID);
+		incrementPuzzleCount(userId);
 		return {type: "puzzle", message: 'You got a puzzle piece!'};
 	}
 

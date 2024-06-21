@@ -4,13 +4,15 @@ import { useTable } from 'react-table';
 import '../style/reward.css';
 import { getUserVouchers } from '../../api/database';
 
+import { curUserId } from '../../class/user';
+
 const Reward = ({ dispatchDisplay }) => {
     const [vouchers, setVouchers] = useState([]);
     const [selectedVoucher, setSelectedVoucher] = useState(null);
 
     useEffect(() => {
         const fetchVouchers = async () => {
-            const userId = process.env.USER_ID; // Adjust based on how you get the user ID
+            const userId = curUserId; // Adjust based on how you get the user ID
             const voucherList = await getUserVouchers(userId);
             setVouchers(voucherList);
         };

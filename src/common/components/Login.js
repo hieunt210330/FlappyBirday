@@ -1,22 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
+import {getUserByEmail} from '../../api/database';
+
+import {setCurUserId} from '../../class/user'
+
 import '../style/login.css'; // Import the CSS file
 
 const Login = ({ dispatchDisplay }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Logic for handling login
-    //console.log('Login:', { email, password });
-    if (email === 'admin@admin.com' && password === 'admin') {
-      dispatchDisplay('DISPLAY_HOME_ADMIN');
+
+    const user = await getUserByEmail(email);
+    if (user === null) {
+      alert('User not found');
       return;
     }
-    //dispatchDisplay('DISPLAY_HOME_USER');
-    dispatchDisplay('DISPLAY_HOME_ADMIN');
+    if (password === user.password) {
+      if(user.isAdmin === true)
+      {
+        dispatchDisplay('DISPLAY_HOME_ADMIN');
+      }
+      else if (user.isAdmin === false)
+      {
+        setCurUserId(user.id);
+        dispatchDisplay('DISPLAY_HOME_USER');
+      }
+    }
+    else {
+      alert('Invalid password');
+    }
+    return;
 
   };
 

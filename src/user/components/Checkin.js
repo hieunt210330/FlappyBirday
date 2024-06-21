@@ -15,6 +15,8 @@ import {
   receiveStreakRewardTwelve,
 } from '../../api/database';
 
+import { curUserId } from '../../class/user';
+
 import '../style/checkin.css';
 
 const Checkin = ({ dispatchDisplay }) => {
@@ -27,7 +29,7 @@ const Checkin = ({ dispatchDisplay }) => {
     fiveDays: { received: false, eligible: false },
     twelveDays: { received: false, eligible: false },
   });
-  const userId = process.env.USER_ID;
+  const userId = curUserId;
 
   useEffect(() => {
     const fetchCheckinDays = async () => {

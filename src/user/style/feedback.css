@@ -23,7 +23,8 @@ body, html {
 }
   
   .home-button {
-    display: block;
+    display: flex;
+    top: 0;
     margin-bottom: 20px;
     padding: 10px 20px;
     background-color: #007bff;

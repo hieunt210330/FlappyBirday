@@ -5,6 +5,8 @@ import {
 
 import config from "../../../class/gameconfig";
 
+import {curUserId} from "../../../class/user";
+
 const initialState = {
     score: 0,
     status: 'end',
@@ -23,7 +25,7 @@ export default (state = initialState, {type , payload} = {} ) => {
             config.setPipeSpeed(gameLevel);
             return {...state, score:0, status: 'playing'}
         case 'DISPLAY_END_GAME':
-            updateScore(process.env.USER_ID, state.score);
+            updateScore(curUserId, state.score);
             return {...state, status: 'end'}
         case 'SCORE_INCREASEMENT':
             return {...state, score: state.score + 1}

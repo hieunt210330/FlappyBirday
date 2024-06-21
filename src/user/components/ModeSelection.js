@@ -8,12 +8,14 @@ import {
       getTurnLeft
  } from '../../api/database';
 
+import { curUserId } from '../../class/user';
+
 const ModeSelection = ({ displayList, dispatchDisplay }) => {
 
       const [gameMode, setGameMode] = useState('');
       const [gameLevel, setGameLevel] = useState('');
       const [turnsLeft, setTurnsLeft] = useState(null);
-      const userId = process.env.USER_ID;
+      const userId = curUserId;
 
       useEffect(() => {
             const fetchTurnsLeft = async () => {

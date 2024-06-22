@@ -1,4 +1,4 @@
-import config from './agameconfig';
+import config from './gameconfig';
 
 class Bird {
     constructor() {

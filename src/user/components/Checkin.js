@@ -55,7 +55,7 @@ const Checkin = ({ dispatchDisplay }) => {
       await saveCheckInDate(userId);
       setCheckinDays([...checkinDays, today]);
       setTodayCheckedIn(true);
-      alert('Check-in successful!');
+      alert('Check-in successful! You get 3 more play attempts!');
     } catch (error) {
       console.error('Error saving check-in date:', error);
     }

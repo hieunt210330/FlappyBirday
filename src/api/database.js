@@ -379,6 +379,69 @@ async function receiveStreakRewardTwelve(userId) {
     return data.isReceived;
 }
 
+//getUserReceipts, claimReceipt, getAllReceipts, deleteReceipt, updateReceipt, createReceipt
+
+// Function to call GET /api/users/:id/receipts
+export async function getUserReceipts(userId) {
+	const response = await fetch(`${serverUrl}/api/users/${userId}/receipts`);
+	return response.json();
+}
+
+// Function to call POST /api/receipts/:id/claim
+export async function claimReceipt(id) {
+	const response = await fetch(`${serverUrl}/api/receipts/${id}/claim`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+	});
+	return response.json();
+}
+
+// Function to call POST /api/receipts/all
+export async function getAllReceipts(searchPattern) {
+	const response = await fetch(`${serverUrl}/api/receipts/all`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ searchPattern })
+	});
+	return response.json();
+
+}
+
+// Function to call GET /api/receipts/delete/:id
+export async function deleteReceipt(id) {
+	const response = await fetch(`${serverUrl}/api/receipts/delete/${id}`);
+	return response.json();
+}
+
+// Function to call POST /api/receipts/update/:id
+export async function updateReceipt(data) {
+	console.log('data:', data);
+	const response = await fetch(`${serverUrl}/api/receipts/update/${data.id}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	});
+	return response.json();
+}
+
+// Function to call POST /api/receipts/create
+export async function createReceipt(userId, total) {
+	const response = await fetch(`${serverUrl}/api/receipts/create`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ userId, total })
+	});
+	return response.json();
+}
+
 export {
 	createUser,
 	getUserIdByEmail,

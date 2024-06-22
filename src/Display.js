@@ -12,6 +12,7 @@ import Rules from "./user/components/Rules";
 import Reward from './user/components/Reward';
 import Scoreboard from './user/components/Scoreboard';
 import Checkin from './user/components/Checkin';
+import Receipt from "./admin/components/Receipt";
 
 import Login from "./common/components/Login";
 import Register from "./common/components/Register";
@@ -21,7 +22,7 @@ import AdminHome from "./admin/components/AdminHome";
 const Display = ({ displayList, dispatchDisplay }) => {
     useEffect(() => {
         if (!Object.values(displayList).some(value => value === true)) {
-            dispatchDisplay('DISPLAY_LOGIN');
+            dispatchDisplay('DISPLAY_HOME_USER');
         }
     }, [displayList, dispatchDisplay]);
 
@@ -62,6 +63,9 @@ const Display = ({ displayList, dispatchDisplay }) => {
     }
     if (displayList.displayRules) {
         displayComponents.push(<Rules key="rules" />);
+    }
+    if (displayList.displayReceipt) {
+        displayComponents.push(<Receipt key="receipt" />);
     }
     if (displayList.displayLogin) {
         displayComponents.push(<Login key="login" />);

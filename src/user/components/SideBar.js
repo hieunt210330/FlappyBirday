@@ -11,6 +11,8 @@ import {
   TicketCheck,
   Puzzle,
   BugOff,
+  Receipt
+  
 } from "lucide-react";
 
 const Sidebar = ({ dispatchDisplay }) => {
@@ -34,6 +36,13 @@ const Sidebar = ({ dispatchDisplay }) => {
               title="Rules"
             >
               <CircleHelp color="currentColor" alt="Rules" />
+            </button>
+            <button
+              className="sidebar-button"
+              onClick={() => dispatchDisplay("DISPLAY_RECEIPT")}
+              title="Receipts"
+            >
+              <Receipt color="currentColor" alt="Receipts" />
             </button>
             <button
               className="sidebar-button"

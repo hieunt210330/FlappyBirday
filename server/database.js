@@ -594,6 +594,12 @@ async function saveCheckInDate(userId) {
             createdAt: today,
         },
     });
+
+	for (let i = 0; i < 3; i++)
+	{
+		await incrementTurnLeft(userId);
+	}
+
 }
 
 // Get the check-in dates in a month of a user
@@ -718,6 +724,113 @@ async function receiveStreakReward(userId, days) {
 	});
 
 	return true;
+}
+
+//getUserReceipts, claimReceipt, getAllReceipts, deleteReceipt, updateReceipt, createReceipt
+// Receipt functions
+export async function getUserReceipts(userId) {
+	userId = parseInt(userId);
+	const receipts = await prisma.receipt.findMany({
+		where: { userId },
+	});
+	return receipts;
+}
+
+export async function claimReceipt(id) {
+	// get total amount of purchase in receipt
+	const receipt = await prisma.receipt.findUnique({
+		where: { id: parseInt(id) },
+		select: { total: true, isClaimed: true},
+	});
+	if (!receipt) {
+		return "Invalid receipt ID";
+	}
+	if (receipt.isClaimed) {
+		return "Receipt has already been claimed";
+	}
+
+	for (let i = 0; i < receipt.total/10; i++)
+	{
+		await incrementTurnLeft(receipt.userId);
+	}
+
+	prisma.receipt.update({
+		where: { id: parseInt(id) },
+		data: { isClaimed: true },
+	});
+	return "Receipt claimed successfully. You have received " + receipt.total/10 + " turns.";
+}
+
+export async function getAllReceipts(searchPattern) {
+	if (searchPattern === undefined || searchPattern === '') {
+		return prisma.receipt.findMany({
+			include: {
+				user: {
+					select: { name: true },
+				},	
+			}
+		});
+	}
+	// find receipts with userId has userName containing searchPattern and return userName with receipt
+	const receipts = await prisma.receipt.findMany({
+		where: {
+			OR: [
+				{
+					userId: {
+						in: {
+							select: {
+								id: true,
+							},
+							where: {
+								name: {
+									contains: searchPattern,
+									mode: 'insensitive',
+								},
+							},
+						},
+					},
+				},
+			],
+		},
+		include: {
+			user: {
+				select: { name: true },
+			},
+		},
+	});
+	console.log(receipts);
+	return receipts;
+}
+
+export async function deleteReceipt(id) {
+	return prisma.receipt.delete({ where: { id: parseInt(id) } });
+}
+
+export async function updateReceipt(id, data) {
+	if (data?.isClaimed !== undefined) {
+		if (data.isClaimed === 'Yes') {
+			data.isClaimed = true;
+		}
+		if (data.isClaimed === 'No') {
+			data.isClaimed = false;
+		}
+	}
+	let newData = {};
+	if (data?.id !== undefined) {
+		newData.id = data.id;
+	}
+	if (data?.isClaimed !== undefined) {
+		newData.isClaimed = data.isClaimed;
+	}
+	data = newData;
+	return prisma.receipt.update({ where: { id: parseInt(id) }, data });
+}
+
+export async function createReceipt(userId, total) {
+	let data = { userId: userId, total: total };
+	data.userId = parseInt(data.userId);
+	data.total = parseInt(data.total);
+	return prisma.receipt.create({ data });
 }
 
 export {

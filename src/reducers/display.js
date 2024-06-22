@@ -13,6 +13,7 @@ const displayList = {
     displayReward: false,
     displayBugReport: false,
     displayRules: false,
+    displayReceipt: false,
     displayExit: false,
 
     displayLogin: false,
@@ -83,6 +84,11 @@ export default (state = intialState, {type} = {}) => {
             displayListTmp.displaySidebar = true;
             return {...state, displayList: displayListTmp};
         
+        case 'DISPLAY_RECEIPT':
+            displayListTmp.displayReceipt = true;
+            displayListTmp.displaySidebar = true;
+            return {...state, displayList: displayListTmp};
+
         case 'DISPLAY_LOGIN':
             displayListTmp.displayLogin = true;
             return {...state, displayList: displayListTmp};

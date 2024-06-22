@@ -43,7 +43,13 @@ import {
   getAllCheckInDates,
   getAllFeedback,
   updateFeedbackResponse,
-  getUserByEmail
+  getUserByEmail,
+  getUserReceipts,
+  claimReceipt,
+  getAllReceipts,
+  deleteReceipt,
+  updateReceipt,
+  createReceipt
 } from './database.js';
 
 const app = express();
@@ -418,6 +424,68 @@ try {
   }
   catch (error) {
 	console.log(error);
+  }
+});
+
+app.get("/api/users/:id/receipts", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const receipts = await getUserReceipts(userId);
+    res.json(receipts);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post("/api/users/receipts/claim", async (req, res) => {
+  try {
+    const { id } = req.body;
+    const response = await claimReceipt(id);
+    res.json(response);
+  } catch (error) {
+    res.json(null);
+  }
+});
+
+app.post("/api/receipts/all", async (req, res) => {
+  try {
+    const { searchPattern } = req.body;
+    const receipts = await getAllReceipts(searchPattern);
+    res.json(receipts);
+  } catch (error) {
+    res.json(null);
+  }
+});
+
+app.get("/api/users/receipts/delete", async (req, res) => {
+  try {
+    const { id } = req.query;
+    await deleteReceipt(id);
+    res.json({ message: "Receipt deleted successfully" });
+  } catch (error) {
+    res.json(null);
+  }
+});
+
+app.post("/api/receipts/update/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = req.body;
+    const response = await updateReceipt(id, data);
+    res.json(response);
+  } catch (error) {
+    res.json(null);
+  }
+});
+
+app.post("/api/receipts/create", async (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const total = req.body.total;
+    const response = await createReceipt(userId, total);
+    res.json(response);
+  } catch (error) {
+    res.json(null);
   }
 });
 

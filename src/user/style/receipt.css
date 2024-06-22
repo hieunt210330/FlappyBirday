@@ -1,0 +1,40 @@
+.bill-container {
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .bill-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .bill-item {
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .claim-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .claim-button.claimed {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .claim-button:hover:not(.claimed) {
+    background-color: #45a049;
+  }
+  

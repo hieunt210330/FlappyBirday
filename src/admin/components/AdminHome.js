@@ -6,6 +6,7 @@ import Feedback from "./Feedback";
 import Voucher from "./Voucher";
 import Score from "./Score";
 import CheckIn from "./CheckIn";
+import Receipt from "./Receipt";
 
 import {
   LogOut,
@@ -41,7 +42,7 @@ const AdminHome = ({ dispatchDisplay }) => {
       </button>
 
       <nav>
-        {['Users', 'Feedbacks', 'Vouchers', 'Scores', 'CheckIns'].map((tab) => (
+        {['Users', 'Feedbacks', 'Vouchers', 'Scores', 'CheckIns', 'Receipts'].map((tab) => (
           <button
             key={tab}
             className={activeTab === tab ? 'active' : ''}
@@ -64,6 +65,7 @@ const AdminHome = ({ dispatchDisplay }) => {
       {activeTab === 'Vouchers' && <Voucher searchPattern={searchPattern}/>}
       {activeTab === 'Scores' && <Score searchPattern={searchPattern}/>}
       {activeTab === 'CheckIns' && <CheckIn searchPattern={searchPattern}/>}
+      {activeTab === 'Receipts' && <Receipt searchPattern={searchPattern}/>}
     </div>
   );
 };

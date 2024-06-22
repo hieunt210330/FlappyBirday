@@ -23,6 +23,7 @@ model User {
   vouchers    Voucher[]
   maxScore    Int            @default(0)
   feedbacks   Feedback[]
+  receipts    Receipt[]
 }
 
 model Feedback {
@@ -70,4 +71,13 @@ model CheckInDate {
   createdAt  DateTime @default(now())
   checkInId  Int
   checkIn    CheckIn  @relation(fields: [checkInId], references: [id])
+}
+
+model Receipt {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  total     Int
+  isClaimed Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }

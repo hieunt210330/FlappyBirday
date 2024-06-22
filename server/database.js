@@ -138,7 +138,7 @@ async function updateUser(data) {
 	}
 	newData.id = parseInt(data.id);
 	data = newData;
-	return prisma.user.update({ where: { id: parseInt(data.id) }, data });
+	return await prisma.user.update({ where: { id: parseInt(data.id) }, data });
 }
 
 async function deleteUser(id) {
@@ -148,7 +148,7 @@ async function deleteUser(id) {
 	await prisma.score.deleteMany({ where: { userId } });
 	await prisma.checkInDate.deleteMany({ where: { checkIn: { userId } } });
 	await prisma.checkIn.deleteMany({ where: { userId } });
-	return prisma.user.delete({ where: { id: userId } });
+	return await prisma.user.delete({ where: { id: userId } });
 }
 
 
@@ -187,7 +187,7 @@ async function updateScore1(data) {
 	data = newData;
 	let scoreId = parseInt(data.id);
 	let score = parseInt(data.score);
-	return prisma.score.update({ where: { id: scoreId }, data: { score: score } });
+	return await prisma.score.update({ where: { id: scoreId }, data: { score: score } });
 }
 
 // Update the score of a user
@@ -339,7 +339,7 @@ async function getUserVouchers(userId) {
 // Voucher functions
 async function createVoucher1(data) {
 	data.userId = parseInt(data.userId);
-	return prisma.voucher.create({ data });
+	return await prisma.voucher.create({ data });
 }
 
 async function updateVoucher(data) {
@@ -378,15 +378,15 @@ async function updateVoucher(data) {
 		}
 	}
 	data = newData;
-	return prisma.voucher.update({ where: { id: parseInt(data.id) }, data });
+	return await prisma.voucher.update({ where: { id: parseInt(data.id) }, data });
   }
   
 async function deleteVoucher(id) {
-	return prisma.voucher.delete({ where: { id: parseInt(id) } });
+	return await prisma.voucher.delete({ where: { id: parseInt(id) } });
 }
 
 async function getAllVouchers() {
-	return prisma.voucher.findMany();
+	return await prisma.voucher.findMany();
 }  
 
 // Score functions
@@ -395,32 +395,32 @@ async function createScore(data) {
 	data.score.userId = parseInt(data.score.userId);
 	data.score.score = parseInt(data.score.score);
 	data = data.score;
-	return prisma.score.create({ data });
+	return await prisma.score.create({ data });
 }
   
 async function deleteScore(id) {
-	return prisma.score.delete({ where: { id: parseInt(id) } });
+	return await prisma.score.delete({ where: { id: parseInt(id) } });
  }
   
 async function getAllScores() {
-	return prisma.score.findMany();
+	return await prisma.score.findMany();
 }
 
 // Check-in functions
 async function createCheckInDate(data) {
-	return prisma.checkInDate.create({ data });
+	return await prisma.checkInDate.create({ data });
 }
   
 async function updateCheckInDate(id, data) {
-	return prisma.checkInDate.update({ where: { id: parseInt(id) }, data });
+	return await prisma.checkInDate.update({ where: { id: parseInt(id) }, data });
 }
   
 async function deleteCheckInDate(id) {
-	return prisma.checkInDate.delete({ where: { id: parseInt(id) } });
+	return await prisma.checkInDate.delete({ where: { id: parseInt(id) } });
   }
   
 async function getAllCheckInDates() {
-	return prisma.checkInDate.findMany(
+	return await prisma.checkInDate.findMany(
 		// include the user name from the check-in field of the check-in date
 		{
 			include: {
@@ -520,7 +520,7 @@ async function createPrize(userId) {
 
 export async function getAllFeedback()
 {
-	return prisma.feedback.findMany(
+	return await prisma.feedback.findMany(
 		{
 			include: {
 				user: {
@@ -532,7 +532,7 @@ export async function getAllFeedback()
 }
 
 export async function updateFeedbackResponse(id, response) {
-	return prisma.feedback.update({ where: { id: parseInt(id) }, data: { response: response } });
+	return await prisma.feedback.update({ where: { id: parseInt(id) }, data: { response: response } });
 }
 
 // Get the list of feedbacks of a user
@@ -740,7 +740,6 @@ export async function claimReceipt(id) {
 	// get total amount of purchase in receipt
 	const receipt = await prisma.receipt.findUnique({
 		where: { id: parseInt(id) },
-		select: { total: true, isClaimed: true},
 	});
 	if (!receipt) {
 		return "Invalid receipt ID";
@@ -748,22 +747,24 @@ export async function claimReceipt(id) {
 	if (receipt.isClaimed) {
 		return "Receipt has already been claimed";
 	}
-
 	for (let i = 0; i < receipt.total/10; i++)
 	{
 		await incrementTurnLeft(receipt.userId);
 	}
 
-	prisma.receipt.update({
+	await prisma.receipt.update({
 		where: { id: parseInt(id) },
 		data: { isClaimed: true },
 	});
-	return "Receipt claimed successfully. You have received " + receipt.total/10 + " turns.";
+	await prisma.receipt.findUnique({
+		where: { id: parseInt(id) },
+	});
+	return "Receipt claimed successfully. You have received " + Math. floor(receipt.total/10) + " turns.";
 }
 
 export async function getAllReceipts(searchPattern) {
 	if (searchPattern === undefined || searchPattern === '') {
-		return prisma.receipt.findMany({
+		return await prisma.receipt.findMany({
 			include: {
 				user: {
 					select: { name: true },
@@ -803,7 +804,7 @@ export async function getAllReceipts(searchPattern) {
 }
 
 export async function deleteReceipt(id) {
-	return prisma.receipt.delete({ where: { id: parseInt(id) } });
+	return await prisma.receipt.delete({ where: { id: parseInt(id) } });
 }
 
 export async function updateReceipt(id, data) {
@@ -823,14 +824,14 @@ export async function updateReceipt(id, data) {
 		newData.isClaimed = data.isClaimed;
 	}
 	data = newData;
-	return prisma.receipt.update({ where: { id: parseInt(id) }, data });
+	return await prisma.receipt.update({ where: { id: parseInt(id) }, data });
 }
 
 export async function createReceipt(userId, total) {
 	let data = { userId: userId, total: total };
 	data.userId = parseInt(data.userId);
 	data.total = parseInt(data.total);
-	return prisma.receipt.create({ data });
+	return await prisma.receipt.create({ data });
 }
 
 export {

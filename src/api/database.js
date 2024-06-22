@@ -389,12 +389,7 @@ export async function getUserReceipts(userId) {
 
 // Function to call POST /api/receipts/:id/claim
 export async function claimReceipt(id) {
-	const response = await fetch(`${serverUrl}/api/receipts/${id}/claim`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-	});
+	const response = await fetch(`${serverUrl}/api/receipt/${id}/claim`);
 	return response.json();
 }
 

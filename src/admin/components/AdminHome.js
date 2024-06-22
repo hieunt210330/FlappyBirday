@@ -34,7 +34,7 @@ const AdminHome = ({ dispatchDisplay }) => {
   return (
     <div className="admin-panel">
       <button
-              className="sidebar-button"
+              className="sidebar-button-admin"
               onClick={() => dispatchDisplay("DISPLAY_LOGIN")}
               title="Logout"
       >

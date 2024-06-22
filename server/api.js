@@ -437,9 +437,9 @@ app.get("/api/users/:id/receipts", async (req, res) => {
   }
 });
 
-app.post("/api/users/receipts/claim", async (req, res) => {
+app.get("/api/receipt/:id/claim", async (req, res) => {
   try {
-    const { id } = req.body;
+    const id = req.params.id;
     const response = await claimReceipt(id);
     res.json(response);
   } catch (error) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import '../style/bill.css';
+import '../style/receipt.css';
 import { getUserReceipts, claimReceipt } from '../../api/database';
 import { curUserId } from '../../class/user';
 
@@ -20,27 +20,33 @@ const Receipt = ({ dispatchDisplay }) => {
     }, []);
 
     const handleClaim = async (id) => {
-        await claimReceipt(id);
+        const response = await claimReceipt(id);
+        if (response === null) {
+            alert('Failed to claim receipt. Please try again later.');
+        }
+        alert(response);
         const updatedReceipts = await getUserReceipts(curUserId);
         setReceipts(updatedReceipts);
     };
 
     return (
-        <div className="bill-container">
+        <div className="receipt-container">
+            <button className="home-button" onClick={() => dispatchDisplay('DISPLAY_HOME_USER')}>Home</button>
+
             <h2 className="title">My Receipts</h2>
-            <div className="bill-list">
-                {bills.map((bill, index) => (
-                    <div key={index} className="bill-item">
-                        <p><strong>ID:</strong> {bill.id}</p>
-                        <p><strong>Total:</strong> {bill.total}</p>
-                        <p><strong>Number of turns:</strong> +{bill.total / 10}</p>
-                        <p><strong>Created At:</strong> {new Date(bill.createdAt).toLocaleDateString()}</p>
+            <div className="receipt-list">
+                {bills.map((receipt, index) => (
+                    <div key={index} className="receipt-item">
+                        <p><strong>ID:</strong> {receipt.id}</p>
+                        <p><strong>Total:</strong> {receipt.total}</p>
+                        <p><strong>Number of turns:</strong> +{Math. floor(receipt.total / 10)}</p>
+                        <p><strong>Created At:</strong> {new Date(receipt.createdAt).toLocaleDateString()}</p>
                         <button
-                            className={`claim-button ${bill.isClaimed ? 'claimed' : ''}`}
-                            onClick={() => handleClaim(bill.id, bill.total)}
-                            disabled={bill.isClaimed}
+                            className={`claim-button ${receipt.isClaimed ? 'claimed' : ''}`}
+                            onClick={() => handleClaim(receipt.id, receipt.total)}
+                            disabled={receipt.isClaimed}
                         >
-                            {bill.isClaimed ? 'Claimed' : 'Claim'}
+                            {receipt.isClaimed ? 'Claimed' : 'Claim'}
                         </button>
                     </div>
                 ))}

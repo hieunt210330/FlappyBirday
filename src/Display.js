@@ -12,7 +12,7 @@ import Rules from "./user/components/Rules";
 import Reward from './user/components/Reward';
 import Scoreboard from './user/components/Scoreboard';
 import Checkin from './user/components/Checkin';
-import Receipt from "./admin/components/Receipt";
+import Receipt from "./user/components/Receipt";
 
 import Login from "./common/components/Login";
 import Register from "./common/components/Register";
@@ -22,7 +22,7 @@ import AdminHome from "./admin/components/AdminHome";
 const Display = ({ displayList, dispatchDisplay }) => {
     useEffect(() => {
         if (!Object.values(displayList).some(value => value === true)) {
-            dispatchDisplay('DISPLAY_HOME_USER');
+            dispatchDisplay('DISPLAY_LOGIN');
         }
     }, [displayList, dispatchDisplay]);
 

@@ -1,4 +1,4 @@
-import Bird from '../../../class/Bird';
+import Bird from '../../../class/abird';
 
 const intialState = {
     bird: new Bird()

@@ -92,11 +92,18 @@ body {
   border-radius: 5px;
 }
 
-.home-button {
-  background-color: #2196f3;
+.home-button-end {
+  display: flex;
+  top: 0;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
 }
 
 .button-row {

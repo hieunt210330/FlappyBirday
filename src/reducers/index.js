@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 
-import game from "./user/game/game";
-import bird from "./user/game/bird";
-import pipe from "./user/game/pipe";
+import game from "./game/game";
+import bird from "./game/bird";
+import pipe from "./game/pipe";
 import display from "./display";
-import gift from "./user/game/gift";
+import gift from "./game/gift";
 
 export default combineReducers({
     game,

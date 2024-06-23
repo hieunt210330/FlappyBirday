@@ -1,11 +1,11 @@
 
 import {
     updateScore,
-} from "../../../api/database"
+} from "../../api/database"
 
-import config from "../../../class/gameconfig";
+import config from "../../class/gameconfig";
 
-import {curUserId} from "../../../class/user";
+import {curUserId} from "../../class/user";
 
 const initialState = {
     score: 0,
@@ -25,7 +25,10 @@ export default (state = initialState, {type , payload} = {} ) => {
             config.setPipeSpeed(gameLevel);
             return {...state, score:0, status: 'playing'}
         case 'DISPLAY_END_GAME':
-            updateScore(curUserId, state.score);
+            if (gameMode === 'challenge')
+            {
+                updateScore(curUserId, state.score);
+            }
             return {...state, status: 'end'}
         case 'SCORE_INCREASEMENT':
             return {...state, score: state.score + 1}

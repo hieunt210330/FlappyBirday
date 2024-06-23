@@ -1,7 +1,7 @@
 // giftReducer.js
 
-import Gifts from '../../../class/gifts';
-import {curUserId} from "../../../class/user";
+import Gifts from '../../class/gifts';
+import {curUserId} from "../../class/user";
 
 const initialState = {
     gifts: new Gifts()

@@ -14,8 +14,8 @@ import Scoreboard from './user/components/Scoreboard';
 import Checkin from './user/components/Checkin';
 import Receipt from "./user/components/Receipt";
 
-import Login from "./common/components/Login";
-import Register from "./common/components/Register";
+import Login from "./authentication/components/Login";
+import Register from "./authentication/components/Register";
 
 import AdminHome from "./admin/components/AdminHome";
 

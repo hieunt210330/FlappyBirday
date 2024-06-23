@@ -50,7 +50,7 @@ import {
   deleteReceipt,
   updateReceipt,
   createReceipt
-} from './database.js';
+} from './handler.js';
 
 const app = express();
 const port = 3000;

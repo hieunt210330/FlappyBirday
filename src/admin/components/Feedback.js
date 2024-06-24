@@ -7,6 +7,7 @@ import { getAllFeedback, updateFeedbackResponse } from '../../api/database';
 const Feedback = ({ dispatchDisplay, searchPattern }) => {
     const [feedbacks, setFeedbacks] = useState([]);
     const [selectedFeedback, setSelectedFeedback] = useState(null);
+    const [replyUser, setReplyUser] = useState(null);
     const [replyMessage, setReplyMessage] = useState('');
     const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
 
@@ -23,7 +24,7 @@ const Feedback = ({ dispatchDisplay, searchPattern }) => {
     }, [searchPattern]);
 
     const handleReply = async () => {
-        await updateFeedbackResponse(selectedFeedback.id, replyMessage);
+        await updateFeedbackResponse(replyUser, replyMessage);
         setIsReplyModalOpen(false);
         setSelectedFeedback(null);
         setReplyMessage('');
@@ -62,7 +63,7 @@ const Feedback = ({ dispatchDisplay, searchPattern }) => {
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                setSelectedFeedback(row.original);
+                                setReplyUser(row.original.id);
                                 setIsReplyModalOpen(true);
                             }}
                         >
